@@ -31,6 +31,8 @@ public class Brand {
     private LocalDate modifyDate;
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
+    @Column(name = "image")
+    private String image;
     @OneToMany(mappedBy = "brand")
     @JsonIgnore
     private Collection<Product> products;
