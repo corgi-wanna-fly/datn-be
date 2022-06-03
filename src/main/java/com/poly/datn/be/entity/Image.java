@@ -19,6 +19,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(name = "name", nullable = false)
+    private String name;
     @Column(name = "image_link", nullable = false, length = 255)
     private String imageLink;
     @Column(name = "create_date", nullable = false)

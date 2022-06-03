@@ -19,15 +19,15 @@ import java.util.Collection;
 public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "name", length = 50)
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
-    @Column(name = "description", length = 255)
+    @Column(name = "description", length = 255, nullable = false)
     private String description;
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
-    @Column(name = "update_date")
+    @Column(name = "update_date", nullable = false)
     private LocalDate updateDate;
     @OneToMany(mappedBy = "orderStatus")
     @JsonIgnore

@@ -16,13 +16,13 @@ import javax.persistence.*;
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
-    @Column(name = "origin_price")
+    @Column(name = "origin_price", nullable = false)
     private Double originPrice;
-    @Column(name = "sell_price")
+    @Column(name = "sell_price", nullable = false)
     private Double sellPrice;
     @ManyToOne
     @JoinColumn(name = "order_id")

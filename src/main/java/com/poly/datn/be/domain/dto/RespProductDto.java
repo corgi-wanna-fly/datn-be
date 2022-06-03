@@ -15,4 +15,6 @@ public class RespProductDto {
     private String code;
     private String description;
     private Long view;
+    private Double price;
+    private String imageLink;
 }

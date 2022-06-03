@@ -20,24 +20,26 @@ import java.util.Collection;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "fullname", length = 50)
+    @Column(name = "fullname", length = 50, nullable = false)
     private String fullname;
-    @Column(name = "phone", length = 11)
+    @Column(name = "phone", length = 11, nullable = false)
     private String phone;
-    @Column(name = "address", length = 255)
+    @Column(name = "address", length = 255, nullable = false)
     private String address;
-    @Column(name = "total")
+    @Column(name = "total", nullable = false)
     private Double total;
-    @Column(name = "note", length = 1000)
+    @Column(name = "note", length = 1000, nullable = true)
     private String note;
-    @Column(name = "ship_date")
+    @Column(name = "ship_date", nullable = true)
     private Date shipDate;
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
-    @Column(name = "modify_date")
+    @Column(name = "modify_date", nullable = false)
     private LocalDate modifyDate;
+    @Column(name = "is_pending", nullable = false)
+    private Boolean isPending;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
