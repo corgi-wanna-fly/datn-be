@@ -25,7 +25,7 @@ public class Product {
     private String name;
     @Column(name = "code", nullable = false, unique = true, length = 20)
     private String code;
-    @Column(name = "description", nullable = false, length = 255)
+    @Column(name = "description", nullable = false, length = 1000)
     private String description;
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
