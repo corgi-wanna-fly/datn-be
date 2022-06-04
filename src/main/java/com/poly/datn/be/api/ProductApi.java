@@ -34,7 +34,7 @@ public class ProductApi {
 
     @GetMapping(AppConst.API_PRODUCT_GET_BY_ID)
     public ResponseEntity<?> getProductById(@PathVariable("id")Long id){
-        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
+        return new ResponseEntity<>(ConvertUtil.fromProductDetail(productService.getProductById(id)), HttpStatus.OK);
     }
 
     @GetMapping(AppConst.API_PRODUCT_TOTAL_PAGE)
