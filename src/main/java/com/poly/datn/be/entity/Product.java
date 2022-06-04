@@ -40,9 +40,7 @@ public class Product {
     @JsonIgnore
     private Collection<ProductCategory> productCategories;
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private Collection<Image> images;
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private Collection<Attribute> attributes;
 }
