@@ -1,11 +1,11 @@
 package com.poly.datn.be.util;
 
+import com.poly.datn.be.domain.dto.RespCartItemDto;
 import com.poly.datn.be.domain.dto.RespProductDetailDto;
 import com.poly.datn.be.domain.dto.RespProductDto;
 import com.poly.datn.be.entity.Attribute;
 import com.poly.datn.be.entity.Product;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,5 +35,16 @@ public class ConvertUtil {
         respProductDetailDto.setImages(images);
         respProductDetailDto.setAttributes((List<Attribute>) product.getAttributes());
         return respProductDetailDto;
+    }
+
+    public static RespCartItemDto fromCartItem(Object[] objects){
+        RespCartItemDto respCartItemDto = new RespCartItemDto();
+        respCartItemDto.setId((Long) objects[0]);
+        respCartItemDto.setImage((String) objects[1]);
+        respCartItemDto.setName((String) objects[2]);
+        respCartItemDto.setSize((Integer) objects[3]);
+        respCartItemDto.setPrice((Double) objects[4]);
+        respCartItemDto.setQuantity((Integer) objects[5]);
+        return respCartItemDto;
     }
 }

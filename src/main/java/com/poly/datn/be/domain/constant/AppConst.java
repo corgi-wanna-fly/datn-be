@@ -7,4 +7,7 @@ public class AppConst {
     public static final String API_PRODUCT_TOTAL_PAGE = "/api/site/get-total-page";
     public static final Integer PRODUCT_AVG_SIZE = 39;
     public static final String PRODUCT_MAIN_IMAGE = "main";
+
+    //CartItem constant
+    public static final String API_CART_ITEM_GET_BY_ACCOUNT_ID = "api/site/get-cart-item-by-account-id/{id}";
 }
