@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Timestamp", new Date());
         body.put("Status", HttpStatus.BAD_REQUEST);
-        body.put("Errors", ex.showDetail());
+        body.put("Errors", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

@@ -28,6 +28,7 @@ public class ConvertUtil {
         respProductDetailDto.setId(product.getId());
         respProductDetailDto.setName(product.getName());
         respProductDetailDto.setCode(product.getCode());
+        respProductDetailDto.setDescription(product.getDescription());
         String main = product.getImages().stream().filter(item -> item.getName().equals("main")).findFirst().get().getImageLink();
         respProductDetailDto.setMain(main);
         List<String> images = product.getImages().stream().map(item -> item.getImageLink()).collect(Collectors.toList());

@@ -16,6 +16,7 @@ public class RespProductDetailDto {
     private Long id;
     private String name;
     private String code;
+    private String description;
     private String main;
     private List<String> images;
     private List<Attribute> attributes;
