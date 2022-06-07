@@ -8,6 +8,7 @@ public class AppConst {
     public static final Integer PRODUCT_AVG_SIZE = 39;
     public static final String PRODUCT_MAIN_IMAGE = "main";
 
+    public static final String PRODUCT_MSG_ERROR_NOT_EXIST = "Mã sản phẩm không tồn tại!";
     //CartItem constant
     public static final String API_CART_ITEM_GET_BY_ACCOUNT_ID = "api/site/get-cart-item-by-account-id/{id}";
 }

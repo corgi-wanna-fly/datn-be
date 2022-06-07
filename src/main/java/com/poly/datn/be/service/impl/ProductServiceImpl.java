@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(Long id) {
         Optional<Product> optionalProduct = productRepo.findById(id);
         if(!optionalProduct.isPresent()){
-            throw new AppException("Mã sản phẩm không tồn tại!");
+            throw new AppException(AppConst.PRODUCT_MSG_ERROR_NOT_EXIST);
         }
         return optionalProduct.get();
     }
