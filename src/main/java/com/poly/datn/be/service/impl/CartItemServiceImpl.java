@@ -36,25 +36,33 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public CartItem addCartItem(ReqCartItemDto reqCartItemDto) {
+    public CartItem modifyCartItem(ReqCartItemDto reqCartItemDto) {
         Attribute attribute = attributeService.findById(reqCartItemDto.getAttributeId());
         Account account = accountService.findById(reqCartItemDto.getAccountId());
-        CartItem cartItem = new CartItem();
-        cartItem.setAttribute(attribute);
-        cartItem.setAccount(account);
-        cartItem.setQuantity(AppConst.CART_ITEM_QUANTITY_ADD);
-        return cartItemRepo.save(cartItem);
-    }
-
-    @Override
-    public CartItem modifyCartItem(ReqCartItemDto reqCartItemDto) {
         CartItem cartItem = cartItemRepo.findCartItemByAccountIdAndAttributeId(reqCartItemDto.getAccountId(),
                 reqCartItemDto.getAttributeId());
         if(cartItem == null){
-            throw new AppException(AppConst.MSG_ERROR_COMMON_RESOURCE_NOT_VALID);
+            if(reqCartItemDto.getQuantity() > attribute.getStock()){
+                throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
+            }else{
+                CartItem c = new CartItem();
+                c.setAccount(account);
+                c.setAttribute(attribute);
+                c.setQuantity(AppConst.CART_ITEM_QUANTITY_ADD);
+                return cartItemRepo.save(c);
+            }
+        }else{
+            int flag = reqCartItemDto.getQuantity() + cartItem.getQuantity();
+            if(flag == 0){
+                cartItemRepo.delete(cartItem);
+                return new CartItem();
+            }else if(flag > attribute.getStock()){
+                throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
+            }else{
+                cartItem.setQuantity(flag);
+                return cartItemRepo.save(cartItem);
+            }
         }
-        cartItem.setQuantity(reqCartItemDto.getQuantity());
-       return cartItemRepo.save(cartItem);
     }
 
     @Override

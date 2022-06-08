@@ -8,7 +8,6 @@ import java.util.List;
 public interface CartItemService {
     List<Object[]> getCartItemByAccountId(Long id);
     List<CartItem> getAllByAccountId(Long id);
-    CartItem addCartItem(ReqCartItemDto reqCartItemDto);
     CartItem modifyCartItem(ReqCartItemDto reqCartItemDto);
     void removeCartItem(ReqCartItemDto reqCartItemDto);
 }

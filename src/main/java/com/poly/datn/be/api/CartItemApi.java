@@ -28,6 +28,6 @@ public class CartItemApi {
 
     @PostMapping(AppConst.API_CART_ITEM_ADD)
     public ResponseEntity<?> addCartItem(@RequestBody ReqCartItemDto reqCartItemDto){
-        return new ResponseEntity<>(cartItemService.addCartItem(reqCartItemDto), HttpStatus.OK);
+        return new ResponseEntity<>(cartItemService.modifyCartItem(reqCartItemDto), HttpStatus.OK);
     }
 }
