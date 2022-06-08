@@ -15,12 +15,12 @@ public class AppConst {
 
     //CartItem constant
     public static final String API_CART_ITEM_GET_BY_ACCOUNT_ID = "api/site/get-cart-item-by-account-id/{id}";
-    public static final String API_CART_ITEM_ADD = "api/site/cart-item/add";
     public static final String API_CART_ITEM_MODIFY = "api/site/cart-item/modify";
-    public static final String API_CART_ITEM_REMOVE = "api/site/cart-item/delete";
+    public static final String API_CART_ITEM_REMOVE = "api/site/cart-item/remove";
     public static final Integer CART_ITEM_QUANTITY_ADD = 1;
     public static final Integer CART_ITEM_QUANTITY_SUB = -1;
     public static final String CART_ITEM_MSG_ERROR_NOT_ENOUGH = "Sản phẩm còn lại không đủ!";
     //Common constant
     public static final String MSG_ERROR_COMMON_RESOURCE_NOT_VALID = "Invalid Resource!";
+    public static final String MSG_SUCCESS_COMMON = "Successfully!";
 }

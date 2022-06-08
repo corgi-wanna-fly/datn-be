@@ -26,8 +26,14 @@ public class CartItemApi {
         return new ResponseEntity<>(cartItemDtoList, HttpStatus.OK);
     }
 
-    @PostMapping(AppConst.API_CART_ITEM_ADD)
-    public ResponseEntity<?> addCartItem(@RequestBody ReqCartItemDto reqCartItemDto){
+    @PostMapping(AppConst.API_CART_ITEM_MODIFY)
+    public ResponseEntity<?> modifyCartItem(@RequestBody ReqCartItemDto reqCartItemDto){
         return new ResponseEntity<>(cartItemService.modifyCartItem(reqCartItemDto), HttpStatus.OK);
+    }
+
+    @PostMapping(AppConst.API_CART_ITEM_REMOVE)
+    public ResponseEntity<?> removeCartItem(@RequestBody ReqCartItemDto reqCartItemDto){
+        cartItemService.removeCartItem(reqCartItemDto);
+        return new ResponseEntity<>(AppConst.MSG_SUCCESS_COMMON, HttpStatus.OK);
     }
 }
