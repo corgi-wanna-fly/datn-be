@@ -24,8 +24,8 @@ public class OrderDetail {
     private Double originPrice;
     @Column(name = "sell_price", nullable = false)
     private Double sellPrice;
-    @ManyToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", updatable = true, insertable = true)
     private Order order;
     @ManyToOne
     @JoinColumn(name = "attribute_id")

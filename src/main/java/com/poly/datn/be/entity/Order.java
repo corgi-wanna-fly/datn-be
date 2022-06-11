@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -43,7 +43,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @JsonIgnore
     private Collection<OrderDetail>  orderDetails;
     @ManyToOne

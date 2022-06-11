@@ -1,11 +1,19 @@
 package com.poly.datn.be.util;
 
+import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.RespCartItemDto;
 import com.poly.datn.be.domain.dto.RespProductDetailDto;
 import com.poly.datn.be.domain.dto.RespProductDto;
+import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.Attribute;
+import com.poly.datn.be.entity.Order;
 import com.poly.datn.be.entity.Product;
+import com.poly.datn.be.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,5 +54,19 @@ public class ConvertUtil {
         respCartItemDto.setPrice((Double) objects[4]);
         respCartItemDto.setQuantity((Integer) objects[5]);
         return respCartItemDto;
+    }
+
+    public static Order fromReqOrderDto(ReqOrderDto reqOrderDto){
+        Order order = new Order();
+        order.setFullname(reqOrderDto.getFullname());
+        order.setAddress(reqOrderDto.getAddress());
+        order.setPhone(reqOrderDto.getPhone());
+        order.setTotal(reqOrderDto.getTotal());
+        order.setNote(reqOrderDto.getNote());
+        order.setIsPending(reqOrderDto.getIsPending());
+        order.setCreateDate(LocalDate.now());
+        order.setModifyDate(LocalDate.now());
+        order.setShipDate(Date.from(LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        return order;
     }
 }
