@@ -6,10 +6,7 @@ import com.poly.datn.be.entity.Order;
 import com.poly.datn.be.entity.OrderDetail;
 import com.poly.datn.be.entity.OrderStatus;
 import com.poly.datn.be.repo.OrderRepo;
-import com.poly.datn.be.service.AccountService;
-import com.poly.datn.be.service.OrderDetailService;
-import com.poly.datn.be.service.OrderService;
-import com.poly.datn.be.service.OrderStatusService;
+import com.poly.datn.be.service.*;
 import com.poly.datn.be.util.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +23,10 @@ public class OrderServiceImpl implements OrderService {
     AccountService accountService;
     @Autowired
     OrderDetailService orderDetailService;
-
     @Autowired
     OrderStatusService orderStatusService;
+    @Autowired
+    CartItemService cartItemService;
 
     @Override
     @Transactional
@@ -43,6 +41,13 @@ public class OrderServiceImpl implements OrderService {
             o.setOrder(order);
             orderDetailService.createOrderDetail(o);
         }
+        cartItemService.clearCartItem(reqOrderDto.getAccountId());
         return order;
+    }
+
+    @Override
+    public List<Order> getOrderByAccount(Long id) {
+        Account account = accountService.findById(id);
+        return orderRepo.findAllByAccount_Id(id);
     }
 }

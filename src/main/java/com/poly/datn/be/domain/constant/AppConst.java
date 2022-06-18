@@ -27,6 +27,7 @@ public class AppConst {
 
     //Order constant
     public static final String API_ORDER_CREATE = "api/site/create-order";
+    public static final String API_ORDER_GET_ALL = "api/site/get-orders";
     public static final String CART_ITEM_MSG_ERROR_NOT_ENOUGH = "Sản phẩm còn lại không đủ!";
     public static final String CART_ITEM_MSG_ERROR_NOT_VALID = "Số lượng không hợp lệ!";
     //Common constant

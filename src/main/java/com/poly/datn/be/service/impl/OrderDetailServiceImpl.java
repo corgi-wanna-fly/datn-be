@@ -6,6 +6,8 @@ import com.poly.datn.be.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
     @Autowired
@@ -13,5 +15,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public OrderDetail createOrderDetail(OrderDetail orderDetail) {
         return orderDetailRepo.save(orderDetail);
+    }
+
+    @Override
+    public List<OrderDetail> getAllByOrderId(Long id) {
+        return orderDetailRepo.findAllByOrder_Id(id);
     }
 }

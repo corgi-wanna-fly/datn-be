@@ -10,4 +10,5 @@ public interface CartItemService {
     List<CartItem> getAllByAccountId(Long id);
     CartItem modifyCartItem(ReqCartItemDto reqCartItemDto);
     void removeCartItem(ReqCartItemDto reqCartItemDto);
+    void clearCartItem(Long id);
 }
