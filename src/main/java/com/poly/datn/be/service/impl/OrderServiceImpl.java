@@ -1,6 +1,8 @@
 package com.poly.datn.be.service.impl;
 
+import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
+import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.Order;
 import com.poly.datn.be.entity.OrderDetail;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -49,5 +52,14 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrderByAccount(Long id) {
         Account account = accountService.findById(id);
         return orderRepo.findAllByAccount_Id(id);
+    }
+
+    @Override
+    public Order getByOrderId(Long id) {
+        Optional<Order> optional = orderRepo.findById(id);
+        if(!optional.isPresent()){
+            throw new AppException(AppConst.ORDER_MSG_ERROR_NOT_EXIST);
+        }
+        return optional.get();
     }
 }

@@ -20,6 +20,10 @@ public class OrderApi {
     public ResponseEntity<?> getOrders(@RequestParam("id")Long id){
         return new ResponseEntity<>(orderService.getOrderByAccount(id), HttpStatus.OK);
     }
+    @GetMapping(AppConst.API_ORDER_GET_BY_ID)
+    public ResponseEntity<?> getOrderById(@RequestParam("id")Long id){
+        return new ResponseEntity<>(orderService.getByOrderId(id), HttpStatus.OK);
+    }
     @PostMapping(AppConst.API_ORDER_CREATE)
     public ResponseEntity<?> createOrder(@RequestBody ReqOrderDto reqOrderDto){
         return new ResponseEntity<>(orderService.createOrder(reqOrderDto), HttpStatus.OK);
