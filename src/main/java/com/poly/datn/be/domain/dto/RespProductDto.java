@@ -17,4 +17,5 @@ public class RespProductDto {
     private Long view;
     private Double price;
     private String imageLink;
+    private String brand;
 }

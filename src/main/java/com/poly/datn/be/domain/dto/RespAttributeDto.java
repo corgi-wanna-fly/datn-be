@@ -9,12 +9,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RespCartItemDto {
-    private Long id;
-    private String image;
-    private String name;
-    private Integer size;
-    private Double price;
-    private Integer quantity;
+public class RespAttributeDto {
+    private Long attributeId;
     private Integer stock;
+    private Integer cache;
 }

@@ -28,6 +28,7 @@ public class ConvertUtil {
         respProductDto.setView((Long) objects[4]);
         respProductDto.setPrice((Double) objects[5]);
         respProductDto.setImageLink((String) objects[6]);
+        respProductDto.setBrand((String) objects[7]);
         return respProductDto;
     }
 
@@ -53,6 +54,7 @@ public class ConvertUtil {
         respCartItemDto.setSize((Integer) objects[3]);
         respCartItemDto.setPrice((Double) objects[4]);
         respCartItemDto.setQuantity((Integer) objects[5]);
+        respCartItemDto.setStock((Integer) objects[6]);
         return respCartItemDto;
     }
 

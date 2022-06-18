@@ -41,24 +41,26 @@ public class CartItemServiceImpl implements CartItemService {
         Account account = accountService.findById(reqCartItemDto.getAccountId());
         CartItem cartItem = cartItemRepo.findCartItemByAccountIdAndAttributeId(reqCartItemDto.getAccountId(),
                 reqCartItemDto.getAttributeId());
-        if(cartItem == null){
-            if(reqCartItemDto.getQuantity() > attribute.getStock()){
+        if (cartItem == null) {
+            if (reqCartItemDto.getQuantity() > attribute.getStock()) {
                 throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
-            }else{
+            }  else {
                 CartItem c = new CartItem();
                 c.setAccount(account);
                 c.setAttribute(attribute);
                 c.setQuantity(AppConst.CART_ITEM_QUANTITY_ADD);
                 return cartItemRepo.save(c);
             }
-        }else{
+        } else {
             int flag = reqCartItemDto.getQuantity() + cartItem.getQuantity();
-            if(flag == 0){
+            if (flag == 0) {
                 cartItemRepo.delete(cartItem);
                 return new CartItem();
-            }else if(flag > attribute.getStock()){
+            } else if (flag > attribute.getStock()) {
                 throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
-            }else{
+            }else if (flag <= 0) {
+                throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_VALID);
+            } else {
                 cartItem.setQuantity(flag);
                 return cartItemRepo.save(cartItem);
             }
@@ -69,7 +71,7 @@ public class CartItemServiceImpl implements CartItemService {
     public void removeCartItem(ReqCartItemDto reqCartItemDto) {
         CartItem cartItem = cartItemRepo.findCartItemByAccountIdAndAttributeId(reqCartItemDto.getAccountId(),
                 reqCartItemDto.getAttributeId());
-        if(cartItem == null){
+        if (cartItem == null) {
             throw new AppException(AppConst.MSG_ERROR_COMMON_RESOURCE_NOT_VALID);
         }
         cartItemRepo.delete(cartItem);

@@ -27,6 +27,8 @@ public class Attribute {
     private Double price;
     @Column(name = "stock", nullable = false)
     private Integer stock;
+    @Column(name = "cache", nullable = false)
+    private Integer cache;
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
     @Column(name = "modify_date", nullable = false)

@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.dto.ReqCacheAttributeDto;
 import com.poly.datn.be.domain.dto.RespProductDto;
 import com.poly.datn.be.entity.Product;
 import com.poly.datn.be.service.ProductService;
@@ -41,4 +42,5 @@ public class ProductApi {
     public ResponseEntity<?> getTotalPage(){
         return new ResponseEntity<>(productService.getToTalPage(), HttpStatus.OK);
     }
+
 }
