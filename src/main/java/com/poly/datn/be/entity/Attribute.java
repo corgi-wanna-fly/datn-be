@@ -35,7 +35,6 @@ public class Attribute {
     private LocalDate modifyDate;
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @JsonIgnore
     private Product product;
     @OneToMany(mappedBy = "attribute")
     @JsonIgnore

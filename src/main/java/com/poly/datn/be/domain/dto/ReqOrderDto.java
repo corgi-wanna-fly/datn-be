@@ -18,6 +18,7 @@ public class ReqOrderDto {
     private String address;
     private String note;
     private Double total;
+    private String email;
     private Boolean isPending;
     private Long accountId;
     private Collection<OrderDetail> orderDetails;

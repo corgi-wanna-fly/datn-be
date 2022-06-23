@@ -63,6 +63,7 @@ public class ConvertUtil {
         order.setFullname(reqOrderDto.getFullname());
         order.setAddress(reqOrderDto.getAddress());
         order.setPhone(reqOrderDto.getPhone());
+        order.setEmail(reqOrderDto.getEmail());
         order.setTotal(reqOrderDto.getTotal());
         order.setNote(reqOrderDto.getNote());
         order.setIsPending(reqOrderDto.getIsPending());

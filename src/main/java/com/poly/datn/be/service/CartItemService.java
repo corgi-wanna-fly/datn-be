@@ -11,4 +11,5 @@ public interface CartItemService {
     CartItem modifyCartItem(ReqCartItemDto reqCartItemDto);
     void removeCartItem(ReqCartItemDto reqCartItemDto);
     void clearCartItem(Long id);
+    Boolean isEnoughStock(Long id, Integer quantity);
 }

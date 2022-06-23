@@ -28,6 +28,8 @@ public class Order {
     private String phone;
     @Column(name = "address", length = 255, nullable = false)
     private String address;
+    @Column(name = "email", length = 255, nullable = false)
+    private String email;
     @Column(name = "total", nullable = false)
     private Double total;
     @Column(name = "note", length = 1000, nullable = true)

@@ -82,4 +82,13 @@ public class CartItemServiceImpl implements CartItemService {
             cartItemRepo.delete(c);
         }
     }
+
+    @Override
+    public Boolean isEnoughStock(Long id, Integer quantity) {
+        Attribute attribute = attributeService.findById(id);
+        if(attribute.getStock() < quantity){
+            throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
+        }
+        return true;
+    }
 }

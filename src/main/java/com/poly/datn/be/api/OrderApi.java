@@ -28,4 +28,8 @@ public class OrderApi {
     public ResponseEntity<?> createOrder(@RequestBody ReqOrderDto reqOrderDto){
         return new ResponseEntity<>(orderService.createOrder(reqOrderDto), HttpStatus.OK);
     }
+    @GetMapping(AppConst.API_ORDER_DETAIL_GET_BY_ID)
+    public ResponseEntity<?> getOrderDetailByOrderId(@RequestParam("id")Long id){
+        return new ResponseEntity<>(orderService.getAllByOrderId(id), HttpStatus.OK);
+    }
 }

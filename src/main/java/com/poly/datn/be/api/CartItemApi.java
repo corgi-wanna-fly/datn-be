@@ -36,4 +36,8 @@ public class CartItemApi {
         cartItemService.removeCartItem(reqCartItemDto);
         return new ResponseEntity<>(AppConst.MSG_SUCCESS_COMMON, HttpStatus.OK);
     }
+    @GetMapping(AppConst.API_CART_ITEM_IS_ENOUGH)
+    public ResponseEntity<?> isEnoughStockCartItem(@RequestParam("id")Long id, @RequestParam("quantity") Integer quantity){
+        return new ResponseEntity<>(cartItemService.isEnoughStock(id, quantity), HttpStatus.OK);
+    }
 }

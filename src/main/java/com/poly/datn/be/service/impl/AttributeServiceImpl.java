@@ -73,4 +73,9 @@ public class AttributeServiceImpl implements AttributeService {
         }
         return respAttributeDtoList;
     }
+
+    @Override
+    public Attribute save(Attribute attribute) {
+        return attributeRepo.save(attribute);
+    }
 }
