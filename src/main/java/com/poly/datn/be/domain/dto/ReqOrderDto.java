@@ -22,4 +22,5 @@ public class ReqOrderDto {
     private Boolean isPending;
     private Long accountId;
     private Collection<OrderDetail> orderDetails;
+    private String code;
 }

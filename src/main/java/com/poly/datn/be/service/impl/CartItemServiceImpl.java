@@ -49,6 +49,7 @@ public class CartItemServiceImpl implements CartItemService {
                 c.setAccount(account);
                 c.setAttribute(attribute);
                 c.setQuantity(AppConst.CART_ITEM_QUANTITY_ADD);
+                c.setLastPrice(reqCartItemDto.getLastPrice());
                 return cartItemRepo.save(c);
             }
         }else{
@@ -90,5 +91,19 @@ public class CartItemServiceImpl implements CartItemService {
             throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
         }
         return true;
+    }
+
+    @Override
+    public void reloadCartItem(Long id) {
+        List<CartItem> cartItems = getAllByAccountId(id);
+        CartItem cartItem = null;
+        for(int i = 0; i < cartItems.size(); i++){
+            cartItem = cartItems.get(i);
+            if(cartItem.getQuantity() > cartItem.getAttribute().getStock()){
+                cartItem.setQuantity(cartItem.getAttribute().getStock());
+                cartItemRepo.save(cartItem);
+                cartItem = null;
+            }
+        }
     }
 }

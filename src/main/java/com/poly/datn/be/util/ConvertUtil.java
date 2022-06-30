@@ -29,6 +29,7 @@ public class ConvertUtil {
         respProductDto.setPrice((Double) objects[5]);
         respProductDto.setImageLink((String) objects[6]);
         respProductDto.setBrand((String) objects[7]);
+        respProductDto.setDiscount((Integer) objects[8]);
         return respProductDto;
     }
 
@@ -43,6 +44,7 @@ public class ConvertUtil {
         List<String> images = product.getImages().stream().map(item -> item.getImageLink()).collect(Collectors.toList());
         respProductDetailDto.setImages(images);
         respProductDetailDto.setAttributes((List<Attribute>) product.getAttributes());
+        respProductDetailDto.setDiscount(product.getSale().getDiscount());
         return respProductDetailDto;
     }
 
@@ -55,6 +57,8 @@ public class ConvertUtil {
         respCartItemDto.setPrice((Double) objects[4]);
         respCartItemDto.setQuantity((Integer) objects[5]);
         respCartItemDto.setStock((Integer) objects[6]);
+        respCartItemDto.setDiscount((Integer) objects[7]);
+        respCartItemDto.setLastPrice((Double) objects[8]);
         return respCartItemDto;
     }
 

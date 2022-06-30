@@ -51,4 +51,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 }

@@ -36,6 +36,11 @@ public class CartItemApi {
         cartItemService.removeCartItem(reqCartItemDto);
         return new ResponseEntity<>(AppConst.MSG_SUCCESS_COMMON, HttpStatus.OK);
     }
+    @GetMapping(AppConst.API_CART_ITEM_RELOAD)
+    public ResponseEntity<?> reloadCartItem(@RequestParam("id") Long id){
+        cartItemService.reloadCartItem(id);
+        return new ResponseEntity<>(AppConst.MSG_SUCCESS_COMMON, HttpStatus.OK);
+    }
     @GetMapping(AppConst.API_CART_ITEM_IS_ENOUGH)
     public ResponseEntity<?> isEnoughStockCartItem(@RequestParam("id")Long id, @RequestParam("quantity") Integer quantity){
         return new ResponseEntity<>(cartItemService.isEnoughStock(id, quantity), HttpStatus.OK);

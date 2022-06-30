@@ -18,6 +18,7 @@ public class RespProductDetailDto {
     private String code;
     private String description;
     private String main;
+    private Integer discount;
     private List<String> images;
     private List<Attribute> attributes;
 }

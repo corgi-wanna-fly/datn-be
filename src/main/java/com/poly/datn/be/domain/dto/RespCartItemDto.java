@@ -17,4 +17,6 @@ public class RespCartItemDto {
     private Double price;
     private Integer quantity;
     private Integer stock;
+    private Integer discount;
+    private Double lastPrice;
 }

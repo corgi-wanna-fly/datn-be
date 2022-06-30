@@ -13,4 +13,5 @@ public class ReqCartItemDto {
     private Long accountId;
     private Long attributeId;
     private Integer quantity;
+    private Double lastPrice;
 }

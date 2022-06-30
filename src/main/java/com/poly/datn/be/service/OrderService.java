@@ -7,7 +7,7 @@ import com.poly.datn.be.entity.OrderDetail;
 import java.util.List;
 
 public interface OrderService {
-    Order createOrder(ReqOrderDto reqOrderDto);
+    Order createOrder(ReqOrderDto reqOrderDto) ;
     List<Order> getOrderByAccount(Long id);
     Order getByOrderId(Long id);
     List<OrderDetail> getAllByOrderId(Long id);

@@ -18,4 +18,5 @@ public class RespProductDto {
     private Double price;
     private String imageLink;
     private String brand;
+    private Integer discount;
 }
