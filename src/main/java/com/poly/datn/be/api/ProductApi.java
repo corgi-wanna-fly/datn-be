@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.ProductConst;
 import com.poly.datn.be.domain.dto.ReqCacheAttributeDto;
 import com.poly.datn.be.domain.dto.RespProductDto;
 import com.poly.datn.be.entity.Product;
@@ -24,7 +25,7 @@ public class ProductApi {
     @Autowired
     ProductService productService;
 
-    @GetMapping(AppConst.API_PRODUCT_GET_ALL)
+    @GetMapping(ProductConst.API_PRODUCT_GET_ALL)
     public ResponseEntity<List<RespProductDto>> getAllProductPagination(@RequestParam("page")Optional<Integer> page,
                                                                   @RequestParam("size")Optional<Integer> size){
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8));
@@ -33,12 +34,12 @@ public class ProductApi {
         return new ResponseEntity<>(respProductDtoList, HttpStatus.OK);
     }
 
-    @GetMapping(AppConst.API_PRODUCT_GET_BY_ID)
+    @GetMapping(ProductConst.API_PRODUCT_GET_BY_ID)
     public ResponseEntity<?> getProductById(@PathVariable("id")Long id){
         return new ResponseEntity<>(ConvertUtil.fromProductDetail(productService.getProductById(id)), HttpStatus.OK);
     }
 
-    @GetMapping(AppConst.API_PRODUCT_TOTAL_PAGE)
+    @GetMapping(ProductConst.API_PRODUCT_TOTAL_PAGE)
     public ResponseEntity<?> getTotalPage(){
         return new ResponseEntity<>(productService.getToTalPage(), HttpStatus.OK);
     }

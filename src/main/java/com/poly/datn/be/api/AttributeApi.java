@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.AttributeConst;
 import com.poly.datn.be.domain.dto.ReqCacheAttributeDto;
 import com.poly.datn.be.service.AttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,12 @@ public class AttributeApi {
     @Autowired
     AttributeService attributeService;
 
-    @PostMapping(AppConst.API_ATTRIBUTE_CACHE)
+    @PostMapping(AttributeConst.API_ATTRIBUTE_CACHE)
     public ResponseEntity<?> cacheAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
         return new ResponseEntity<>(attributeService.cacheAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
     }
 
-    @PostMapping(AppConst.API_ATTRIBUTE_BACK)
+    @PostMapping(AttributeConst.API_ATTRIBUTE_BACK)
     public ResponseEntity<?> backAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
         return new ResponseEntity<>(attributeService.backAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
     }

@@ -1,5 +1,6 @@
 package com.poly.datn.be.service.impl;
 
+import com.poly.datn.be.domain.constant.AccountConst;
 import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Account;
@@ -18,7 +19,7 @@ public class AccountServiceImpl implements AccountService {
     public Account findById(Long id) {
         Optional<Account> optionalAccount = accountRepo.findById(id);
         if(!optionalAccount.isPresent()){
-            throw new AppException(AppConst.ACCOUNT_MSG_ERROR_NOT_EXIST);
+            throw new AppException(AccountConst.ACCOUNT_MSG_ERROR_NOT_EXIST);
         }
         return optionalAccount.get();
     }

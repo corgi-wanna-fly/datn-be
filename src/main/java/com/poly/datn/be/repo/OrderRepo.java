@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
     List<Order> findAllByAccount_Id(Long id);
+    List<Order> findOrderByAccount_IdAndOrderStatus_Id(Long accountId, Long orderStatusId);
 }

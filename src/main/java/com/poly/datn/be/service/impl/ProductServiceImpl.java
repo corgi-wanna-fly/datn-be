@@ -1,6 +1,7 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.ProductConst;
 import com.poly.datn.be.domain.dto.RespProductDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Product;
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Object[]> getProducts(Pageable pageable) {
-        return productRepo.getAllProducts(AppConst.PRODUCT_AVG_SIZE, AppConst.PRODUCT_MAIN_IMAGE, pageable);
+        return productRepo.getAllProducts(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, pageable);
     }
 
     @Override
@@ -33,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(Long id) {
         Optional<Product> optionalProduct = productRepo.findById(id);
         if(!optionalProduct.isPresent()){
-            throw new AppException(AppConst.PRODUCT_MSG_ERROR_NOT_EXIST);
+            throw new AppException(ProductConst.PRODUCT_MSG_ERROR_NOT_EXIST);
         }
         return optionalProduct.get();
     }

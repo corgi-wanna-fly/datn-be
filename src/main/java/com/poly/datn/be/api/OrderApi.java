@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.OrderConst;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,20 @@ public class OrderApi {
     @Autowired
     OrderService orderService;
 
-    @GetMapping(AppConst.API_ORDER_GET_ALL)
-    public ResponseEntity<?> getOrders(@RequestParam("id")Long id){
-        return new ResponseEntity<>(orderService.getOrderByAccount(id), HttpStatus.OK);
+    @GetMapping(OrderConst.API_ORDER_GET_ALL)
+    public ResponseEntity<?> getOrders(@RequestParam("id")Long id,
+                                       @RequestParam("status") Optional<Long> status){
+        return new ResponseEntity<>(orderService.findOrderByAccountIdAndOrderStatusId(id, status.orElse(0L)), HttpStatus.OK);
     }
-    @GetMapping(AppConst.API_ORDER_GET_BY_ID)
+    @GetMapping(OrderConst.API_ORDER_GET_BY_ID)
     public ResponseEntity<?> getOrderById(@RequestParam("id")Long id){
         return new ResponseEntity<>(orderService.getByOrderId(id), HttpStatus.OK);
     }
-    @PostMapping(AppConst.API_ORDER_CREATE)
+    @PostMapping(OrderConst.API_ORDER_CREATE)
     public ResponseEntity<?> createOrder(@RequestBody ReqOrderDto reqOrderDto){
         return new ResponseEntity<>(orderService.createOrder(reqOrderDto), HttpStatus.OK);
     }
-    @GetMapping(AppConst.API_ORDER_DETAIL_GET_BY_ID)
+    @GetMapping(OrderConst.API_ORDER_DETAIL_GET_BY_ID)
     public ResponseEntity<?> getOrderDetailByOrderId(@RequestParam("id")Long id){
         return new ResponseEntity<>(orderService.getAllByOrderId(id), HttpStatus.OK);
     }

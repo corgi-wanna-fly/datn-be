@@ -1,6 +1,9 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.AttributeConst;
+import com.poly.datn.be.domain.constant.CartItemConst;
+import com.poly.datn.be.domain.constant.OrderConst;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.*;
@@ -40,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
         for(OrderDetail o: reqOrderDto.getOrderDetails()){
             Attribute attribute = attributeService.findById(o.getAttribute().getId());
             if(attribute.getStock() < o.getQuantity()){
-                throw new AppException(AppConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
+                throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
             }else{
                 attribute.setStock(attribute.getStock() - o.getQuantity());
                 attribute.setCache(attribute.getCache() + o.getQuantity());
@@ -63,11 +66,14 @@ public class OrderServiceImpl implements OrderService {
         for(OrderDetail o: reqOrderDto.getOrderDetails()){
             o.setOrder(order);
             orderDetailService.createOrderDetail(o);
-        }
-        cartItemService.clearCartItem(reqOrderDto.getAccountId());
 
+            CartItem c = cartItemService.findCartItemByAccountIdAndAttributeId(account.getId(), o.getAttribute().getId());
+            c.setQuantity(CartItemConst.CART_ITEM_QUANTITY_WAITING);
+            c.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
+            cartItemService.saveCartItem(c);
+        }
        try {
-           if(order.getTotal() > AppConst.ORDER_TOTAL_BASE){
+           if(order.getTotal() > OrderConst.ORDER_TOTAL_BASE){
                MailUtil.sendmail(order.getEmail(), order.getId());
            }
        }catch (MessagingException e){
@@ -86,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
     public Order getByOrderId(Long id) {
         Optional<Order> optional = orderRepo.findById(id);
         if(!optional.isPresent()){
-            throw new AppException(AppConst.ORDER_MSG_ERROR_NOT_EXIST);
+            throw new AppException(OrderConst.ORDER_MSG_ERROR_NOT_EXIST);
         }
         return optional.get();
     }
@@ -94,5 +100,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDetail> getAllByOrderId(Long id) {
         return orderDetailService.getAllByOrderId(id);
+    }
+
+    @Override
+    public List<Order> findOrderByAccountIdAndOrderStatusId(Long accountId, Long orderStatusId) {
+        OrderStatus orderStatus = orderStatusService.getById(orderStatusId);
+        if(orderStatus == null){
+            return orderRepo.findAllByAccount_Id(accountId);
+        }
+        return orderRepo.findOrderByAccount_IdAndOrderStatus_Id(accountId, orderStatusId);
     }
 }

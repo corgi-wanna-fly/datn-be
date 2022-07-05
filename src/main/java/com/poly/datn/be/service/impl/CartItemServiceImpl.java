@@ -1,6 +1,9 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.CartItemConst;
+import com.poly.datn.be.domain.constant.OrderConst;
+import com.poly.datn.be.domain.constant.ProductConst;
 import com.poly.datn.be.domain.dto.ReqCartItemDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Account;
@@ -26,13 +29,23 @@ public class CartItemServiceImpl implements CartItemService {
     AccountService accountService;
 
     @Override
-    public List<Object[]> getCartItemByAccountId(Long id) {
-        return cartItemRepo.getCartItemByAccountId(id, AppConst.PRODUCT_MAIN_IMAGE);
+    public List<Object[]> getCartItemByAccountId(Long id, Boolean isActive) {
+        return cartItemRepo.getCartItemByAccountId(id, ProductConst.PRODUCT_MAIN_IMAGE, isActive);
     }
 
     @Override
-    public List<CartItem> getAllByAccountId(Long id) {
-        return cartItemRepo.findAll();
+    public List<CartItem> getAllByAccountId(Long id, Boolean isActive) {
+        return cartItemRepo.findCartItemByAccount_IdAndIsActiveEquals(id, isActive);
+    }
+
+    @Override
+    public CartItem findCartItemByAccountIdAndAttributeId(Long accountId, Long attributeId) {
+        return cartItemRepo.findCartItemByAccountIdAndAttributeId(accountId, attributeId);
+    }
+
+    @Override
+    public CartItem saveCartItem(CartItem cartItem) {
+        return cartItemRepo.save(cartItem);
     }
 
     @Override
@@ -43,24 +56,27 @@ public class CartItemServiceImpl implements CartItemService {
                 reqCartItemDto.getAttributeId());
         if(cartItem == null){
             if(reqCartItemDto.getQuantity() > attribute.getStock()){
-                throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
+                throw new AppException(OrderConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
             }else{
                 CartItem c = new CartItem();
                 c.setAccount(account);
                 c.setAttribute(attribute);
-                c.setQuantity(AppConst.CART_ITEM_QUANTITY_ADD);
+                c.setQuantity(CartItemConst.CART_ITEM_QUANTITY_ADD);
                 c.setLastPrice(reqCartItemDto.getLastPrice());
+                c.setIsActive(CartItemConst.CART_ITEM_ACTIVE);
                 return cartItemRepo.save(c);
             }
         }else{
             int flag = reqCartItemDto.getQuantity() + cartItem.getQuantity();
             if(flag == 0){
-                cartItemRepo.delete(cartItem);
-                return new CartItem();
+                cartItem.setQuantity(flag);
+                cartItem.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
+                return cartItemRepo.save(cartItem);
             }else if(flag > attribute.getStock()){
-                throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
+                throw new AppException(OrderConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
             }else{
                 cartItem.setQuantity(flag);
+                cartItem.setIsActive(CartItemConst.CART_ITEM_ACTIVE);
                 return cartItemRepo.save(cartItem);
             }
         }
@@ -73,14 +89,18 @@ public class CartItemServiceImpl implements CartItemService {
         if(cartItem == null){
             throw new AppException(AppConst.MSG_ERROR_COMMON_RESOURCE_NOT_VALID);
         }
-        cartItemRepo.delete(cartItem);
+        cartItem.setQuantity(CartItemConst.CART_ITEM_QUANTITY_WAITING);
+        cartItem.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
+        cartItemRepo.save(cartItem);
     }
 
     @Override
     public void clearCartItem(Long id) {
-        List<CartItem> cartItemList = getAllByAccountId(id);
+        List<CartItem> cartItemList = getAllByAccountId(id, CartItemConst.CART_ITEM_ACTIVE);
         for(CartItem c: cartItemList){
-            cartItemRepo.delete(c);
+            c.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
+            c.setQuantity(CartItemConst.CART_ITEM_QUANTITY_WAITING);
+            cartItemRepo.save(c);
         }
     }
 
@@ -88,14 +108,14 @@ public class CartItemServiceImpl implements CartItemService {
     public Boolean isEnoughStock(Long id, Integer quantity) {
         Attribute attribute = attributeService.findById(id);
         if(attribute.getStock() < quantity){
-            throw new AppException(AppConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
+            throw new AppException(OrderConst.CART_ITEM_MSG_ERROR_NOT_ENOUGH);
         }
         return true;
     }
 
     @Override
     public void reloadCartItem(Long id) {
-        List<CartItem> cartItems = getAllByAccountId(id);
+        List<CartItem> cartItems = cartItemRepo.findCartItemByAccount_IdAndIsActiveEquals(id, CartItemConst.CART_ITEM_ACTIVE);
         CartItem cartItem = null;
         for(int i = 0; i < cartItems.size(); i++){
             cartItem = cartItems.get(i);

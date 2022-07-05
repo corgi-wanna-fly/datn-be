@@ -1,6 +1,7 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.VoucherConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Voucher;
 import com.poly.datn.be.repo.VoucherRepo;
@@ -21,14 +22,14 @@ public class VoucherServiceImpl implements VoucherService {
         if(optionalVoucher.isPresent()){
             Voucher voucher = optionalVoucher.get();
             if(voucher.getExpireDate().isBefore(LocalDate.now())){
-                throw new AppException(AppConst.MSG_ERROR_VOUCHER_EXPIRED);
+                throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_EXPIRED);
             }
             if(voucher.getCount() == 0){
-                throw new AppException(AppConst.MSG_ERROR_VOUCHER_USED);
+                throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_USED);
             }
             return voucher;
         }else{
-            throw new AppException(AppConst.MSG_ERROR_VOUCHER_NOT_EXIST);
+            throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_NOT_EXIST);
         }
     }
 

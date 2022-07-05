@@ -1,6 +1,7 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.AttributeConst;
 import com.poly.datn.be.domain.dto.ReqCacheAttributeDto;
 import com.poly.datn.be.domain.dto.RespAttributeDto;
 import com.poly.datn.be.domain.exception.AppException;
@@ -23,7 +24,7 @@ public class AttributeServiceImpl implements AttributeService {
     public Attribute findById(Long id) {
         Optional<Attribute> optionalAttribute = attributeRepo.findById(id);
         if(!optionalAttribute.isPresent()){
-            throw new AppException(AppConst.ATTRIBUTE_MSG_ERROR_NOT_EXIST);
+            throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_EXIST);
         }
         return optionalAttribute.get();
     }
@@ -39,7 +40,7 @@ public class AttributeServiceImpl implements AttributeService {
             }else {
                 Attribute attribute = optionalAttribute.get();
                 if(reqCacheAttributeDto.getQuantity() > attribute.getStock()){
-                    throw new AppException(AppConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
+                    throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
                 }else{
                     attribute.setStock(attribute.getStock() - reqCacheAttributeDto.getQuantity());
                     attribute.setCache(attribute.getCache() + reqCacheAttributeDto.getQuantity());
@@ -62,7 +63,7 @@ public class AttributeServiceImpl implements AttributeService {
             }else {
                 Attribute attribute = optionalAttribute.get();
                 if(reqCacheAttributeDto.getQuantity() > attribute.getCache()){
-                    throw new AppException(AppConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
+                    throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
                 }else{
                     attribute.setStock(attribute.getStock() + reqCacheAttributeDto.getQuantity());
                     attribute.setCache(attribute.getCache() - reqCacheAttributeDto.getQuantity());

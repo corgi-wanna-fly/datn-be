@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.VoucherConst;
 import com.poly.datn.be.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class VoucherApi {
     @Autowired
     VoucherService voucherService;
-    @GetMapping(AppConst.API_VOUCHER_GET_BY_CODE)
+    @GetMapping(VoucherConst.API_VOUCHER_GET_BY_CODE)
     public ResponseEntity getVoucherByCode(@RequestParam("code") String code){
         return new ResponseEntity(voucherService.getVoucherByCode(code), HttpStatus.OK);
     }
