@@ -1,9 +1,6 @@
 package com.poly.datn.be.service.impl;
 
-import com.poly.datn.be.domain.constant.AppConst;
-import com.poly.datn.be.domain.constant.AttributeConst;
-import com.poly.datn.be.domain.constant.CartItemConst;
-import com.poly.datn.be.domain.constant.OrderConst;
+import com.poly.datn.be.domain.constant.*;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.*;
@@ -12,10 +9,12 @@ import com.poly.datn.be.service.*;
 import com.poly.datn.be.util.ConvertUtil;
 import com.poly.datn.be.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -109,5 +108,25 @@ public class OrderServiceImpl implements OrderService {
             return orderRepo.findAllByAccount_Id(accountId);
         }
         return orderRepo.findOrderByAccount_IdAndOrderStatus_Id(accountId, orderStatusId);
+    }
+
+    @Override
+    public List<Order> getAllOrdersAndPagination(Pageable pageable) {
+        return orderRepo.findAll(pageable).getContent();
+    }
+
+    @Override
+    public Order updateOrderWithStatus(Long orderId, Long statusId) {
+        Order order = getByOrderId(orderId);
+        OrderStatus orderStatus = orderStatusService.getById(statusId);
+        if(orderStatus == null){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_MSG_ERROR_NOT_EXIST);
+        }
+        if(order.getOrderStatus().getId().equals(orderStatus.getId())){
+            throw new AppException(OrderConst.ORDER_MSG_ERROR_ALREADY_STATUS);
+        }
+        order.setOrderStatus(orderStatus);
+        order.setModifyDate(LocalDate.now());
+        return orderRepo.save(order);
     }
 }
