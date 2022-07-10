@@ -10,4 +10,6 @@ public interface ProductService {
     List<Object[]> getProducts(Pageable pageable);
 
     Integer getToTalPage();
+
+    Product getProductById(Long id);
 }

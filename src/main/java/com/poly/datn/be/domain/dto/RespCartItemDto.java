@@ -9,14 +9,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RespProductDto {
+public class RespCartItemDto {
     private Long id;
+    private String image;
     private String name;
-    private String code;
-    private String description;
-    private Long view;
+    private Integer size;
     private Double price;
-    private String imageLink;
-    private String brand;
+    private Integer quantity;
+    private Integer stock;
     private Integer discount;
+    private Double lastPrice;
 }

@@ -8,30 +8,32 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
-@Table(name = "images")
+@Table(name = "sales")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
-public class Image {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id",  nullable = false)
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name",  nullable = false,length = 50)
     private String name;
-    @Column(name = "image_link", nullable = false, length = 255)
-    private String imageLink;
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
     @Column(name = "modify_date", nullable = false)
     private LocalDate modifyDate;
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @Column(name = "discount")
+    private Integer discount;
+    @OneToMany(mappedBy = "sale")
     @JsonIgnore
-    private Product product;
+    private Collection<Product> products;
 }
