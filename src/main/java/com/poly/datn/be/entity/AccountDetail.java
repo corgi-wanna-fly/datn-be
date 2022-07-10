@@ -29,6 +29,8 @@ public class AccountDetail {
     private String phone;
     @Column(name = "email", nullable = false, length = 50)
     private String email;
+    @Column(name = "address", nullable = false, length = 265)
+    private String address;
     @Column(name = "birthdate", nullable = false)
     private Date birthDate;
     @OneToOne

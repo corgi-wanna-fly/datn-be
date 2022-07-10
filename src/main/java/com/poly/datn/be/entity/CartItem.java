@@ -20,6 +20,10 @@ public class CartItem {
     private Long id;
     @Column(name = "quantity")
     private Integer quantity;
+    @Column(name = "last_price")
+    private Double lastPrice;
+    @Column(name = "is_active")
+    private Boolean isActive;
     @ManyToOne
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;

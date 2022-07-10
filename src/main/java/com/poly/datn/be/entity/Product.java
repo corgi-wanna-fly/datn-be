@@ -36,13 +36,14 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
+    @ManyToOne
+    @JoinColumn(name = "sale_id")
+    private Sale sale;
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private Collection<ProductCategory> productCategories;
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private Collection<Image> images;
     @OneToMany(mappedBy = "product")
-    @JsonIgnore
     private Collection<Attribute> attributes;
 }

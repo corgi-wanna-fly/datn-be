@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -28,6 +28,8 @@ public class Order {
     private String phone;
     @Column(name = "address", length = 255, nullable = false)
     private String address;
+    @Column(name = "email", length = 255, nullable = false)
+    private String email;
     @Column(name = "total", nullable = false)
     private Double total;
     @Column(name = "note", length = 1000, nullable = true)
@@ -43,10 +45,13 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @JsonIgnore
     private Collection<OrderDetail>  orderDetails;
     @ManyToOne
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 }
