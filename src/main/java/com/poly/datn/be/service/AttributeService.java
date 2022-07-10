@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AttributeService {
     Attribute findById(Long id);
-    List<RespAttributeDto> cacheAttribute(List<ReqCacheAttributeDto> reqCacheAttributeDtoList);
-    List<RespAttributeDto> backAttribute(List<ReqCacheAttributeDto> reqCacheAttributeDtoList);
+    List<Attribute> cacheAttribute(Long id);
+    List<Attribute> backAttribute(Long id);
     Attribute save(Attribute attribute);
 }

@@ -1,6 +1,7 @@
 package com.poly.datn.be.service;
 
 import com.poly.datn.be.domain.dto.ReqOrderDto;
+import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.entity.Order;
 import com.poly.datn.be.entity.OrderDetail;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,8 @@ public interface OrderService {
     Order getByOrderId(Long id);
     List<OrderDetail> getAllByOrderId(Long id);
     List<Order> findOrderByAccountIdAndOrderStatusId(Long accountId, Long orderStatusId);
-    List<Order> getAllOrdersAndPagination(Pageable pageable);
+    List<Order> getAllOrdersAndPagination(Long id, Pageable pageable);
     Order updateOrderWithStatus(Long orderId, Long statusId);
+    Order updateOrder(ReqUpdateOrderDto reqUpdateOrderDto);
+    Order cancelOrder(Long orderId);
 }

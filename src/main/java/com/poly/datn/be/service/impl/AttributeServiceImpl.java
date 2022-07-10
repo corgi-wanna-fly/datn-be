@@ -6,8 +6,10 @@ import com.poly.datn.be.domain.dto.ReqCacheAttributeDto;
 import com.poly.datn.be.domain.dto.RespAttributeDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Attribute;
+import com.poly.datn.be.entity.OrderDetail;
 import com.poly.datn.be.repo.AttributeRepo;
 import com.poly.datn.be.service.AttributeService;
+import com.poly.datn.be.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 @Service
 public class AttributeServiceImpl implements AttributeService {
+    @Autowired
+    OrderDetailService orderDetailService;
     @Autowired
     AttributeRepo attributeRepo;
     @Override
@@ -31,48 +35,30 @@ public class AttributeServiceImpl implements AttributeService {
 
     @Override
     @Transactional
-    public List<RespAttributeDto> cacheAttribute(List<ReqCacheAttributeDto> list) {
-        List<RespAttributeDto> respAttributeDtoList = new ArrayList<>();
-        for(ReqCacheAttributeDto reqCacheAttributeDto: list){
-            Optional<Attribute> optionalAttribute = attributeRepo.findById(reqCacheAttributeDto.getAttributeId());
-            if(!optionalAttribute.isPresent()){
-                throw new AppException(AppConst.MSG_ERROR_COMMON_RESOURCE_NOT_VALID);
-            }else {
-                Attribute attribute = optionalAttribute.get();
-                if(reqCacheAttributeDto.getQuantity() > attribute.getStock()){
-                    throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
-                }else{
-                    attribute.setStock(attribute.getStock() - reqCacheAttributeDto.getQuantity());
-                    attribute.setCache(attribute.getCache() + reqCacheAttributeDto.getQuantity());
-                    attributeRepo.save(attribute);
-                    respAttributeDtoList.add(new RespAttributeDto(attribute.getId(), attribute.getStock(), attribute.getCache()));
-                }
-            }
+    public List<Attribute> cacheAttribute(Long id) {
+        List<OrderDetail> orderDetails = orderDetailService.getAllByOrderId(id);
+        List<Attribute> attributes = new ArrayList<>();
+        for(OrderDetail o: orderDetails){
+            Attribute attribute = o.getAttribute();
+            attribute.setCache(attribute.getCache() - o.getQuantity());
+            attributeRepo.save(attribute);
+            attributes.add(attribute);
         }
-        return respAttributeDtoList;
+        return attributes;
     }
 
     @Override
-    @Transactional
-    public List<RespAttributeDto> backAttribute(List<ReqCacheAttributeDto> list) {
-        List<RespAttributeDto> respAttributeDtoList = new ArrayList<>();
-        for(ReqCacheAttributeDto reqCacheAttributeDto: list){
-            Optional<Attribute> optionalAttribute = attributeRepo.findById(reqCacheAttributeDto.getAttributeId());
-            if(!optionalAttribute.isPresent()){
-                throw new AppException(AppConst.MSG_ERROR_COMMON_RESOURCE_NOT_VALID);
-            }else {
-                Attribute attribute = optionalAttribute.get();
-                if(reqCacheAttributeDto.getQuantity() > attribute.getCache()){
-                    throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
-                }else{
-                    attribute.setStock(attribute.getStock() + reqCacheAttributeDto.getQuantity());
-                    attribute.setCache(attribute.getCache() - reqCacheAttributeDto.getQuantity());
-                    attributeRepo.save(attribute);
-                    respAttributeDtoList.add(new RespAttributeDto(attribute.getId(), attribute.getStock(), attribute.getCache()));
-                }
-            }
+    public List<Attribute> backAttribute(Long id) {
+        List<OrderDetail> orderDetails = orderDetailService.getAllByOrderId(id);
+        List<Attribute> attributes = new ArrayList<>();
+        for(OrderDetail o: orderDetails){
+            Attribute attribute = o.getAttribute();
+            attribute.setCache(attribute.getCache() - o.getQuantity());
+            attribute.setStock(attribute.getStock() + o.getQuantity());
+            attributeRepo.save(attribute);
+            attributes.add(attribute);
         }
-        return respAttributeDtoList;
+        return attributes;
     }
 
     @Override

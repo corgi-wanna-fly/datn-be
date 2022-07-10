@@ -20,13 +20,13 @@ public class AttributeApi {
     @Autowired
     AttributeService attributeService;
 
-    @PostMapping(AttributeConst.API_ATTRIBUTE_CACHE)
-    public ResponseEntity<?> cacheAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
-        return new ResponseEntity<>(attributeService.cacheAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
-    }
-
-    @PostMapping(AttributeConst.API_ATTRIBUTE_BACK)
-    public ResponseEntity<?> backAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
-        return new ResponseEntity<>(attributeService.backAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
-    }
+//    @PostMapping(AttributeConst.API_ATTRIBUTE_CACHE)
+//    public ResponseEntity<?> cacheAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
+//        return new ResponseEntity<>(attributeService.cacheAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
+//    }
+//
+//    @PostMapping(AttributeConst.API_ATTRIBUTE_BACK)
+//    public ResponseEntity<?> backAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
+//        return new ResponseEntity<>(attributeService.backAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
+//    }
 }

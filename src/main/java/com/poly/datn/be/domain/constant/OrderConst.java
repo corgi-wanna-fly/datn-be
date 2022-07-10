@@ -2,6 +2,8 @@ package com.poly.datn.be.domain.constant;
 
 public class OrderConst {
     public static final String API_ORDER_CREATE = "api/site/create-order";
+    public static final String API_ORDER_UPDATE = "api/site/update-order";
+    public static final String API_ORDER_CANCEL = "api/site/cancel-order";
     public static final String API_ORDER_UPDATE_STATUS = "api/site/update-order-with-status";
     public static final String API_ORDER_GET_ALL = "api/site/get-orders";
     public static final String API_ORDER_GET_ALL_AND_PAGINATION = "api/site/get-orders-and-pagination";

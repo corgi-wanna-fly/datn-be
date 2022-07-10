@@ -2,6 +2,7 @@ package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.*;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
+import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.*;
 import com.poly.datn.be.repo.OrderRepo;
@@ -51,7 +52,6 @@ public class OrderServiceImpl implements OrderService {
         }
         Account account = accountService.findById(reqOrderDto.getAccountId());
         OrderStatus orderStatus = orderStatusService.getById(1L);
-
         Order order = ConvertUtil.fromReqOrderDto(reqOrderDto);
         order.setAccount(account);
         order.setOrderStatus(orderStatus);
@@ -111,22 +111,74 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllOrdersAndPagination(Pageable pageable) {
-        return orderRepo.findAll(pageable).getContent();
+    public List<Order> getAllOrdersAndPagination(Long id, Pageable pageable) {
+        OrderStatus orderStatus = orderStatusService.getById(id);
+        if(orderStatus == null){
+            return orderRepo.findAll(pageable).getContent();
+        }
+        return orderRepo.findOrderByOrderStatus_Id(id, pageable);
     }
 
     @Override
+    @Transactional
     public Order updateOrderWithStatus(Long orderId, Long statusId) {
         Order order = getByOrderId(orderId);
         OrderStatus orderStatus = orderStatusService.getById(statusId);
         if(orderStatus == null){
             throw new AppException(OrderStatusConst.ORDER_STATUS_MSG_ERROR_NOT_EXIST);
         }
+        if(order.getOrderStatus().getId().equals(OrderStatusConst.ORDER_STATUS_CANCEL) || order.getOrderStatus().getId().equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_MSG_ERROR_NOT_EXIST);
+        }
         if(order.getOrderStatus().getId().equals(orderStatus.getId())){
             throw new AppException(OrderConst.ORDER_MSG_ERROR_ALREADY_STATUS);
         }
+        if(order.getOrderStatus().getId() > statusId){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_MSG_ERROR_NOT_EXIST);
+        }
+        if(statusId == OrderStatusConst.ORDER_STATUS_CANCEL){
+            attributeService.backAttribute(orderId);
+        }
+        if(statusId == OrderStatusConst.ORDER_STATUS_SUCCESS){
+            order.setIsPending(true);
+            attributeService.cacheAttribute(orderId);
+        }
         order.setOrderStatus(orderStatus);
         order.setModifyDate(LocalDate.now());
+        return orderRepo.save(order);
+    }
+
+    @Override
+    public Order updateOrder(ReqUpdateOrderDto reqUpdateOrderDto) {
+        Optional<Order> optionalOrder = orderRepo.findById(reqUpdateOrderDto.getOrderId());
+        if(!optionalOrder.isPresent()){
+            throw new AppException(OrderConst.ORDER_MSG_ERROR_NOT_EXIST);
+        }
+        Order order = optionalOrder.get();
+        order.setIsPending(reqUpdateOrderDto.getIsPending());
+        order.setAddress(reqUpdateOrderDto.getAddress());
+        order.setEmail(reqUpdateOrderDto.getEmail());
+        order.setFullname(reqUpdateOrderDto.getFullname());
+        order.setNote(reqUpdateOrderDto.getNote());
+        order.setPhone(reqUpdateOrderDto.getPhone());
+        order.setModifyDate(LocalDate.now());
+        return orderRepo.save(order);
+    }
+
+    @Override
+    public Order cancelOrder(Long orderId) {
+        Order order = getByOrderId(orderId);
+        if(order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SHIPPING){
+            throw new AppException("Đơn hàng đang được vận chuyển.");
+        }
+        if(order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_CANCEL){
+            throw new AppException("Đơn hàng đã được hủy.");
+        }
+        if(order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SUCCESS){
+            throw new AppException("Đơn hàng đã được giao thành công.");
+        }
+        OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
+        order.setOrderStatus(orderStatus);
         return orderRepo.save(order);
     }
 }
