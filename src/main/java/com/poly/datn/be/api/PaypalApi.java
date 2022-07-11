@@ -20,7 +20,7 @@ import com.poly.datn.be.util.PaypalUtil;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class PaypalApi {
     public static final String URL_PAYPAL_SUCCESS = "/api/site/pay/success";
     public static final String URL_PAYPAL_CANCEL = "/api/site/pay/cancel";
