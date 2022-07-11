@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class ProductApi {
     @Autowired
     ProductService productService;
