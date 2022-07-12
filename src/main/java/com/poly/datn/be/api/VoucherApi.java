@@ -20,4 +20,5 @@ public class VoucherApi {
     public ResponseEntity getVoucherByCode(@RequestParam("code") String code){
         return new ResponseEntity(voucherService.getVoucherByCode(code), HttpStatus.OK);
     }
+    String a;
 }
