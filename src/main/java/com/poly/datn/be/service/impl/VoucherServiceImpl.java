@@ -1,6 +1,5 @@
 package com.poly.datn.be.service.impl;
 
-import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.VoucherConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Voucher;
@@ -36,5 +35,36 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public Voucher saveVoucher(Voucher voucher) {
         return voucherRepo.save(voucher);
+    }
+    @Override
+    public Voucher update(Voucher voucher, Long id){
+        Optional<Voucher> optional = voucherRepo.findById(id);
+        if(optional.isPresent()){
+            Voucher vou =optional.get();
+            vou.setCode(vou.getCode());
+            vou.setExpireDate(vou.getExpireDate());
+            vou.setDiscount(vou.getDiscount());
+            vou.setCount(vou.getCount());
+            voucherRepo.save(vou);
+            return vou;
+        }else {
+            throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_NOT_EXIST);
+        }
+
+    }
+    @Override
+    public void delete(Long id){
+        if(!voucherRepo.existsById(id)){
+            throw  new AppException(VoucherConst.MSG_ERROR_VOUCHER_NOT_EXIST);
+        }
+        Voucher vou =voucherRepo.findById(id).orElse(null);
+        vou.setIsActive(false);
+        voucherRepo.save(vou);
+
+    }
+    @Override
+    public boolean exitsByCode(String code){
+        return voucherRepo.existsByCode(code);
+
     }
 }
