@@ -25,11 +25,11 @@ public class Voucher {
     @Column(name = "code", length = 12, nullable = false, unique = true)
     private String code;
     @Column(name = "create_date")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate createDate;
     @Future
     @Column(name = "expire_date")
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate expireDate;
     @Column(name = "discount")
     private Integer discount;

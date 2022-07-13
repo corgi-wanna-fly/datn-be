@@ -10,6 +10,7 @@ import com.poly.datn.be.service.*;
 import com.poly.datn.be.util.ConvertUtil;
 import com.poly.datn.be.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,9 +83,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrderByAccount(Long id) {
+    public Page<Order> getOrderByAccount(Long id, Pageable pageable) {
         Account account = accountService.findById(id);
-        return orderRepo.findAllByAccount_Id(id);
+        return orderRepo.findAllByAccount_Id(id, pageable);
     }
 
     @Override
@@ -102,19 +103,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findOrderByAccountIdAndOrderStatusId(Long accountId, Long orderStatusId) {
+    public Page<Order> findOrderByAccountIdAndOrderStatusId(Long accountId, Long orderStatusId, Pageable pageable) {
         OrderStatus orderStatus = orderStatusService.getById(orderStatusId);
         if(orderStatus == null){
-            return orderRepo.findAllByAccount_Id(accountId);
+            return orderRepo.findAllByAccount_Id(accountId, pageable);
         }
-        return orderRepo.findOrderByAccount_IdAndOrderStatus_Id(accountId, orderStatusId);
+        return orderRepo.findOrderByAccount_IdAndOrderStatus_Id(accountId, orderStatusId, pageable);
     }
 
     @Override
-    public List<Order> getAllOrdersAndPagination(Long id, Pageable pageable) {
+    public Page<Order> getAllOrdersAndPagination(Long id, Pageable pageable) {
         OrderStatus orderStatus = orderStatusService.getById(id);
         if(orderStatus == null){
-            return orderRepo.findAll(pageable).getContent();
+            return orderRepo.findAll(pageable);
         }
         return orderRepo.findOrderByOrderStatus_Id(id, pageable);
     }
@@ -138,6 +139,11 @@ public class OrderServiceImpl implements OrderService {
         }
         if(statusId == OrderStatusConst.ORDER_STATUS_CANCEL){
             attributeService.backAttribute(orderId);
+            Voucher voucher = order.getVoucher();
+            if(voucher != null){
+                voucher.setCount(voucher.getCount() + 1);
+                voucherService.saveVoucher(voucher);
+            }
         }
         if(statusId == OrderStatusConst.ORDER_STATUS_SUCCESS){
             order.setIsPending(true);
@@ -180,5 +186,10 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
         order.setOrderStatus(orderStatus);
         return orderRepo.save(order);
+    }
+
+    @Override
+    public Page<Order> findOrderByAccount_Id(Long id, Pageable pageable) {
+        return orderRepo.findOrderByAccount_Id(id, pageable);
     }
 }

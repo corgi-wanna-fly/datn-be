@@ -16,7 +16,8 @@ public class RespProductDto {
     private String description;
     private Long view;
     private Double price;
-    private String imageLink;
+    private String image;
     private String brand;
     private Integer discount;
+    private Boolean isActive;
 }

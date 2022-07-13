@@ -7,26 +7,20 @@ import com.poly.datn.be.service.AttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
 public class AttributeApi {
     @Autowired
     AttributeService attributeService;
+    @GetMapping(AttributeConst.API_ATTRIBUTE_GET_BY_PRODUCT_ID)
+    public ResponseEntity<?> cacheAttribute(@RequestParam("id") Long id,
+                                            @RequestParam("size") Optional<Integer> size){
+        return new ResponseEntity<>(attributeService.getByProductIdAndSize(id, size.orElse(39)), HttpStatus.OK);
+    }
 
-//    @PostMapping(AttributeConst.API_ATTRIBUTE_CACHE)
-//    public ResponseEntity<?> cacheAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
-//        return new ResponseEntity<>(attributeService.cacheAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
-//    }
-//
-//    @PostMapping(AttributeConst.API_ATTRIBUTE_BACK)
-//    public ResponseEntity<?> backAttribute(@RequestBody List<ReqCacheAttributeDto> reqCacheAttributeDtoList){
-//        return new ResponseEntity<>(attributeService.backAttribute(reqCacheAttributeDtoList), HttpStatus.OK);
-//    }
 }

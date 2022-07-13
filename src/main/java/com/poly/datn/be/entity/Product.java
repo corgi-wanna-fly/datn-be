@@ -33,6 +33,8 @@ public class Product {
     private LocalDate modifyDate;
     @Column(name = "view", nullable = false)
     private Long view;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;

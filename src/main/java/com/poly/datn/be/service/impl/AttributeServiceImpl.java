@@ -65,4 +65,9 @@ public class AttributeServiceImpl implements AttributeService {
     public Attribute save(Attribute attribute) {
         return attributeRepo.save(attribute);
     }
+
+    @Override
+    public Attribute getByProductIdAndSize(Long productId, Integer size) {
+        return attributeRepo.findByProduct_IdAndSize(productId, size);
+    }
 }
