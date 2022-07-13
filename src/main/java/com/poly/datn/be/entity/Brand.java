@@ -1,5 +1,6 @@
 package com.poly.datn.be.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +27,10 @@ public class Brand {
     @Column(name = "description", nullable = false, length = 255)
     private String description;
     @Column(name = "create_date", nullable = false)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private LocalDate createDate;
     @Column(name = "modify_date", nullable = false)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
     private LocalDate modifyDate;
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
