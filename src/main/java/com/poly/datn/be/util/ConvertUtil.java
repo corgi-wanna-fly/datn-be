@@ -21,9 +21,10 @@ public class ConvertUtil {
         respProductDto.setDescription((String) objects[3]);
         respProductDto.setView((Long) objects[4]);
         respProductDto.setPrice((Double) objects[5]);
-        respProductDto.setImageLink((String) objects[6]);
+        respProductDto.setImage((String) objects[6]);
         respProductDto.setBrand((String) objects[7]);
         respProductDto.setDiscount((Integer) objects[8]);
+        respProductDto.setIsActive((Boolean) objects[9]);
         return respProductDto;
     }
 //    public static RespBrandDto fromBrand(Object[] objects){

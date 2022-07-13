@@ -1,5 +1,6 @@
 package com.poly.datn.be.service.impl;
 
+import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.VoucherConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Voucher;
@@ -25,6 +26,9 @@ public class VoucherServiceImpl implements VoucherService {
             if(voucher.getExpireDate().isBefore(LocalDate.now())){
                 throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_EXPIRED);
             }
+            if(!voucher.getIsActive()){
+                throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_INACTIVE);
+            }
             if(voucher.getCount() == 0){
                 throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_USED);
             }
@@ -36,6 +40,8 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public Voucher saveVoucher(Voucher voucher) {
+        voucher.setCreateDate(LocalDate.now());
+        voucher.setIsActive(AppConst.CONST_ACTIVE);
         return voucherRepo.save(voucher);
     }
     @Override
@@ -48,6 +54,7 @@ public class VoucherServiceImpl implements VoucherService {
             vou.setCreateDate(vou.getCreateDate());
             vou.setDiscount(voucher.getDiscount());
             vou.setCount(voucher.getCount());
+            vou.setIsActive(voucher.getIsActive());
             voucherRepo.save(vou);
             return vou;
         }else {

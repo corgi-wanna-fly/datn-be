@@ -21,8 +21,8 @@ public class ProductServiceImpl implements ProductService {
     ProductRepo productRepo;
 
     @Override
-    public List<Object[]> getProducts(Pageable pageable) {
-        return productRepo.getAllProducts(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, pageable);
+    public List<Object[]> getProducts(Boolean active, Pageable pageable) {
+        return productRepo.getAllProducts(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, active, pageable);
     }
 
     @Override
