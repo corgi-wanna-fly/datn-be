@@ -10,4 +10,5 @@ public class VoucherConst {
     public static final String API_VOUCHER_REMOVE = "/api/site/remove-voucher/{id}";
     public static final String MSG_ERROR_CODE_DUPLICATE = "Mã Code bị trùng xin nhập mã khác.";
     public static final String API_VOUCHER_GET_ALL = "/api/site/get-voucher";
+    public static final String API_VOUCHER_GET_BY_ID = "/api/site/get-voucher-detail/{id}";
 }
