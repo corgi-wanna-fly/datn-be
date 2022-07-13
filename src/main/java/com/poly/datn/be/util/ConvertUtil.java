@@ -1,15 +1,9 @@
 package com.poly.datn.be.util;
 
-import com.poly.datn.be.domain.dto.ReqOrderDto;
-import com.poly.datn.be.domain.dto.RespCartItemDto;
-import com.poly.datn.be.domain.dto.RespProductDetailDto;
-import com.poly.datn.be.domain.dto.RespProductDto;
-import com.poly.datn.be.entity.Account;
+import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.entity.Attribute;
 import com.poly.datn.be.entity.Order;
 import com.poly.datn.be.entity.Product;
-import com.poly.datn.be.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,6 +26,15 @@ public class ConvertUtil {
         respProductDto.setDiscount((Integer) objects[8]);
         return respProductDto;
     }
+//    public static RespBrandDto fromBrand(Object[] objects){
+//        RespBrandDto respBrandDto = new RespBrandDto();
+//        respBrandDto.setId((Long) objects[0]);
+//        respBrandDto.setName((String) objects[1]);
+//        respBrandDto.setDescription((String) objects[2]);
+//        respBrandDto.setIsActive((Boolean) objects[3]);
+//        respBrandDto.setImage((String) objects[4]);
+//        return respBrandDto;
+//    }
 
     public static RespProductDetailDto fromProductDetail(Product product){
         RespProductDetailDto respProductDetailDto = new RespProductDetailDto();
