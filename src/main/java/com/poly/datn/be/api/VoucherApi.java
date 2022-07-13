@@ -6,6 +6,9 @@ import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Voucher;
 import com.poly.datn.be.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +33,18 @@ public class VoucherApi {
         return new ResponseEntity<>(voucherService.saveVoucher(vou),HttpStatus.CREATED);
     }
     @PostMapping(VoucherConst.API_VOUCHER_UPDATE)
-    public ResponseEntity<Voucher> update(@Valid @RequestBody Voucher vou ,
-                                          @PathVariable("id") Optional<Long> id) throws AppException {
-        return new ResponseEntity<>(voucherService.update(vou, id.get()),HttpStatus.OK);
+    public ResponseEntity<Voucher> update(@Valid @RequestBody Voucher vou) throws AppException {
+        return new ResponseEntity<>(voucherService.update(vou),HttpStatus.OK);
     }
     @GetMapping(VoucherConst.API_VOUCHER_REMOVE)
     public ResponseEntity<String> remove(@PathVariable("id") Optional<Long> id) throws AppException{
         voucherService.delete(id.orElse(null));
         return new ResponseEntity<>("Succesfully!" , HttpStatus.OK);
+    }
+    @GetMapping(VoucherConst.API_VOUCHER_GET_ALL)
+    public ResponseEntity<?> getAllVoucher(@RequestParam("page") Optional<Integer> page,
+                                           @RequestParam("size") Optional<Integer> size){
+        Pageable pageable = PageRequest.of(page.orElse(1)-1, size.orElse(9), Sort.Direction.DESC,"id");
+        return new ResponseEntity<>(voucherService.getToTalPage(pageable),HttpStatus.OK);
     }
 }

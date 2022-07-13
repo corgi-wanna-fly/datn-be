@@ -6,6 +6,8 @@ import com.poly.datn.be.entity.Voucher;
 import com.poly.datn.be.repo.VoucherRepo;
 import com.poly.datn.be.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,14 +39,15 @@ public class VoucherServiceImpl implements VoucherService {
         return voucherRepo.save(voucher);
     }
     @Override
-    public Voucher update(Voucher voucher, Long id){
-        Optional<Voucher> optional = voucherRepo.findById(id);
+    public Voucher update(Voucher voucher){
+        Optional<Voucher> optional = voucherRepo.findById(voucher.getId());
         if(optional.isPresent()){
-            Voucher vou =optional.get();
-            vou.setCode(vou.getCode());
-            vou.setExpireDate(vou.getExpireDate());
-            vou.setDiscount(vou.getDiscount());
-            vou.setCount(vou.getCount());
+            Voucher vou = optional.get();
+            vou.setCode(voucher.getCode());
+            vou.setExpireDate(voucher.getExpireDate());
+            vou.setCreateDate(vou.getCreateDate());
+            vou.setDiscount(voucher.getDiscount());
+            vou.setCount(voucher.getCount());
             voucherRepo.save(vou);
             return vou;
         }else {
@@ -66,5 +69,9 @@ public class VoucherServiceImpl implements VoucherService {
     public boolean exitsByCode(String code){
         return voucherRepo.existsByCode(code);
 
+    }
+    @Override
+    public Page<Voucher> getToTalPage(Pageable pageable){
+        return voucherRepo.findAll(pageable);
     }
 }
