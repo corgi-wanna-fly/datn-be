@@ -74,4 +74,12 @@ public class VoucherServiceImpl implements VoucherService {
     public Page<Voucher> getToTalPage(Pageable pageable){
         return voucherRepo.findAll(pageable);
     }
+    @Override
+    public Voucher getVOucherById(Long id){
+        Optional<Voucher> optionalVoucher = voucherRepo.findById(id);
+        if(!optionalVoucher.isPresent()){
+            throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_NOT_EXIST);
+        }
+        return optionalVoucher.get();
+    }
 }
