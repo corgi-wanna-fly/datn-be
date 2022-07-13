@@ -15,4 +15,6 @@ public interface VoucherService {
     boolean exitsByCode(String code);
 
     Page<Voucher> getToTalPage(Pageable pageable);
+
+    Voucher getVOucherById(Long id);
 }
