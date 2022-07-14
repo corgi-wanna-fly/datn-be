@@ -6,6 +6,8 @@ import com.poly.datn.be.domain.dto.ReqCategoryProductDto;
 import com.poly.datn.be.entity.Category;
 import com.poly.datn.be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +26,9 @@ public class CategoryApi {
     }
 
     @GetMapping(CategoryConst.FIND_ALL)
-    public ResponseEntity<?> findAllList() {
-        return ResponseEntity.ok(categoryService.findAll());
+    public ResponseEntity<?> findAllList(@RequestParam(defaultValue = "0") Integer page,@RequestParam(defaultValue = "10") Integer size) {
+        Pageable pageable = PageRequest.of(page,size);
+        return ResponseEntity.ok(categoryService.findAll(pageable));
     }
 
     @PostMapping(CategoryConst.CREATE)

@@ -6,7 +6,6 @@ import com.poly.datn.be.domain.constant.OrderConst;
 import com.poly.datn.be.domain.constant.OrderStatusConst;
 import com.poly.datn.be.domain.dto.ReqCategoryDto;
 import com.poly.datn.be.domain.dto.ReqCategoryProductDto;
-import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Category;
 import com.poly.datn.be.entity.Order;
@@ -15,6 +14,8 @@ import com.poly.datn.be.repo.CategoryRepo;
 import com.poly.datn.be.repo.ProductCategoryRepo;
 import com.poly.datn.be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -42,8 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     @Transactional
-    public List<Category> findAll() {
-        return categoryRepo.findAll();
+    public Page<Category> getCategory(Pageable pageable) {
+        return categoryRepo.categoryList(pageable);
     }
 
     @Override
