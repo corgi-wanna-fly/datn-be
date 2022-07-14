@@ -1,10 +1,14 @@
 package com.poly.datn.be.service.impl;
 
+import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
 import com.poly.datn.be.repo.AccountDetailRepo;
 import com.poly.datn.be.service.AccountDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 public class AccountDetailServiceImpl implements AccountDetailService {
@@ -14,4 +18,22 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     public AccountDetail findAccountDetail(Long id) {
         return accountDetailRepo.findAccountDetailByAccount_Id(id);
     }
+
+    @Override
+    public AccountDetail save(AccountDetail accountDetail) {
+        return this.accountDetailRepo.save(accountDetail);
+    }
+
+
+    @Override
+    public void update(AccountDetail accountDetail) {
+        this.accountDetailRepo.update(accountDetail.getFullname(), accountDetail.getGender(), accountDetail.getPhone(), accountDetail.getEmail(), accountDetail.getAddress(), accountDetail.getBirthDate(), accountDetail.getAccount().getId());
+    }
+
+    @Override
+    public Account findAccountDetailByEmail(String email) {
+        return this.accountDetailRepo.findAccountDetailByEmail(email);
+    }
+
+
 }
