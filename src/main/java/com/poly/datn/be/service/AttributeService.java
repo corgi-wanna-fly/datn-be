@@ -11,4 +11,5 @@ public interface AttributeService {
     List<Attribute> cacheAttribute(Long id);
     List<Attribute> backAttribute(Long id);
     Attribute save(Attribute attribute);
+    Attribute getByProductIdAndSize(Long productId, Integer size);
 }

@@ -10,6 +10,7 @@ import com.poly.datn.be.util.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +21,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class ProductApi {
     @Autowired
     ProductService productService;
 
     @GetMapping(ProductConst.API_PRODUCT_GET_ALL)
     public ResponseEntity<List<RespProductDto>> getAllProductPagination(@RequestParam("page")Optional<Integer> page,
-                                                                  @RequestParam("size")Optional<Integer> size){
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8));
-        List<Object[]> objects = productService.getProducts(pageable);
+                                                                  @RequestParam("size")Optional<Integer> size,
+                                                                        @RequestParam("active")Optional<Boolean> active){
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8), sort);
+        List<Object[]> objects = productService.getProducts(active.orElse(true), pageable);
         List<RespProductDto> respProductDtoList = objects.stream().map(item -> ConvertUtil.fromProduct(item)).collect(Collectors.toList());
         return new ResponseEntity<>(respProductDtoList, HttpStatus.OK);
     }

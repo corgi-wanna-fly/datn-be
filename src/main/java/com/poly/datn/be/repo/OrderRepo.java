@@ -2,6 +2,7 @@ package com.poly.datn.be.repo;
 
 import com.poly.datn.be.entity.Order;
 import org.aspectj.weaver.ast.Or;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,8 @@ import java.util.List;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
-    List<Order> findAllByAccount_Id(Long id);
-    List<Order> findOrderByAccount_IdAndOrderStatus_Id(Long accountId, Long orderStatusId);
-    List<Order> findOrderByOrderStatus_Id(Long id, Pageable pageable);
+    Page<Order> findAllByAccount_Id(Long id, Pageable pageable);
+    Page<Order> findOrderByAccount_Id(Long id, Pageable pageable);
+    Page<Order> findOrderByAccount_IdAndOrderStatus_Id(Long accountId, Long orderStatusId, Pageable pageable);
+    Page<Order> findOrderByOrderStatus_Id(Long id, Pageable pageable);
 }

@@ -1,11 +1,14 @@
 package com.poly.datn.be.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -22,13 +25,18 @@ public class Voucher {
     @Column(name = "code", length = 12, nullable = false, unique = true)
     private String code;
     @Column(name = "create_date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate createDate;
+    @Future
     @Column(name = "expire_date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate expireDate;
     @Column(name = "discount")
     private Integer discount;
     @Column(name = "count")
     private Integer count;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
     @OneToMany(mappedBy = "voucher")
     @JsonIgnore
     private Collection<Order> orders;

@@ -1,15 +1,10 @@
 package com.poly.datn.be.util;
 
-import com.poly.datn.be.domain.dto.ReqOrderDto;
-import com.poly.datn.be.domain.dto.RespCartItemDto;
-import com.poly.datn.be.domain.dto.RespProductDetailDto;
-import com.poly.datn.be.domain.dto.RespProductDto;
-import com.poly.datn.be.entity.Account;
-import com.poly.datn.be.entity.Attribute;
-import com.poly.datn.be.entity.Order;
-import com.poly.datn.be.entity.Product;
-import com.poly.datn.be.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.poly.datn.be.domain.dto.*;
+import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.resp_dto.RespAccountDto;
+import com.poly.datn.be.entity.*;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -27,11 +22,21 @@ public class ConvertUtil {
         respProductDto.setDescription((String) objects[3]);
         respProductDto.setView((Long) objects[4]);
         respProductDto.setPrice((Double) objects[5]);
-        respProductDto.setImageLink((String) objects[6]);
+        respProductDto.setImage((String) objects[6]);
         respProductDto.setBrand((String) objects[7]);
         respProductDto.setDiscount((Integer) objects[8]);
+        respProductDto.setIsActive((Boolean) objects[9]);
         return respProductDto;
     }
+//    public static RespBrandDto fromBrand(Object[] objects){
+//        RespBrandDto respBrandDto = new RespBrandDto();
+//        respBrandDto.setId((Long) objects[0]);
+//        respBrandDto.setName((String) objects[1]);
+//        respBrandDto.setDescription((String) objects[2]);
+//        respBrandDto.setIsActive((Boolean) objects[3]);
+//        respBrandDto.setImage((String) objects[4]);
+//        return respBrandDto;
+//    }
 
     public static RespProductDetailDto fromProductDetail(Product product){
         RespProductDetailDto respProductDetailDto = new RespProductDetailDto();
@@ -75,5 +80,76 @@ public class ConvertUtil {
         order.setModifyDate(LocalDate.now());
         order.setShipDate(Date.from(LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant()));
         return order;
+    }
+
+    public static RespAccountDto accountToRespAccountDto(Object[] objects){
+        RespAccountDto respAccountDto = new RespAccountDto();
+        respAccountDto.setUsername((String) objects[0]);
+        respAccountDto.setCreateDate((LocalDate) objects[1]);
+        respAccountDto.setModifyDate((LocalDate) objects[2]);
+        respAccountDto.setIsActive((Boolean) objects[3]);
+        respAccountDto.setRoleName((String) objects[4]);
+        respAccountDto.setFullName((String) objects[5]);
+        respAccountDto.setGender((String) objects[6]);
+        respAccountDto.setPhone((String) objects[7]);
+        respAccountDto.setEmail((String) objects[8]);
+        respAccountDto.setAddress((String) objects[9]);
+        respAccountDto.setBirthDate((Date) objects[10]);
+        return  respAccountDto;
+    }
+
+    public static Account ReqCreateAccountDtoToAccount(ReqCreateAccountDto reqAccountDto){
+        Account account = new Account();
+        account.setUsername(reqAccountDto.getUsername());
+        account.setPassword(reqAccountDto.getPassword());
+        account.setCreateDate(LocalDate.now());
+        account.setModifyDate(LocalDate.now());
+        account.setIsActive(reqAccountDto.getIsActive());
+        Role role = new Role();
+        role.setId(reqAccountDto.getRoleId());
+        account.setRole(role);
+        return account;
+    }
+
+    public static Account ReqUpdateAccountDtoToAccount(ReqUpdateAccountDto reqUpdateAccountDto){
+        Account account = new Account();
+        account.setId(reqUpdateAccountDto.getId());
+        account.setUsername(reqUpdateAccountDto.getUsername());
+        account.setPassword(reqUpdateAccountDto.getPassword());
+        account.setCreateDate(reqUpdateAccountDto.getCreateDate());
+        account.setModifyDate(LocalDate.now());
+        account.setIsActive(reqUpdateAccountDto.getIsActive());
+        Role role = new Role();
+        role.setId(reqUpdateAccountDto.getRoleId());
+        account.setRole(role);
+        return account;
+    }
+
+    public static AccountDetail ReqAccountDtoToAccountDetail(ReqCreateAccountDto reqCreateAccountDto){
+        AccountDetail accountDetail = new AccountDetail();
+        Account account = new Account();
+        account.setId(reqCreateAccountDto.getAccountId());
+        accountDetail.setAccount(account);
+        accountDetail.setFullname(reqCreateAccountDto.getFullName());
+        accountDetail.setGender(reqCreateAccountDto.getGender());
+        accountDetail.setPhone(reqCreateAccountDto.getPhone());
+        accountDetail.setEmail(reqCreateAccountDto.getEmail());
+        accountDetail.setAddress(reqCreateAccountDto.getAddress());
+        accountDetail.setBirthDate(reqCreateAccountDto.getBirthDate());
+        return accountDetail;
+    }
+
+    public static AccountDetail ReqAccountDtoToAccountDetail(ReqUpdateAccountDto ReqUpdateAccountDto){
+        AccountDetail accountDetail = new AccountDetail();
+        Account account = new Account();
+        account.setId(ReqUpdateAccountDto.getId());
+        accountDetail.setAccount(account);
+        accountDetail.setFullname(ReqUpdateAccountDto.getFullName());
+        accountDetail.setGender(ReqUpdateAccountDto.getGender());
+        accountDetail.setPhone(ReqUpdateAccountDto.getPhone());
+        accountDetail.setEmail(ReqUpdateAccountDto.getEmail());
+        accountDetail.setAddress(ReqUpdateAccountDto.getAddress());
+        accountDetail.setBirthDate(ReqUpdateAccountDto.getBirthDate());
+        return accountDetail;
     }
 }

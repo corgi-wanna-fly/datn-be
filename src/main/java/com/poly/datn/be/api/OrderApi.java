@@ -8,6 +8,7 @@ import com.poly.datn.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +17,27 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class OrderApi {
     @Autowired
     OrderService orderService;
 
-    @GetMapping(OrderConst.API_ORDER_GET_ALL)
+    @GetMapping(OrderConst.API_ORDER_GET_ALL_BY_ACCOUNT)
     public ResponseEntity<?> getOrders(@RequestParam("id")Long id,
-                                       @RequestParam("status") Optional<Long> status){
-        return new ResponseEntity<>(orderService.findOrderByAccountIdAndOrderStatusId(id, status.orElse(0L)), HttpStatus.OK);
+                                       @RequestParam("status") Optional<Long> status,
+                                       @RequestParam("page")Optional<Integer> page,
+                                       @RequestParam("size")Optional<Integer> size){
+        Sort sort = Sort.by(Sort.Direction.DESC,"id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
+        return new ResponseEntity<>(orderService.findOrderByAccountIdAndOrderStatusId(id, status.orElse(0L), pageable), HttpStatus.OK);
+    }
+    @GetMapping("/api/site/page-orders")
+    public ResponseEntity<?> getPageOrders(@RequestParam("id")Long id,
+                                       @RequestParam("page")Optional<Integer> page,
+                                       @RequestParam("size")Optional<Integer> size){
+        Sort sort = Sort.by(Sort.Direction.DESC,"id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
+        return new ResponseEntity<>(orderService.findOrderByAccount_Id(id, pageable), HttpStatus.OK);
     }
     @GetMapping(OrderConst.API_ORDER_CANCEL)
     public ResponseEntity<?> cancelOrder(@RequestParam("id")Long id){
@@ -39,7 +52,8 @@ public class OrderApi {
     public ResponseEntity<?> getOrdersAndPagination(@RequestParam("page") Optional<Integer> page,
                                                     @RequestParam("size") Optional<Integer> size,
                                                     @RequestParam("status") Optional<Long> status){
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(10));
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
         return new ResponseEntity<>(orderService.getAllOrdersAndPagination(status.orElse(0L), pageable), HttpStatus.OK);
     }
     @GetMapping(OrderConst.API_ORDER_GET_BY_ID)

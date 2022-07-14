@@ -1,23 +1,20 @@
 package com.poly.datn.be.domain.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class RespProductDto {
+public class ReqCategoryDto {
     private Long id;
     private String name;
-    private String code;
     private String description;
-    private Long view;
-    private Double price;
-    private String image;
-    private String brand;
-    private Integer discount;
+    private LocalDate createDate;
+    private LocalDate modifyDate;
     private Boolean isActive;
 }
