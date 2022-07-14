@@ -45,7 +45,8 @@ public class BrandServiceImpl implements BrandService {
     }
     @Override
     public Brand saveBrand(Brand brand) {
-
+        brand.setCreateDate(LocalDate.now());
+        brand.setModifyDate(LocalDate.now());
         return brandRepo.save(brand);
     }
 
@@ -58,6 +59,7 @@ public class BrandServiceImpl implements BrandService {
             b.setModifyDate(LocalDate.now());
             b.setDescription(brand.getDescription());
             b.setImage(brand.getImage());
+            b.setIsActive(brand.getIsActive());
             brandRepo.save(b);
             return b;
         }else {

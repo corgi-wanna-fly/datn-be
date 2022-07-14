@@ -15,6 +15,8 @@ import com.poly.datn.be.repo.CategoryRepo;
 import com.poly.datn.be.repo.ProductCategoryRepo;
 import com.poly.datn.be.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,57 +27,43 @@ import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    final
+    @Autowired
     CategoryRepo categoryRepo;
 
-    final
-    ProductCategoryRepo productCategoryRepo;
+    @Override
+    public Page<Category> findAll(Pageable pageable) {
+        return categoryRepo.findAll(pageable);
+    }
 
-    final
-    ObjectMapper objectMapper;
-
-    public CategoryServiceImpl(CategoryRepo categoryRepo, ObjectMapper objectMapper, ProductCategoryRepo productCategoryRepo) {
-        this.categoryRepo = categoryRepo;
-        this.objectMapper = objectMapper;
-        this.productCategoryRepo = productCategoryRepo;
+    @Override
+    public Category findById(Long id) {
+        return categoryRepo.findById(id).orElse(null);
     }
 
     @Autowired
-    @Transactional
-    public List<Category> findAll() {
-        return categoryRepo.findAll();
-    }
-
+    ObjectMapper objectMapper;
+    @Autowired
+    ProductCategoryRepo productCategoryRepo;
     @Override
-    @Transactional
-    public Category saveCategory(ReqCategoryDto categoryDto) {
-        try {
-            Clock clock = Clock.systemDefaultZone();
-            LocalDate localDate = LocalDate.now(clock);
-            Category category = objectMapper.convertValue(categoryDto, Category.class);
-            category.setCreateDate(localDate);
-            category.setIsActive(true);
-            return categoryRepo.save(category);
-        } catch (Exception e) {
-            throw new AppException(CategoryConst.FALSE);
-        }
+    public Category saveCategory(Category category) {
+        category.setCreateDate(LocalDate.now());
+        category.setModifyDate(LocalDate.now());
+        return categoryRepo.save(category);
     }
 
 
     @Override
-    @Transactional
-    public Category updateCategory(ReqCategoryDto categoryDto) {
-        try {
-            Optional<Category> optionalCategory = categoryRepo.findById(categoryDto.getId());
-            Category category = optionalCategory.get();
-            Clock clock = Clock.systemDefaultZone();
-            LocalDate localDate = LocalDate.now(clock);
-            category.setDescription(categoryDto.getDescription());
-            category.setName(categoryDto.getName());
-            category.setModifyDate(localDate);
-            return categoryRepo.save(category);
-        } catch (Exception e) {
-            throw new AppException(CategoryConst.FALSE);
+    public Category updateCategory(Category category) {
+        Optional<Category> optional = categoryRepo.findById(category.getId());
+        if(optional.isPresent()){
+            Category cate = optional.get();
+            cate.setIsActive(category.getIsActive());
+            cate.setModifyDate(LocalDate.now());
+            cate.setDescription(category.getDescription());
+            cate.setName(category.getName());
+            return categoryRepo.save(cate);
+        }else{
+            throw new AppException("Loại sản phẩm không tồn tại.");
         }
     }
 
