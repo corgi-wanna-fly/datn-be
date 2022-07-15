@@ -1,17 +1,19 @@
 package com.poly.datn.be.service;
 
+import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface AccountService {
     Account findById(Long id);
 
-    List<Object[]> findAllSecond(Pageable pageable);
+    List<RespAccountDto> findAllSecond(Pageable pageable);
 
-    List<Object[]> findByIdSecond(Long id);
+    RespAccountDto findByIdSecond(Long id);
 
     List<Object[]> findByUsername(String username);
 
@@ -23,5 +25,5 @@ public interface AccountService {
 
     Account findAccountByUsername(String username);
 
-
+    Integer getToTalPage();
 }
