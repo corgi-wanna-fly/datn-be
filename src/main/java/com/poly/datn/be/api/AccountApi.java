@@ -50,9 +50,7 @@ public class AccountApi {
 
     @GetMapping(AccountConst.API_ACCOUNT_FIND_BY_USERNAME)
     public ResponseEntity<?> findByUsername(@RequestParam("username") String username) {
-        List<Object[]> objects = this.accountService.findByUsername(username);
-        List<RespAccountDto> respAccountDtos = objects.stream().map(item -> ConvertUtil.accountToRespAccountDto(item)).collect(Collectors.toList());
-        return new ResponseEntity<>(respAccountDtos, HttpStatus.OK);
+        return new ResponseEntity<>(this.accountService.findByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping(AccountConst.API_ACCOUNT_DELETE_OR_RESTORE)

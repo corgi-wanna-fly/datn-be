@@ -29,11 +29,11 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
             "inner join Role r on a.role.id = r.id where a.id = ?1")
     RespAccountDto findByIdSecond(Long id);
 
-    @Query("SELECT a.id, a.username, a.createDate, a.modifyDate, a.isActive , r.name," +
-            " ad.fullname, ad.gender, ad.phone, ad.email, ad.address, ad.birthDate FROM Account a " +
+    @Query("SELECT new com.poly.datn.be.domain.resp_dto.RespAccountDto(a.id, a.username, a.createDate, a.modifyDate, a.isActive , r.name," +
+            " ad.fullname, ad.gender, ad.phone, ad.email, ad.address, ad.birthDate) FROM Account a " +
             "inner join AccountDetail ad on a.id = ad.account.id " +
-            "inner join Role r on a.id = r.id where a.username = ?1")
-    List<Object[]> findByUsername(String username);
+            "inner join Role r on a.role.id = r.id where a.username = ?1")
+    RespAccountDto findByUsername(String username);
 
     @Transactional
     @Modifying
@@ -43,7 +43,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     @Query("SELECT a.id, a.username, a.createDate, a.modifyDate, a.isActive , r.name," +
             " ad.fullname, ad.gender, ad.phone, ad.email, ad.address, ad.birthDate FROM Account a " +
             "inner join AccountDetail ad on a.id = ad.account.id " +
-            "inner join Role r on a.id = r.id where a.isActive = ?1")
+            "inner join Role r on a.role.id = r.id where a.isActive = ?1")
     List<Object[]> findAccountByIsActiveOrInactive(Boolean isActive, Pageable pageable);
 
     Account findAccountByUsername(String username);
