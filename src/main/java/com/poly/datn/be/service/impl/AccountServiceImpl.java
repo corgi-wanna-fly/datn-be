@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Object[]> findByUsername(String username) {
+    public RespAccountDto findByUsername(String username) {
         return this.accountRepo.findByUsername(username);
     }
 
