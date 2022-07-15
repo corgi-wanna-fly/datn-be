@@ -1,14 +1,19 @@
 package com.poly.datn.be.domain.resp_dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RespAccountDto {
-    //11 truong
+    //12 truong
     //account
+    private Long id;
     private String username;
     private LocalDate createDate;
     private LocalDate modifyDate;

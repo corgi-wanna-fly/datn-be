@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AccountConst;
+import com.poly.datn.be.domain.constant.ProductConst;
 import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
 import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
@@ -12,6 +13,7 @@ import com.poly.datn.be.util.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,17 +39,13 @@ public class AccountApi {
     @GetMapping(AccountConst.API_ACCOUNT_FIND_ALL)
     public ResponseEntity<?> findAll(@RequestParam("page") Optional<Integer> page,
                                      @RequestParam("size") Optional<Integer> size) {
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8));
-        List<Object[]> objects = this.accountService.findAllSecond(pageable);
-        List<RespAccountDto> respAccountDtos = objects.stream().map(item -> ConvertUtil.accountToRespAccountDto(item)).collect(Collectors.toList());
-        return new ResponseEntity<>(respAccountDtos, HttpStatus.OK);
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        return new ResponseEntity<>(this.accountService.findAllSecond(pageable), HttpStatus.OK);
     }
 
     @GetMapping(AccountConst.API_ACCOUNT_FIND_BY_ID)
     public ResponseEntity<?> findById(@PathVariable Long id) {
-        List<Object[]> objects = this.accountService.findByIdSecond(id);
-        List<RespAccountDto> respAccountDtos = objects.stream().map(item -> ConvertUtil.accountToRespAccountDto(item)).collect(Collectors.toList());
-        return new ResponseEntity<>(respAccountDtos, HttpStatus.OK);
+        return new ResponseEntity<>(this.accountService.findByIdSecond(id), HttpStatus.OK);
     }
 
     @GetMapping(AccountConst.API_ACCOUNT_FIND_BY_USERNAME)
@@ -68,9 +66,11 @@ public class AccountApi {
                                                              @RequestParam("page") Optional<Integer> page,
                                                              @RequestParam("size") Optional<Integer> size
     ) {
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8));
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9));
         List<Object[]> objects = this.accountService.findAccountByIsActiveOrInactive(isActive, pageable);
-        List<RespAccountDto> respAccountDtos = objects.stream().map(item -> ConvertUtil.accountToRespAccountDto(item)).collect(Collectors.toList());
+        List<RespAccountDto> respAccountDtos = objects.stream().map(item -> ConvertUtil.accountToRespAccountDto(item))
+                .sorted((o1, o2) ->  o1.getId() > o2.getId() ? -1 : 1)
+                .collect(Collectors.toList());
         return new ResponseEntity<>(respAccountDtos, HttpStatus.OK);
     }
 
@@ -112,4 +112,8 @@ public class AccountApi {
         return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
     }
 
+    @GetMapping(AccountConst.API_ACCOUNT_TOTAL_PAGE)
+    public ResponseEntity<?> getTotalPage(){
+        return new ResponseEntity<>(this.accountService.getToTalPage(), HttpStatus.OK);
+    }
 }

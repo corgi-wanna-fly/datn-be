@@ -84,17 +84,18 @@ public class ConvertUtil {
 
     public static RespAccountDto accountToRespAccountDto(Object[] objects){
         RespAccountDto respAccountDto = new RespAccountDto();
-        respAccountDto.setUsername((String) objects[0]);
-        respAccountDto.setCreateDate((LocalDate) objects[1]);
-        respAccountDto.setModifyDate((LocalDate) objects[2]);
-        respAccountDto.setIsActive((Boolean) objects[3]);
-        respAccountDto.setRoleName((String) objects[4]);
-        respAccountDto.setFullName((String) objects[5]);
-        respAccountDto.setGender((String) objects[6]);
-        respAccountDto.setPhone((String) objects[7]);
-        respAccountDto.setEmail((String) objects[8]);
-        respAccountDto.setAddress((String) objects[9]);
-        respAccountDto.setBirthDate((Date) objects[10]);
+        respAccountDto.setId((Long) objects[0]);
+        respAccountDto.setUsername((String) objects[1]);
+        respAccountDto.setCreateDate((LocalDate) objects[2]);
+        respAccountDto.setModifyDate((LocalDate) objects[3]);
+        respAccountDto.setIsActive((Boolean) objects[4]);
+        respAccountDto.setRoleName((String) objects[5]);
+        respAccountDto.setFullName((String) objects[6]);
+        respAccountDto.setGender((String) objects[7]);
+        respAccountDto.setPhone((String) objects[8]);
+        respAccountDto.setEmail((String) objects[9]);
+        respAccountDto.setAddress((String) objects[10]);
+        respAccountDto.setBirthDate((Date) objects[11]);
         return  respAccountDto;
     }
 
