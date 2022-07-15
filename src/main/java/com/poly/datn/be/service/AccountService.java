@@ -15,7 +15,7 @@ public interface AccountService {
 
     RespAccountDto findByIdSecond(Long id);
 
-    List<Object[]> findByUsername(String username);
+    RespAccountDto findByUsername(String username);
 
     void deleteOrRestore(Boolean isActive, Long id);
 
