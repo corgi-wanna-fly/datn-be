@@ -14,7 +14,7 @@ public class ReqCategoryProductDto {
 
     private Long id;
 
-    private Category category;
+    private Long categoryId;
 
-    private Product product;
+    private Long productId;
 }

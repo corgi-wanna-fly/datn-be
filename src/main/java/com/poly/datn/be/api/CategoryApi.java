@@ -28,7 +28,7 @@ public class CategoryApi {
     @GetMapping(CategoryConst.FIND_ALL)
     public ResponseEntity<?> findAllList(@RequestParam(defaultValue = "0") Integer page,@RequestParam(defaultValue = "10") Integer size) {
         Pageable pageable = PageRequest.of(page,size);
-        return ResponseEntity.ok(categoryService.findAll(pageable));
+        return ResponseEntity.ok(categoryService.getListCategory(pageable));
     }
 
     @PostMapping(CategoryConst.CREATE)

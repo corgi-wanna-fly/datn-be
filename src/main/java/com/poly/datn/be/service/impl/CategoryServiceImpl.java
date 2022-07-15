@@ -9,6 +9,7 @@ import com.poly.datn.be.domain.dto.ReqCategoryProductDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Category;
 import com.poly.datn.be.entity.Order;
+import com.poly.datn.be.entity.Product;
 import com.poly.datn.be.entity.ProductCategory;
 import com.poly.datn.be.repo.CategoryRepo;
 import com.poly.datn.be.repo.ProductCategoryRepo;
@@ -41,9 +42,9 @@ public class CategoryServiceImpl implements CategoryService {
         this.productCategoryRepo = productCategoryRepo;
     }
 
-    @Autowired
+    @Override
     @Transactional
-    public Page<Category> getCategory(Pageable pageable) {
+    public Page<Category> getListCategory(Pageable pageable) {
         return categoryRepo.categoryList(pageable);
     }
 
@@ -98,6 +99,12 @@ public class CategoryServiceImpl implements CategoryService {
     public ProductCategory createProductCate(ReqCategoryProductDto productDto) {
         try {
             ProductCategory category = objectMapper.convertValue(productDto, ProductCategory.class);
+            Category cate = new Category();
+            cate.setId(productDto.getCategoryId());
+            category.setCategory(cate);
+            Product pro = new Product();
+            pro.setId(productDto.getProductId());
+            category.setProduct(pro);
             return productCategoryRepo.save(category);
         } catch (Exception e) {
             throw new AppException(CategoryConst.FALSE);

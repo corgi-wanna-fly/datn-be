@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CategoryService {
-    Page<Category> getCategory(Pageable pageable);
+    Page<Category> getListCategory(Pageable pageable);
     Category saveCategory(ReqCategoryDto categoryDto);
     Category updateCategory(ReqCategoryDto categoryDto);
     Category deleteCategory(ReqCategoryDto categoryDto);
