@@ -3,14 +3,17 @@ package com.poly.datn.be.service.impl;
 import com.poly.datn.be.domain.constant.AccountConst;
 import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.exception.AppException;
+import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.repo.AccountRepo;
 import com.poly.datn.be.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,12 +30,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Object[]> findAllSecond(Pageable pageable) {
+    public List<RespAccountDto> findAllSecond(Pageable pageable) {
         return this.accountRepo.findAllSecond(pageable);
     }
 
     @Override
-    public List<Object[]> findByIdSecond(Long id) {
+    public RespAccountDto findByIdSecond(Long id) {
         return this.accountRepo.findByIdSecond(id);
     }
 
@@ -59,6 +62,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findAccountByUsername(String username) {
         return this.accountRepo.findAccountByUsername(username);
+    }
+
+    @Override
+    public Integer getToTalPage() {
+        return this.accountRepo.findAll(PageRequest.of(0, 9)).getTotalPages();
     }
 
 }

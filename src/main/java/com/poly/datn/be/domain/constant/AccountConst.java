@@ -11,4 +11,5 @@ public class AccountConst {
     public static final String API_ACCOUNT_FIND_ALL_BY_IS_ACTIVE_OR_INACTIVE = "/api/site/accounts/{isActive}";
     public static final String API_ACCOUNT_CREATE = "/api/site/account/create";
     public static final String API_ACCOUNT_UPDATE = "/api/site/account/update";
+    public static final String API_ACCOUNT_TOTAL_PAGE = "/api/site/account/get-total-page";
 }
