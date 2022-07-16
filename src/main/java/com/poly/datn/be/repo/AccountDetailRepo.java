@@ -20,5 +20,5 @@ public interface AccountDetailRepo extends JpaRepository<AccountDetail, Long> {
             "a.email = ?4, a.address = ?5, a.birthDate = ?6 where a.account.id = ?7")
     void update(String fullname, String gender, String phone, String email, String address, Date birthDate, Long id);
 
-    Account findAccountDetailByEmail(String email);
+    AccountDetail findAccountDetailByEmail(String email);
 }

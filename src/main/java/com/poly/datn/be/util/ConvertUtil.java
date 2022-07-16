@@ -105,20 +105,16 @@ public class ConvertUtil {
         account.setPassword(reqAccountDto.getPassword());
         account.setCreateDate(LocalDate.now());
         account.setModifyDate(LocalDate.now());
-        account.setIsActive(reqAccountDto.getIsActive());
+        account.setIsActive(true);
         Role role = new Role();
         role.setId(reqAccountDto.getRoleId());
         account.setRole(role);
         return account;
     }
 
-    public static Account ReqUpdateAccountDtoToAccount(ReqUpdateAccountDto reqUpdateAccountDto){
-        Account account = new Account();
+    public static Account ReqUpdateAccountDtoToAccount(Account account, ReqUpdateAccountDto reqUpdateAccountDto){
         account.setId(reqUpdateAccountDto.getId());
-        account.setUsername(reqUpdateAccountDto.getUsername());
         account.setPassword(reqUpdateAccountDto.getPassword());
-        account.setCreateDate(reqUpdateAccountDto.getCreateDate());
-        account.setModifyDate(LocalDate.now());
         account.setIsActive(reqUpdateAccountDto.getIsActive());
         Role role = new Role();
         role.setId(reqUpdateAccountDto.getRoleId());
@@ -129,7 +125,6 @@ public class ConvertUtil {
     public static AccountDetail ReqAccountDtoToAccountDetail(ReqCreateAccountDto reqCreateAccountDto){
         AccountDetail accountDetail = new AccountDetail();
         Account account = new Account();
-        account.setId(reqCreateAccountDto.getAccountId());
         accountDetail.setAccount(account);
         accountDetail.setFullname(reqCreateAccountDto.getFullName());
         accountDetail.setGender(reqCreateAccountDto.getGender());

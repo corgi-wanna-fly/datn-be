@@ -53,11 +53,11 @@ public class AccountApi {
         return new ResponseEntity<>(this.accountService.findByUsername(username), HttpStatus.OK);
     }
 
-    @GetMapping(AccountConst.API_ACCOUNT_DELETE_OR_RESTORE)
-    public ResponseEntity<?> deleteOrRestore(@PathVariable("id") Long id, @RequestParam("isActive") Optional<Boolean> isActive) {
-        this.accountService.deleteOrRestore(isActive.orElse(false), id);
-        return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
-    }
+//    @GetMapping(AccountConst.API_ACCOUNT_DELETE_OR_RESTORE)
+//    public ResponseEntity<?> deleteOrRestore(@PathVariable("id") Long id, @RequestParam("isActive") Optional<Boolean> isActive) {
+//        this.accountService.deleteOrRestore(isActive.orElse(false), id);
+//        return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
+//    }
 
     @GetMapping(AccountConst.API_ACCOUNT_FIND_ALL_BY_IS_ACTIVE_OR_INACTIVE)
     public ResponseEntity<?> findAccountByIsActiveOrInactive(@PathVariable("isActive") Boolean isActive,
@@ -67,7 +67,7 @@ public class AccountApi {
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9));
         List<Object[]> objects = this.accountService.findAccountByIsActiveOrInactive(isActive, pageable);
         List<RespAccountDto> respAccountDtos = objects.stream().map(item -> ConvertUtil.accountToRespAccountDto(item))
-                .sorted((o1, o2) ->  o1.getId() > o2.getId() ? -1 : 1)
+                .sorted((o1, o2) -> o1.getId() > o2.getId() ? -1 : 1)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(respAccountDtos, HttpStatus.OK);
     }
@@ -82,28 +82,31 @@ public class AccountApi {
             return new ResponseEntity<>("Username hoặc Email đã tồn tại!", HttpStatus.FOUND);
         }
         Account account = ConvertUtil.ReqCreateAccountDtoToAccount(reqCreateAccountDto);
-        Long id = this.accountService.save(account).getId();
-        reqCreateAccountDto.setAccountId(id);
+        account.setId(this.accountService.save(account).getId());
         AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqCreateAccountDto);
+        accountDetail.setAccount(account);
         this.accountDetailService.save(accountDetail);
-        return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Create Successfully", HttpStatus.OK);
     }
 
     @Transactional
     @Modifying
     @PostMapping(AccountConst.API_ACCOUNT_UPDATE)
     public ResponseEntity<?> update(@RequestBody @Valid ReqUpdateAccountDto reqUpdateAccountDto) {
-        Account ac = this.accountService.findById(reqUpdateAccountDto.getId());
-        if (ac == null){
+        Account account = this.accountService.findById(reqUpdateAccountDto.getId());
+        AccountDetail ad = this.accountDetailService.findAccountDetail(account.getId());
+        if (account.getRole().getId() == 1) {
+            return new ResponseEntity<>("Không thể thay đổi quyền Admin", HttpStatus.FOUND);
+        }
+        if (account == null) {
             return new ResponseEntity<>("Mã id Account không tồn tại!", HttpStatus.NOT_FOUND);
         }
-        if (this.accountService.findAccountByUsername(reqUpdateAccountDto.getUsername()) != null ||
-                this.accountDetailService.findAccountDetailByEmail(reqUpdateAccountDto.getEmail()) != null
+        if (
+                !reqUpdateAccountDto.getEmail().equals(ad.getEmail()) && this.accountDetailService.findAccountDetailByEmail(reqUpdateAccountDto.getEmail()) != null
         ) {
-            return new ResponseEntity<>("Username hoặc Email đã tồn tại!", HttpStatus.FOUND);
+            return new ResponseEntity<>("Email đã tồn tại!", HttpStatus.FOUND);
         }
-        reqUpdateAccountDto.setCreateDate(ac.getCreateDate());
-        Account account = ConvertUtil.ReqUpdateAccountDtoToAccount(reqUpdateAccountDto);
+        account = ConvertUtil.ReqUpdateAccountDtoToAccount(account, reqUpdateAccountDto);
         this.accountService.save(account);
         AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqUpdateAccountDto);
         this.accountDetailService.update(accountDetail);
@@ -111,7 +114,7 @@ public class AccountApi {
     }
 
     @GetMapping(AccountConst.API_ACCOUNT_TOTAL_PAGE)
-    public ResponseEntity<?> getTotalPage(){
+    public ResponseEntity<?> getTotalPage() {
         return new ResponseEntity<>(this.accountService.getToTalPage(), HttpStatus.OK);
     }
 }
