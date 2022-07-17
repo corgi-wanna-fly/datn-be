@@ -72,49 +72,29 @@ public class AccountApi {
         return new ResponseEntity<>(respAccountDtos, HttpStatus.OK);
     }
 
-    @Transactional
-    @Modifying
+
     @PostMapping(AccountConst.API_ACCOUNT_CREATE)
     public ResponseEntity<?> create(@RequestBody @Valid ReqCreateAccountDto reqCreateAccountDto) {
-        if (this.accountService.findAccountByUsername(reqCreateAccountDto.getUsername()) != null ||
-                this.accountDetailService.findAccountDetailByEmail(reqCreateAccountDto.getEmail()) != null
-        ) {
-            return new ResponseEntity<>("Username hoặc Email đã tồn tại!", HttpStatus.FOUND);
-        }
-        Account account = ConvertUtil.ReqCreateAccountDtoToAccount(reqCreateAccountDto);
-        account.setId(this.accountService.save(account).getId());
-        AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqCreateAccountDto);
-        accountDetail.setAccount(account);
-        this.accountDetailService.save(accountDetail);
-        return new ResponseEntity<>("Create Successfully", HttpStatus.OK);
+        return new ResponseEntity<>(this.accountService.save(reqCreateAccountDto), HttpStatus.OK);
     }
 
-    @Transactional
-    @Modifying
+
     @PostMapping(AccountConst.API_ACCOUNT_UPDATE)
     public ResponseEntity<?> update(@RequestBody @Valid ReqUpdateAccountDto reqUpdateAccountDto) {
-        Account account = this.accountService.findById(reqUpdateAccountDto.getId());
-        AccountDetail ad = this.accountDetailService.findAccountDetail(account.getId());
-        if (account.getRole().getId() == 1) {
-            return new ResponseEntity<>("Không thể thay đổi quyền Admin", HttpStatus.FOUND);
-        }
-        if (account == null) {
-            return new ResponseEntity<>("Mã id Account không tồn tại!", HttpStatus.NOT_FOUND);
-        }
-        if (
-                !reqUpdateAccountDto.getEmail().equals(ad.getEmail()) && this.accountDetailService.findAccountDetailByEmail(reqUpdateAccountDto.getEmail()) != null
-        ) {
-            return new ResponseEntity<>("Email đã tồn tại!", HttpStatus.FOUND);
-        }
-        account = ConvertUtil.ReqUpdateAccountDtoToAccount(account, reqUpdateAccountDto);
-        this.accountService.save(account);
-        AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqUpdateAccountDto);
-        this.accountDetailService.update(accountDetail);
-        return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
+        return new ResponseEntity<>(this.accountService.update(reqUpdateAccountDto), HttpStatus.OK);
     }
 
     @GetMapping(AccountConst.API_ACCOUNT_TOTAL_PAGE)
     public ResponseEntity<?> getTotalPage() {
         return new ResponseEntity<>(this.accountService.getToTalPage(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = AccountConst.API_ACCOUNT_GET_BY_ROLE_NAME, params = "roleName")
+    public ResponseEntity<?> getAccountByRoleName(@RequestParam("roleName") String roleName,
+                                                  @RequestParam("page") Optional<Integer> page,
+                                                  @RequestParam("size") Optional<Integer> size
+                                                  ){
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        return new ResponseEntity<>(this.accountService.findAccountByRoleName(roleName, pageable), HttpStatus.OK);
     }
 }

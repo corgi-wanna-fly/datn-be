@@ -48,4 +48,10 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     Account findAccountByUsername(String username);
 
+    @Query("SELECT new com.poly.datn.be.domain.resp_dto.RespAccountDto( a.id, a.username, a.createDate, a.modifyDate, a.isActive , r.name," +
+            " ad.fullname, ad.gender, ad.phone, ad.email, ad.address, ad.birthDate ) FROM Account a " +
+            "inner join AccountDetail ad on a.id = ad.account.id " +
+            "inner join Role r on a.role.id = r.id where a.role.name = ?1")
+    List<RespAccountDto> findAccountByRoleName(String name, Pageable pageable);
+
 }
