@@ -1,5 +1,7 @@
 package com.poly.datn.be.service;
 
+import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +23,13 @@ public interface AccountService {
 
     List<Object[]> findAccountByIsActiveOrInactive(Boolean isActive, Pageable pageable);
 
-    Account save(Account account);
+    Account update(ReqUpdateAccountDto reqUpdateAccountDto);
+
+    Account save(ReqCreateAccountDto reqCreateAccountDto);
 
     Account findAccountByUsername(String username);
 
     Integer getToTalPage();
+
+    List<RespAccountDto> findAccountByRoleName(String roleName, Pageable pageable);
 }

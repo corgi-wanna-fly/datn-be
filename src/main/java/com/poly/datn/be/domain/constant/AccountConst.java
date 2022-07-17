@@ -12,4 +12,5 @@ public class AccountConst {
     public static final String API_ACCOUNT_CREATE = "/api/site/account/create";
     public static final String API_ACCOUNT_UPDATE = "/api/site/account/update";
     public static final String API_ACCOUNT_TOTAL_PAGE = "/api/site/account/get-total-page";
+    public static final String API_ACCOUNT_GET_BY_ROLE_NAME = "/api/site/account";
 }
