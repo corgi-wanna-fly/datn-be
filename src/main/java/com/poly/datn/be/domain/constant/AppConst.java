@@ -6,5 +6,5 @@ public class AppConst {
     public static final String MSG_SUCCESS_COMMON = "Thành công!";
     public static final String MSG_FAIL_COMMON = "Thất bại!";
     public static final Boolean CONST_ACTIVE = true;
-    public static final Boolean CONST_IS_ACTIVE = false;
+    public static final Boolean CONST_IN_ACTIVE = false;
 }

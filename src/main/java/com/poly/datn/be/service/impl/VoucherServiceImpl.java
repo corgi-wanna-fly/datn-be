@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 @Service
 public class VoucherServiceImpl implements VoucherService {
@@ -51,7 +52,7 @@ public class VoucherServiceImpl implements VoucherService {
             Voucher vou = optional.get();
             vou.setCode(voucher.getCode());
             vou.setExpireDate(voucher.getExpireDate());
-            vou.setCreateDate(vou.getCreateDate());
+            vou.setCreateDate(LocalDate.now());
             vou.setDiscount(voucher.getDiscount());
             vou.setCount(voucher.getCount());
             vou.setIsActive(voucher.getIsActive());
@@ -88,5 +89,10 @@ public class VoucherServiceImpl implements VoucherService {
             throw new AppException(VoucherConst.MSG_ERROR_VOUCHER_NOT_EXIST);
         }
         return optionalVoucher.get();
+    }
+
+    @Override
+    public List<Voucher> findAll() {
+        return voucherRepo.findAll();
     }
 }
