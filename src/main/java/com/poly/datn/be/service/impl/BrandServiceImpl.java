@@ -1,15 +1,19 @@
 package com.poly.datn.be.service.impl;
 
+import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.BrandConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Brand;
+import com.poly.datn.be.entity.Product;
 import com.poly.datn.be.repo.BrandRepo;
 import com.poly.datn.be.service.BrandService;
+import com.poly.datn.be.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +24,8 @@ public class BrandServiceImpl implements BrandService {
     @Autowired
     BrandRepo brandRepo;
 
+    @Autowired
+    ProductService productService;
     @Override
     public Page<Brand> getBrands(Pageable pageable) {
         return brandRepo.findAll(pageable);
@@ -39,6 +45,7 @@ public class BrandServiceImpl implements BrandService {
         return optionalBrand.get();
     }
     @Override
+    
     public boolean existsByName(String name){
         return brandRepo.existsByName(name);
 
@@ -51,6 +58,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    @Transactional
     public Brand update(Brand brand){
         Optional<Brand> optional = brandRepo.findById(brand.getId());
         if(optional.isPresent()){
@@ -61,6 +69,21 @@ public class BrandServiceImpl implements BrandService {
             b.setImage(brand.getImage());
             b.setIsActive(brand.getIsActive());
             brandRepo.save(b);
+            List<Product> list = productService.getProductByBrand(b.getId());
+            for (Product product: list){
+                System.out.println(product.getId());
+            }
+           if(!brand.getIsActive()){
+               for(Product p: list){
+                   p.setIsActive(AppConst.CONST_IN_ACTIVE);
+                   productService.update(p);
+               }
+           }else if(brand.getIsActive()){
+               for(Product p: list){
+                   p.setIsActive(AppConst.CONST_ACTIVE);
+                   productService.update(p);
+               }
+           }
             return b;
         }else {
             throw new AppException(BrandConst.MSG_ERROR_BRAND_NOT_EXIST);

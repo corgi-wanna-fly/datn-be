@@ -24,7 +24,7 @@ public class BrandApi {
     @GetMapping(BrandConst.API_BRAND_GET_ALL)
     public ResponseEntity<?> getAllBrandPagination(@RequestParam("page") Optional<Integer> page,
                                                                     @RequestParam("size")Optional<Integer> size){
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC,"id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC,"modifyDate");
 
 
         return new ResponseEntity<>(brandService.getBrands(pageable), HttpStatus.OK);
