@@ -48,4 +48,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductByBrand(Long id) {
         return productRepo.getProductByBrand_Id(id);
     }
+
+    @Override
+    public Product update(Product product) {
+        return productRepo.save(product);
+    }
 }
