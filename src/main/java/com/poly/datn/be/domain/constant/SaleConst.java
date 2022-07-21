@@ -2,7 +2,7 @@ package com.poly.datn.be.domain.constant;
 
 public class SaleConst {
     public static final String MSG_ERROR_SALE_NOT_EXIST = "id không tồn tại.";
-
+    public static final String MSG_ERROR_SALE_NOT_ACCEPT = "Không thể thay đổi trạng thái mặc định.";
     public static final String API_SALE_GET_BY_ID = "/api/site/get-sale-by-id/{id}";
     public static final String API_SALE_CREATE = "/api/site/create-sale";
     public static final String API_SALE_UPDATE = "/api/site/update-sale";

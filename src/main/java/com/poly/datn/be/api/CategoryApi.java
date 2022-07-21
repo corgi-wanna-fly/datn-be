@@ -31,7 +31,7 @@ public class CategoryApi {
     @GetMapping(CategoryConst.FIND_ALL)
     public ResponseEntity<?> findAllList(@RequestParam("page")Optional<Integer> page,
                                          @RequestParam("size")Optional<Integer> size) {
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "createDate");
         return ResponseEntity.ok(categoryService.findAll(pageable));
     }
     @GetMapping(CategoryConst.FIND_BY_ID)

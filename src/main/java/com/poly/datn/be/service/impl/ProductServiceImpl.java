@@ -50,6 +50,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getProductByCategory(Long id) {
+        return productRepo.getProductByCategory(id);
+    }
+
+    @Override
+    public List<Product> getProductBySale(Long id) {
+        return productRepo.getProductBySale_Id(id);
+    }
+
+    @Override
     public Product update(Product product) {
         return productRepo.save(product);
     }

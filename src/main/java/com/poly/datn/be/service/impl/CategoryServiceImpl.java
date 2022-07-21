@@ -1,6 +1,7 @@
 package com.poly.datn.be.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.CategoryConst;
 import com.poly.datn.be.domain.constant.OrderConst;
 import com.poly.datn.be.domain.constant.OrderStatusConst;
@@ -10,10 +11,12 @@ import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Category;
 import com.poly.datn.be.entity.Order;
+import com.poly.datn.be.entity.Product;
 import com.poly.datn.be.entity.ProductCategory;
 import com.poly.datn.be.repo.CategoryRepo;
 import com.poly.datn.be.repo.ProductCategoryRepo;
 import com.poly.datn.be.service.CategoryService;
+import com.poly.datn.be.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     CategoryRepo categoryRepo;
 
+    @Autowired
+    ProductService productService;
     @Override
     public Page<Category> findAll(Pageable pageable) {
         return categoryRepo.findAll(pageable);
@@ -53,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public Category updateCategory(Category category) {
         Optional<Category> optional = categoryRepo.findById(category.getId());
         if(optional.isPresent()){
@@ -61,6 +67,18 @@ public class CategoryServiceImpl implements CategoryService {
             cate.setModifyDate(LocalDate.now());
             cate.setDescription(category.getDescription());
             cate.setName(category.getName());
+            List<Product> products = productService.getProductByCategory(cate.getId());
+            if(!category.getIsActive()){
+                for(Product p: products){
+                    p.setIsActive(AppConst.CONST_IN_ACTIVE);
+                    productService.update(p);
+                }
+            }else{
+                for(Product p: products){
+                    p.setIsActive(AppConst.CONST_ACTIVE);
+                    productService.update(p);
+                }
+            }
             return categoryRepo.save(cate);
         }else{
             throw new AppException("Loại sản phẩm không tồn tại.");

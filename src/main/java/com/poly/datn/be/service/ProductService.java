@@ -12,5 +12,7 @@ public interface ProductService {
     List<RespProductDto> searchByKeyword(String keyword, Pageable pageable);
     Product getProductById(Long id);
     List<Product> getProductByBrand(Long id);
+    List<Product> getProductByCategory(Long id);
+    List<Product> getProductBySale(Long id);
     Product update(Product product);
 }

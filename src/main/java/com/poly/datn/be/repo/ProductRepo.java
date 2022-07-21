@@ -29,4 +29,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
                                             Pageable pageable);
 
     List<Product> getProductByBrand_Id(Long brandId);
+    @Query("SELECT p FROM Product p INNER JOIN ProductCategory pc ON p.id = pc.product.id INNER JOIN Category c on pc.category.id = c.id where c.id = :categoryId")
+    List<Product> getProductByCategory(@Param("categoryId") Long categoryId);
+
+    List<Product> getProductBySale_Id(Long id);
 }

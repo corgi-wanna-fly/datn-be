@@ -41,7 +41,7 @@ public class SaleApi {
     @GetMapping(SaleConst.API_SALE_GET_ALL)
     public ResponseEntity<?> getAllVoucher(@RequestParam("page") Optional<Integer> page,
                                            @RequestParam("size") Optional<Integer> size){
-        Pageable pageable = PageRequest.of(page.orElse(1)-1, size.orElse(9), Sort.Direction.DESC,"id");
+        Pageable pageable = PageRequest.of(page.orElse(1)-1, size.orElse(9), Sort.Direction.DESC,"modifyDate");
         return new ResponseEntity<>(saleService.getToTalPage(pageable),HttpStatus.OK);
     }
     @GetMapping(SaleConst.API_SALE_GET_BY_ID)
