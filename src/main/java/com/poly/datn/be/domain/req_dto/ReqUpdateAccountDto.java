@@ -13,9 +13,6 @@ public class ReqUpdateAccountDto {
     //account
     @NotNull(message = "id không được để trống")
     private Long id;
-    @NotNull(message = "Password không null")
-    @NotEmpty(message = "Password không trống")
-    private String password;
     @NotNull(message = "Isactive không được để trống")
     private Boolean isActive;
     //role

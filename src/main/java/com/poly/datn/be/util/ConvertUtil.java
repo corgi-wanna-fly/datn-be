@@ -28,15 +28,6 @@ public class ConvertUtil {
         respProductDto.setIsActive((Boolean) objects[9]);
         return respProductDto;
     }
-//    public static RespBrandDto fromBrand(Object[] objects){
-//        RespBrandDto respBrandDto = new RespBrandDto();
-//        respBrandDto.setId((Long) objects[0]);
-//        respBrandDto.setName((String) objects[1]);
-//        respBrandDto.setDescription((String) objects[2]);
-//        respBrandDto.setIsActive((Boolean) objects[3]);
-//        respBrandDto.setImage((String) objects[4]);
-//        return respBrandDto;
-//    }
 
     public static RespProductDetailDto fromProductDetail(Product product){
         RespProductDetailDto respProductDetailDto = new RespProductDetailDto();
@@ -114,7 +105,6 @@ public class ConvertUtil {
 
     public static Account ReqUpdateAccountDtoToAccount(Account account, ReqUpdateAccountDto reqUpdateAccountDto){
         account.setId(reqUpdateAccountDto.getId());
-        account.setPassword(reqUpdateAccountDto.getPassword());
         account.setIsActive(reqUpdateAccountDto.getIsActive());
         Role role = new Role();
         role.setId(reqUpdateAccountDto.getRoleId());

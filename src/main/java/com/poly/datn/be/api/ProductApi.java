@@ -37,6 +37,15 @@ public class ProductApi {
         return new ResponseEntity<>(respProductDtoList, HttpStatus.OK);
     }
 
+    @GetMapping(ProductConst.API_PRODUCT_SEARCH)
+    public ResponseEntity<?> searchByKeyword(@RequestParam("page")Optional<Integer> page,
+                                            @RequestParam("size")Optional<Integer> size,
+                                             @RequestParam("keyword") String keyword){
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), sort);
+        return new ResponseEntity(productService.searchByKeyword("%" + keyword + "%", pageable), HttpStatus.OK);
+    }
+
     @GetMapping(ProductConst.API_PRODUCT_GET_BY_ID)
     public ResponseEntity<?> getProductById(@PathVariable("id")Long id){
         return new ResponseEntity<>(ConvertUtil.fromProductDetail(productService.getProductById(id)), HttpStatus.OK);

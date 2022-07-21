@@ -31,11 +31,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<RespProductDto> searchByKeyword(String keyword, Pageable pageable) {
+        return productRepo.searchAllByKeyword(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, keyword, pageable);
+    }
+
+    @Override
     public Product getProductById(Long id) {
         Optional<Product> optionalProduct = productRepo.findById(id);
         if(!optionalProduct.isPresent()){
             throw new AppException(ProductConst.PRODUCT_MSG_ERROR_NOT_EXIST);
         }
         return optionalProduct.get();
+    }
+
+    @Override
+    public List<Product> getProductByBrand(Long id) {
+        return productRepo.getProductByBrand_Id(id);
     }
 }

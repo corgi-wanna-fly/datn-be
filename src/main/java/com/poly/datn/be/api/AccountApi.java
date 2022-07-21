@@ -53,12 +53,6 @@ public class AccountApi {
         return new ResponseEntity<>(this.accountService.findByUsername(username), HttpStatus.OK);
     }
 
-//    @GetMapping(AccountConst.API_ACCOUNT_DELETE_OR_RESTORE)
-//    public ResponseEntity<?> deleteOrRestore(@PathVariable("id") Long id, @RequestParam("isActive") Optional<Boolean> isActive) {
-//        this.accountService.deleteOrRestore(isActive.orElse(false), id);
-//        return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
-//    }
-
     @GetMapping(AccountConst.API_ACCOUNT_FIND_ALL_BY_IS_ACTIVE_OR_INACTIVE)
     public ResponseEntity<?> findAccountByIsActiveOrInactive(@PathVariable("isActive") Boolean isActive,
                                                              @RequestParam("page") Optional<Integer> page,

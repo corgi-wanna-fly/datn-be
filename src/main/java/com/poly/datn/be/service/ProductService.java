@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ProductService {
     List<Object[]> getProducts(Boolean active, Pageable pageable);
-
     Integer getToTalPage();
-
+    List<RespProductDto> searchByKeyword(String keyword, Pageable pageable);
     Product getProductById(Long id);
+    List<Product> getProductByBrand(Long id);
 }
