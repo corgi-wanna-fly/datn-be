@@ -1,11 +1,11 @@
 package com.poly.datn.be.service;
 
-import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.req_dto.*;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import org.springframework.data.domain.Pageable;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,4 +32,10 @@ public interface AccountService {
     Integer getToTalPage();
 
     List<RespAccountDto> findAccountByRoleName(String roleName, Pageable pageable);
+
+    RespAccountDto register(ReqRegisterAccountDto reqRegisterAccountDto);
+
+//    void changePassword(ReqChangePasswordDto reqChangePasswordDto);
+//
+//    void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException;
 }

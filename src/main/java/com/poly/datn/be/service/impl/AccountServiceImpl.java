@@ -3,8 +3,7 @@ package com.poly.datn.be.service.impl;
 import com.poly.datn.be.domain.constant.AccountConst;
 import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.exception.AppException;
-import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.req_dto.*;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
@@ -12,18 +11,23 @@ import com.poly.datn.be.repo.AccountRepo;
 import com.poly.datn.be.service.AccountDetailService;
 import com.poly.datn.be.service.AccountService;
 import com.poly.datn.be.util.ConvertUtil;
+import com.poly.datn.be.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -126,6 +130,60 @@ public class AccountServiceImpl implements AccountService {
     public List<RespAccountDto> findAccountByRoleName(String roleName, Pageable pageable) {
         return this.accountRepo.findAccountByRoleName(roleName, pageable);
     }
+
+    @Transactional
+    @Modifying
+    @Override
+    public RespAccountDto register(ReqRegisterAccountDto reqRegisterAccountDto) {
+
+        if (this.accountRepo.findAccountByUsername(reqRegisterAccountDto.getUsername()) != null) {
+            throw new AppException("Username đã tồn tại");
+        }
+        if (this.accountDetailService.findAccountDetailByEmail(reqRegisterAccountDto.getEmail()) != null){
+            throw new AppException("Email đã tồn tại");
+        }
+        Account account = ConvertUtil.ReqCreateAccountDtoToAccount(reqRegisterAccountDto);
+        account.setId(this.accountRepo.save(account).getId());
+        AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqRegisterAccountDto);
+        accountDetail.setAccount(account);
+        AccountDetail accountDetail1 = this.accountDetailService.save(accountDetail);
+        RespAccountDto respAccountDto = ConvertUtil.accountToRespAccountDto(account, accountDetail1);
+        return respAccountDto;
+    }
+
+//    @Override
+//    public void changePassword(ReqChangePasswordDto reqChangePasswordDto) {
+//        Account account = this.accountRepo.findAccountByUsername(reqChangePasswordDto.getUsername());
+//        if (account == null){
+//            throw new AppException("Tài khoản không tồn tại");
+//        }
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        if (!passwordEncoder.matches(account.getPassword(), reqChangePasswordDto.getPassword())) {
+//            throw new AppException("Password cũ không đúng!");
+//        } else if (!reqChangePasswordDto.getNewPassword().equals(reqChangePasswordDto.getNewPasswordSecond())) {
+//            throw new AppException("Password mới không giống nhau");
+//        }else {
+//            account.setPassword(passwordEncoder.encode(reqChangePasswordDto.getNewPassword().trim()));
+//            this.accountRepo.save(account);
+//        }
+//    }
+//
+//    @Transactional
+//    @Override
+//    public void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
+//        Account account = this.accountRepo.findAccountByUsername(reqForgotPasswordDto.getUsername());
+//        if (account == null){
+//            throw new AppException("Username không tồn tại");
+//        }else {
+//            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//            String newPassword = String.valueOf(UUID.randomUUID());
+//            account.setPassword(passwordEncoder.encode(newPassword));
+//            this.accountRepo.save(account);
+//            //gửi mail
+//            AccountDetail accountDetail = this.accountDetailService.findAccountDetail(account.getId());
+//            MailUtil.sendmailForgotPassword(accountDetail.getEmail(), newPassword);
+//        }
+//    }
 
 
 }

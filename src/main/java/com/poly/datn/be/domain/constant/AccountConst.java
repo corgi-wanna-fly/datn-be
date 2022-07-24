@@ -13,4 +13,7 @@ public class AccountConst {
     public static final String API_ACCOUNT_UPDATE = "/api/site/account/update";
     public static final String API_ACCOUNT_TOTAL_PAGE = "/api/site/account/get-total-page";
     public static final String API_ACCOUNT_GET_BY_ROLE_NAME = "/api/site/account";
+    public static final String API_ACCOUNT_REGISTER = "/api/site/account/register";
+    public static final String API_ACCOUNT_CHANGE_PASSWORD = "/api/site/account/change-password";
+    public static final String API_ACCOUNT_FORGOT_PASSWORD = "/api/site/account/forgot-password";
 }

@@ -2,8 +2,7 @@ package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AccountConst;
 import com.poly.datn.be.domain.constant.ProductConst;
-import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.req_dto.*;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
@@ -19,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -91,4 +91,21 @@ public class AccountApi {
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
         return new ResponseEntity<>(this.accountService.findAccountByRoleName(roleName, pageable), HttpStatus.OK);
     }
+
+    @PostMapping(AccountConst.API_ACCOUNT_REGISTER)
+    public ResponseEntity<?> register(@RequestBody @Valid ReqRegisterAccountDto reqRegisterAccountDto){
+        return new ResponseEntity<>(this.accountService.register(reqRegisterAccountDto), HttpStatus.OK);
+    }
+
+//    @PostMapping(AccountConst.API_ACCOUNT_CHANGE_PASSWORD)
+//    public ResponseEntity<?> changePassword(@RequestBody @Valid ReqChangePasswordDto reqChangePasswordDto){
+//        this.accountService.changePassword(reqChangePasswordDto);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+//
+//    @PostMapping(AccountConst.API_ACCOUNT_FORGOT_PASSWORD)
+//    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
+//        this.accountService.forgotPassword(reqForgotPasswordDto);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

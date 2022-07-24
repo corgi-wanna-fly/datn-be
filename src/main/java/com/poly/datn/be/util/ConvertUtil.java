@@ -2,9 +2,12 @@ package com.poly.datn.be.util;
 
 import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.req_dto.ReqRegisterAccountDto;
 import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.*;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConvertUtil {
+
     //mapper product -> resp-product-dto
     public static RespProductDto fromProduct(Object[] objects){
         RespProductDto respProductDto = new RespProductDto();
@@ -90,15 +94,49 @@ public class ConvertUtil {
         return  respAccountDto;
     }
 
+    public static RespAccountDto accountToRespAccountDto(Account account, AccountDetail accountDetail){
+        RespAccountDto respAccountDto = new RespAccountDto();
+        respAccountDto.setId(account.getId());
+        respAccountDto.setUsername(account.getUsername());
+        respAccountDto.setCreateDate(account.getCreateDate());
+        respAccountDto.setModifyDate(account.getModifyDate());
+        respAccountDto.setRoleName("CUSTOMER");
+        respAccountDto.setIsActive(account.getIsActive());
+        respAccountDto.setFullName(accountDetail.getFullname());
+        respAccountDto.setGender(accountDetail.getGender());
+        respAccountDto.setPhone(accountDetail.getPhone());
+        respAccountDto.setEmail(accountDetail.getEmail());
+        respAccountDto.setAddress(accountDetail.getAddress());
+        respAccountDto.setBirthDate(accountDetail.getBirthDate());
+        return  respAccountDto;
+    }
+
     public static Account ReqCreateAccountDtoToAccount(ReqCreateAccountDto reqAccountDto){
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Account account = new Account();
         account.setUsername(reqAccountDto.getUsername());
+//        account.setPassword(passwordEncoder.encode(reqAccountDto.getPassword()));
         account.setPassword(reqAccountDto.getPassword());
         account.setCreateDate(LocalDate.now());
         account.setModifyDate(LocalDate.now());
         account.setIsActive(true);
         Role role = new Role();
         role.setId(reqAccountDto.getRoleId());
+        account.setRole(role);
+        return account;
+    }
+
+    public static Account ReqCreateAccountDtoToAccount(ReqRegisterAccountDto reqAccountDto){
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        Account account = new Account();
+        account.setUsername(reqAccountDto.getUsername());
+//        account.setPassword(passwordEncoder.encode(reqAccountDto.getPassword()));
+        account.setPassword(reqAccountDto.getPassword());
+        account.setCreateDate(LocalDate.now());
+        account.setModifyDate(LocalDate.now());
+        account.setIsActive(true);
+        Role role = new Role();
+        role.setId(3L);
         account.setRole(role);
         return account;
     }
@@ -122,6 +160,19 @@ public class ConvertUtil {
         accountDetail.setEmail(reqCreateAccountDto.getEmail());
         accountDetail.setAddress(reqCreateAccountDto.getAddress());
         accountDetail.setBirthDate(reqCreateAccountDto.getBirthDate());
+        return accountDetail;
+    }
+
+    public static AccountDetail ReqAccountDtoToAccountDetail(ReqRegisterAccountDto ReqRegisterAccountDto){
+        AccountDetail accountDetail = new AccountDetail();
+        Account account = new Account();
+        accountDetail.setAccount(account);
+        accountDetail.setFullname(ReqRegisterAccountDto.getFullName());
+        accountDetail.setGender(ReqRegisterAccountDto.getGender());
+        accountDetail.setPhone(ReqRegisterAccountDto.getPhone());
+        accountDetail.setEmail(ReqRegisterAccountDto.getEmail());
+        accountDetail.setAddress(ReqRegisterAccountDto.getAddress());
+        accountDetail.setBirthDate(ReqRegisterAccountDto.getBirthDate());
         return accountDetail;
     }
 
