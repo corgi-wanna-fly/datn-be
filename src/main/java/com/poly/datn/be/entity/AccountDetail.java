@@ -34,6 +34,6 @@ public class AccountDetail {
     @Column(name = "birthdate", nullable = false)
     private Date birthDate;
     @OneToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", unique = true)
     private Account account;
 }

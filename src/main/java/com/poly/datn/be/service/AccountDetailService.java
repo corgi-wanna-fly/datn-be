@@ -10,5 +10,5 @@ public interface AccountDetailService {
 
     void update(AccountDetail accountDetail);
 
-    Account findAccountDetailByEmail(String email);
+    AccountDetail findAccountDetailByEmail(String email);
 }

@@ -1,27 +1,41 @@
 package com.poly.datn.be.service;
 
+import com.poly.datn.be.domain.req_dto.*;
+import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import org.springframework.data.domain.Pageable;
 
+import javax.mail.MessagingException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface AccountService {
     Account findById(Long id);
 
-    List<Object[]> findAllSecond(Pageable pageable);
+    List<RespAccountDto> findAllSecond(Pageable pageable);
 
-    List<Object[]> findByIdSecond(Long id);
+    RespAccountDto findByIdSecond(Long id);
 
-    List<Object[]> findByUsername(String username);
+    RespAccountDto findByUsername(String username);
 
     void deleteOrRestore(Boolean isActive, Long id);
 
     List<Object[]> findAccountByIsActiveOrInactive(Boolean isActive, Pageable pageable);
 
-    Account save(Account account);
+    Account update(ReqUpdateAccountDto reqUpdateAccountDto);
+
+    Account save(ReqCreateAccountDto reqCreateAccountDto);
 
     Account findAccountByUsername(String username);
 
+    Integer getToTalPage();
 
+    List<RespAccountDto> findAccountByRoleName(String roleName, Pageable pageable);
+
+    RespAccountDto register(ReqRegisterAccountDto reqRegisterAccountDto);
+
+//    void changePassword(ReqChangePasswordDto reqChangePasswordDto);
+//
+//    void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException;
 }

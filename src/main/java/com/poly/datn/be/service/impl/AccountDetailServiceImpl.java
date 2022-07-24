@@ -31,7 +31,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     }
 
     @Override
-    public Account findAccountDetailByEmail(String email) {
+    public AccountDetail findAccountDetailByEmail(String email) {
         return this.accountDetailRepo.findAccountDetailByEmail(email);
     }
 
