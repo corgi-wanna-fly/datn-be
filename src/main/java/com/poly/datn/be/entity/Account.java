@@ -9,6 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "accounts")
@@ -31,13 +32,18 @@ public class Account {
     private LocalDate modifyDate;
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<AppUserRole> appUserRoles;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
     @OneToMany(mappedBy = "account")
+
     @JsonIgnore
     private Collection<Order> orders;
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     private Collection<CartItem> cartItems;
+
 }
