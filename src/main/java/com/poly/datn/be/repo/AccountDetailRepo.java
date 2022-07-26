@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Repository
@@ -18,7 +19,7 @@ public interface AccountDetailRepo extends JpaRepository<AccountDetail, Long> {
     @Modifying
     @Query("update AccountDetail a set a.fullname = ?1, a.gender = ?2, a.phone = ?3, " +
             "a.email = ?4, a.address = ?5, a.birthDate = ?6 where a.account.id = ?7")
-    void update(String fullname, String gender, String phone, String email, String address, Date birthDate, Long id);
+    void update(String fullname, String gender, String phone, String email, String address, LocalDate birthDate, Long id);
 
     AccountDetail findAccountDetailByEmail(String email);
 }

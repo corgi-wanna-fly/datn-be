@@ -4,6 +4,9 @@ public class OrderConst {
     public static final String API_ORDER_CREATE = "/api/site/create-order";
     public static final String API_ORDER_UPDATE = "/api/site/update-order";
     public static final String API_ORDER_CANCEL = "/api/site/cancel-order";
+    public static final String API_ORDER_PAGE_ORDER = "/api/site/page-orders";
+    public static final String API_ORDER_PAGE_ORDER_BY_YEAR_AND_MONTH = "/api/site/page-orders-by-year-and-month";
+    public static final String API_ORDER_PAGE_ORDER_BETWEEN_DATE = "/api/site/page-orders-between-date";
     public static final String API_ORDER_UPDATE_STATUS = "/api/site/update-order-with-status";
     public static final String API_ORDER_GET_ALL_BY_ACCOUNT = "/api/site/get-orders";
     public static final String API_ORDER_GET_ALL_AND_PAGINATION = "/api/site/get-orders-and-pagination";

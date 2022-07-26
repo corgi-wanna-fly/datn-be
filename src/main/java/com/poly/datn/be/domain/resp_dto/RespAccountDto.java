@@ -1,5 +1,6 @@
 package com.poly.datn.be.domain.resp_dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,6 @@ public class  RespAccountDto {
     private String phone;
     private String email;
     private String address;
-    private Date birthDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private LocalDate birthDate;
 }

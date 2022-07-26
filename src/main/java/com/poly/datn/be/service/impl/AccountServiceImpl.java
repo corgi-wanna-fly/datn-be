@@ -7,9 +7,11 @@ import com.poly.datn.be.domain.req_dto.*;
 import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
+import com.poly.datn.be.entity.Role;
 import com.poly.datn.be.repo.AccountRepo;
 import com.poly.datn.be.service.AccountDetailService;
 import com.poly.datn.be.service.AccountService;
+import com.poly.datn.be.service.RoleService;
 import com.poly.datn.be.util.ConvertUtil;
 import com.poly.datn.be.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,10 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     AccountRepo accountRepo;
-
     @Autowired
     AccountDetailService accountDetailService;
-
+    @Autowired
+    RoleService roleService;
     @Override
     public Account findById(Long id) {
         Optional<Account> optionalAccount = accountRepo.findById(id);
@@ -135,7 +137,6 @@ public class AccountServiceImpl implements AccountService {
     @Modifying
     @Override
     public RespAccountDto register(ReqRegisterAccountDto reqRegisterAccountDto) {
-
         if (this.accountRepo.findAccountByUsername(reqRegisterAccountDto.getUsername()) != null) {
             throw new AppException("Username đã tồn tại");
         }
@@ -143,11 +144,13 @@ public class AccountServiceImpl implements AccountService {
             throw new AppException("Email đã tồn tại");
         }
         Account account = ConvertUtil.ReqCreateAccountDtoToAccount(reqRegisterAccountDto);
-        account.setId(this.accountRepo.save(account).getId());
+        Role role = roleService.findById(3L);
+        account.setRole(role);
+        account = this.accountRepo.save(account);
         AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqRegisterAccountDto);
         accountDetail.setAccount(account);
-        AccountDetail accountDetail1 = this.accountDetailService.save(accountDetail);
-        RespAccountDto respAccountDto = ConvertUtil.accountToRespAccountDto(account, accountDetail1);
+        accountDetail = this.accountDetailService.save(accountDetail);
+        RespAccountDto respAccountDto = ConvertUtil.accountToRespAccountDto(account, accountDetail);
         return respAccountDto;
     }
 

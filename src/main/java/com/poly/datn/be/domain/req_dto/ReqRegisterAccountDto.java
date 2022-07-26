@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Data
 public class ReqRegisterAccountDto {
@@ -32,6 +31,4 @@ public class ReqRegisterAccountDto {
     @NotNull(message = "Address không được null")
     @NotEmpty(message = "Address không được trống")
     private String address;
-    @NotNull(message = "BirthDate không được null")
-    private Date birthDate;
 }

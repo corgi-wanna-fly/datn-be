@@ -90,7 +90,7 @@ public class ConvertUtil {
         respAccountDto.setPhone((String) objects[8]);
         respAccountDto.setEmail((String) objects[9]);
         respAccountDto.setAddress((String) objects[10]);
-        respAccountDto.setBirthDate((Date) objects[11]);
+        respAccountDto.setBirthDate((LocalDate) objects[11]);
         return  respAccountDto;
     }
 
@@ -107,7 +107,7 @@ public class ConvertUtil {
         respAccountDto.setPhone(accountDetail.getPhone());
         respAccountDto.setEmail(accountDetail.getEmail());
         respAccountDto.setAddress(accountDetail.getAddress());
-        respAccountDto.setBirthDate(accountDetail.getBirthDate());
+        respAccountDto.setBirthDate(LocalDate.now());
         return  respAccountDto;
     }
 
@@ -135,9 +135,6 @@ public class ConvertUtil {
         account.setCreateDate(LocalDate.now());
         account.setModifyDate(LocalDate.now());
         account.setIsActive(true);
-        Role role = new Role();
-        role.setId(3L);
-        account.setRole(role);
         return account;
     }
 
@@ -159,20 +156,18 @@ public class ConvertUtil {
         accountDetail.setPhone(reqCreateAccountDto.getPhone());
         accountDetail.setEmail(reqCreateAccountDto.getEmail());
         accountDetail.setAddress(reqCreateAccountDto.getAddress());
-        accountDetail.setBirthDate(reqCreateAccountDto.getBirthDate());
+        accountDetail.setBirthDate(LocalDate.now());
         return accountDetail;
     }
 
     public static AccountDetail ReqAccountDtoToAccountDetail(ReqRegisterAccountDto ReqRegisterAccountDto){
         AccountDetail accountDetail = new AccountDetail();
-        Account account = new Account();
-        accountDetail.setAccount(account);
         accountDetail.setFullname(ReqRegisterAccountDto.getFullName());
         accountDetail.setGender(ReqRegisterAccountDto.getGender());
         accountDetail.setPhone(ReqRegisterAccountDto.getPhone());
         accountDetail.setEmail(ReqRegisterAccountDto.getEmail());
         accountDetail.setAddress(ReqRegisterAccountDto.getAddress());
-        accountDetail.setBirthDate(ReqRegisterAccountDto.getBirthDate());
+        accountDetail.setBirthDate(LocalDate.now());
         return accountDetail;
     }
 
@@ -186,7 +181,7 @@ public class ConvertUtil {
         accountDetail.setPhone(ReqUpdateAccountDto.getPhone());
         accountDetail.setEmail(ReqUpdateAccountDto.getEmail());
         accountDetail.setAddress(ReqUpdateAccountDto.getAddress());
-        accountDetail.setBirthDate(ReqUpdateAccountDto.getBirthDate());
+        accountDetail.setBirthDate(LocalDate.now());
         return accountDetail;
     }
 }

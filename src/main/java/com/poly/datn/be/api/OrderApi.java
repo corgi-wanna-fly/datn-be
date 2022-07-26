@@ -1,6 +1,5 @@
 package com.poly.datn.be.api;
 
-import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.OrderConst;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
@@ -14,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
@@ -27,17 +28,40 @@ public class OrderApi {
                                        @RequestParam("status") Optional<Long> status,
                                        @RequestParam("page")Optional<Integer> page,
                                        @RequestParam("size")Optional<Integer> size){
-        Sort sort = Sort.by(Sort.Direction.DESC,"id");
+        Sort sort = Sort.by(Sort.Direction.DESC,"modifyDate");
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
         return new ResponseEntity<>(orderService.findOrderByAccountIdAndOrderStatusId(id, status.orElse(0L), pageable), HttpStatus.OK);
     }
-    @GetMapping("/api/site/page-orders")
+    @GetMapping(OrderConst.API_ORDER_PAGE_ORDER)
     public ResponseEntity<?> getPageOrders(@RequestParam("id")Long id,
                                        @RequestParam("page")Optional<Integer> page,
                                        @RequestParam("size")Optional<Integer> size){
-        Sort sort = Sort.by(Sort.Direction.DESC,"id");
+        Sort sort = Sort.by(Sort.Direction.DESC,"modifyDate");
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
         return new ResponseEntity<>(orderService.findOrderByAccount_Id(id, pageable), HttpStatus.OK);
+    }
+    @GetMapping(OrderConst.API_ORDER_PAGE_ORDER_BY_YEAR_AND_MONTH)
+    public ResponseEntity<?> getOrderByOrderStatusAndYearAndMonth(@RequestParam("id")Long id,
+                                           @RequestParam("year") Integer year,
+                                           @RequestParam("month") Integer month,
+                                           @RequestParam("page")Optional<Integer> page,
+                                           @RequestParam("size")Optional<Integer> size){
+        Sort sort = Sort.by(Sort.Direction.DESC,"modifyDate");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
+        return new ResponseEntity<>(orderService.findOrderByOrderStatusAndYearAndMonth(id, year, month, pageable), HttpStatus.OK);
+    }
+    @GetMapping(OrderConst.API_ORDER_PAGE_ORDER_BETWEEN_DATE)
+    public ResponseEntity<?> findOrderBetweenDate(@RequestParam("id")Long id,
+                                                                  @RequestParam("from") String from,
+                                                                  @RequestParam("to") String to,
+                                                                  @RequestParam("page")Optional<Integer> page,
+                                                                  @RequestParam("size")Optional<Integer> size){
+        Sort sort = Sort.by(Sort.Direction.DESC,"modifyDate");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate fromDate = LocalDate.parse(from, dtf);
+        LocalDate toDate = LocalDate.parse(to, dtf);
+        return new ResponseEntity<>(orderService.findOrderBetweenDate(id, fromDate, toDate, pageable), HttpStatus.OK);
     }
     @GetMapping(OrderConst.API_ORDER_CANCEL)
     public ResponseEntity<?> cancelOrder(@RequestParam("id")Long id){
@@ -52,7 +76,7 @@ public class OrderApi {
     public ResponseEntity<?> getOrdersAndPagination(@RequestParam("page") Optional<Integer> page,
                                                     @RequestParam("size") Optional<Integer> size,
                                                     @RequestParam("status") Optional<Long> status){
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modifyDate");
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
         return new ResponseEntity<>(orderService.getAllOrdersAndPagination(status.orElse(0L), pageable), HttpStatus.OK);
     }

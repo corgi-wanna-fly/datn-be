@@ -192,4 +192,20 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> findOrderByAccount_Id(Long id, Pageable pageable) {
         return orderRepo.findOrderByAccount_Id(id, pageable);
     }
+
+    @Override
+    public Page<Order> findOrderByOrderStatusAndYearAndMonth(Long id, Integer year, Integer month, Pageable pageable) {
+        if(id.equals(0L)){
+           return orderRepo.findOrderByYearAndMonth(year, month, pageable);
+        }
+        return orderRepo.findOrderByOrderStatusAndYearAndMonth(id, year, month, pageable);
+    }
+
+    @Override
+    public Page<Order> findOrderBetweenDate(Long id, LocalDate from, LocalDate to, Pageable pageable) {
+        if(id.equals(0L)){
+            return orderRepo.findOrderBetweenDate(from, to, pageable);
+        }
+        return orderRepo.findOrderByOrderStatusBetweenDate(id, from, to, pageable);
+    }
 }
