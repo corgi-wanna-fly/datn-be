@@ -58,7 +58,7 @@ public class OrderApi {
                                                                   @RequestParam("size")Optional<Integer> size){
         Sort sort = Sort.by(Sort.Direction.DESC,"modifyDate");
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8),sort);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate fromDate = LocalDate.parse(from, dtf);
         LocalDate toDate = LocalDate.parse(to, dtf);
         return new ResponseEntity<>(orderService.findOrderBetweenDate(id, fromDate, toDate, pageable), HttpStatus.OK);
@@ -95,5 +95,37 @@ public class OrderApi {
     @GetMapping(OrderConst.API_ORDER_DETAIL_GET_BY_ID)
     public ResponseEntity<?> getOrderDetailByOrderId(@RequestParam("id")Long id){
         return new ResponseEntity<>(orderService.getAllByOrderId(id), HttpStatus.OK);
+    }
+
+    @GetMapping(OrderConst.API_ORDER_PAGE_REPORT_PRODUCT)
+    public ResponseEntity<?> reportByProduct(@RequestParam("page") Optional<Integer> page,
+                                             @RequestParam("size") Optional<Integer> size){
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8));
+        return new ResponseEntity<>(orderService.reportByProduct(pageable), HttpStatus.OK);
+    }
+    @GetMapping(OrderConst.API_ORDER_PAGE_ORDER_BY_PRODUCT)
+    public ResponseEntity<?> getOrderByProduct(@RequestParam("id") Long id,
+                                               @RequestParam("page") Optional<Integer> page,
+                                             @RequestParam("size") Optional<Integer> size){
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8), Sort.Direction.DESC, "modifyDate");
+        return new ResponseEntity<>(orderService.findOrderByProduct(id, pageable), HttpStatus.OK);
+    }
+
+    @GetMapping(OrderConst.API_ORDER_LIST_AMOUNT_YEAR)
+    public ResponseEntity<?> reportAmountYear(){
+        return new ResponseEntity<>(orderService.reportAmountYear(), HttpStatus.OK);
+    }
+    @GetMapping(OrderConst.API_ORDER_LIST_AMOUNT_MONTH)
+    public ResponseEntity<?> reportAmountMonth(@RequestParam("year") Integer year){
+        return new ResponseEntity<>(orderService.reportAmountMonth(year), HttpStatus.OK);
+    }
+
+    @GetMapping(OrderConst.API_ORDER_COUNT)
+    public ResponseEntity<?> countOrder(){
+        return new ResponseEntity<>(orderService.countOrder(), HttpStatus.OK);
+    }
+    @GetMapping(OrderConst.API_ORDER_COUNT_BY_NAME)
+    public ResponseEntity<?> countOrderByName(){
+        return new ResponseEntity<>(orderService.countOrderByName(), HttpStatus.OK);
     }
 }

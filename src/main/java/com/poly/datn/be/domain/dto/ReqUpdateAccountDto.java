@@ -1,20 +1,24 @@
-package com.poly.datn.be.domain.req_dto;
+package com.poly.datn.be.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Data
-public class ReqRegisterAccountDto {
-    //10 truong
+public class ReqUpdateAccountDto {
+    //12 truong
     //account
-    @NotNull(message = "Username không null")
-    @NotEmpty(message = "Username không trống")
-    private String username;
-    @NotNull(message = "Password không null")
-    @NotEmpty(message = "Password không trống")
-    private String password;
+    @NotNull(message = "id không được để trống")
+    private Long id;
+    @NotNull(message = "Isactive không được để trống")
+    private Boolean isActive;
+    //role
+    @NotNull(message = "Role id không được để trống")
+    private Long roleId;
     //account detail
     @NotNull(message = "FullName không được null")
     @NotEmpty(message = "FullName không được trống")
@@ -31,4 +35,7 @@ public class ReqRegisterAccountDto {
     @NotNull(message = "Address không được null")
     @NotEmpty(message = "Address không được trống")
     private String address;
+    @NotNull(message = "BirthDate không được null")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private LocalDate birthDate;
 }

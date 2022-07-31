@@ -1,4 +1,4 @@
-package com.poly.datn.be.domain.req_dto;
+package com.poly.datn.be.domain.dto;
 
 import lombok.Data;
 

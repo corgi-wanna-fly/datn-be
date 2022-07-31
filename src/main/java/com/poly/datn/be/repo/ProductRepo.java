@@ -1,7 +1,9 @@
 package com.poly.datn.be.repo;
 
 import com.poly.datn.be.domain.dto.RespProductDto;
+import com.poly.datn.be.domain.dto.ResponseProductDto;
 import com.poly.datn.be.entity.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,17 +11,26 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
-    @Query("SELECT p.id, p.name, p.code, p.description, p.view, a.price, i.imageLink, p.brand.name, p.sale.discount, p.isActive FROM Product p " +
+    @Query("SELECT new com.poly.datn.be.domain.dto.ResponseProductDto(p.id, p.name, p.code, p.description, p.view, a.price, i.imageLink, p.brand.name, p.sale.discount, p.isActive) FROM Product p " +
             "inner join Attribute a on p.id = a.product.id " +
             "inner join Image i on p.id = i.product.id where a.size = :size and i.name = :name and p.isActive = :active")
-    List<Object[]> getAllProducts(@Param("size") Integer size,
+    Page<ResponseProductDto> getAllProducts(@Param("size") Integer size,
                                   @Param("name") String name,
                                   @Param("active") Boolean active,
                                   Pageable pageable);
 
+    @Query("SELECT new com.poly.datn.be.domain.dto.ResponseProductDto(p.id, p.name, p.code, p.description, p.view, a.price, i.imageLink, p.brand.name, p.sale.discount, p.isActive) FROM Product p " +
+            "inner join Attribute a on p.id = a.product.id " +
+            "inner join Image i on p.id = i.product.id where a.size = :size and i.name = :name and p.brand.id = :brand and p.isActive = :active")
+    Page<ResponseProductDto> getAllProductsByBrand(@Param("size") Integer size,
+                                                   @Param("name") String name,
+                                                   @Param("active") Boolean active,
+                                                   @Param("brand") Long brand,
+                                                   Pageable pageable);
     @Query("SELECT DISTINCT new com.poly.datn.be.domain.dto.RespProductDto(p.id, p.name, p.code, p.description, p.view, a.price, i.imageLink, p.brand.name, p.sale.discount, p.isActive) FROM Product p " +
             "inner join Attribute a on p.id = a.product.id " +
             "inner join Image i on p.id = i.product.id where a.size = :size and i.name = :name and p.name like :keyword or p.brand.name like :keyword")
@@ -33,4 +44,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     List<Product> getProductByCategory(@Param("categoryId") Long categoryId);
 
     List<Product> getProductBySale_Id(Long id);
+
+    Optional<Product> findProductByCode(String code);
 }

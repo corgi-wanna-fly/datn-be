@@ -8,6 +8,7 @@ import com.poly.datn.be.repo.SaleRepo;
 import com.poly.datn.be.service.ProductService;
 import com.poly.datn.be.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class SaleServieImpl implements SaleService {
     @Autowired
     SaleRepo saleRepo;
     @Autowired
+    @Lazy
     ProductService productService;
 
     @Override

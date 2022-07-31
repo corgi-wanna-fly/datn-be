@@ -4,7 +4,13 @@ public class OrderConst {
     public static final String API_ORDER_CREATE = "/api/site/create-order";
     public static final String API_ORDER_UPDATE = "/api/site/update-order";
     public static final String API_ORDER_CANCEL = "/api/site/cancel-order";
+    public static final String API_ORDER_COUNT = "/api/site/count-order";
+    public static final String API_ORDER_COUNT_BY_NAME = "/api/site/count-order-by-name";
     public static final String API_ORDER_PAGE_ORDER = "/api/site/page-orders";
+    public static final String API_ORDER_LIST_AMOUNT_YEAR = "/api/site/amount-year";
+    public static final String API_ORDER_LIST_AMOUNT_MONTH = "/api/site/amount-month";
+    public static final String API_ORDER_PAGE_ORDER_BY_PRODUCT = "/api/site/page-orders-by-product";
+    public static final String API_ORDER_PAGE_REPORT_PRODUCT = "/api/site/page-report-product";
     public static final String API_ORDER_PAGE_ORDER_BY_YEAR_AND_MONTH = "/api/site/page-orders-by-year-and-month";
     public static final String API_ORDER_PAGE_ORDER_BETWEEN_DATE = "/api/site/page-orders-between-date";
     public static final String API_ORDER_UPDATE_STATUS = "/api/site/update-order-with-status";

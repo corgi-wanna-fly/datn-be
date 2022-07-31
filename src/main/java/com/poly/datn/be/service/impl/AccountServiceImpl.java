@@ -1,10 +1,11 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AccountConst;
-import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.dto.ReqRegisterAccountDto;
+import com.poly.datn.be.domain.dto.ReqUpdateAccountDto;
 import com.poly.datn.be.domain.exception.AppException;
-import com.poly.datn.be.domain.req_dto.*;
-import com.poly.datn.be.domain.resp_dto.RespAccountDto;
+import com.poly.datn.be.domain.dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
 import com.poly.datn.be.entity.Role;
@@ -13,23 +14,17 @@ import com.poly.datn.be.service.AccountDetailService;
 import com.poly.datn.be.service.AccountService;
 import com.poly.datn.be.service.RoleService;
 import com.poly.datn.be.util.ConvertUtil;
-import com.poly.datn.be.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -152,6 +147,11 @@ public class AccountServiceImpl implements AccountService {
         accountDetail = this.accountDetailService.save(accountDetail);
         RespAccountDto respAccountDto = ConvertUtil.accountToRespAccountDto(account, accountDetail);
         return respAccountDto;
+    }
+
+    @Override
+    public Integer countAccount() {
+        return accountRepo.findAll().size();
     }
 
 //    @Override

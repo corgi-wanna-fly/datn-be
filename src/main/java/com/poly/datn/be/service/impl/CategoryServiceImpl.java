@@ -18,6 +18,7 @@ import com.poly.datn.be.repo.ProductCategoryRepo;
 import com.poly.datn.be.service.CategoryService;
 import com.poly.datn.be.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepo categoryRepo;
 
     @Autowired
+    @Lazy
     ProductService productService;
     @Override
     public Page<Category> findAll(Pageable pageable) {

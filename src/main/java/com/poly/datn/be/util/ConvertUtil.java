@@ -1,10 +1,10 @@
 package com.poly.datn.be.util;
 
 import com.poly.datn.be.domain.dto.*;
-import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqRegisterAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
-import com.poly.datn.be.domain.resp_dto.RespAccountDto;
+import com.poly.datn.be.domain.dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.dto.ReqRegisterAccountDto;
+import com.poly.datn.be.domain.dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.dto.RespAccountDto;
 import com.poly.datn.be.entity.*;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;

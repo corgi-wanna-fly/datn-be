@@ -1,17 +1,24 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.AttributeConst;
 import com.poly.datn.be.domain.constant.ProductConst;
+import com.poly.datn.be.domain.dto.ReqAttributeDto;
+import com.poly.datn.be.domain.dto.ReqProductDto;
 import com.poly.datn.be.domain.dto.RespProductDto;
+import com.poly.datn.be.domain.dto.ResponseProductDto;
 import com.poly.datn.be.domain.exception.AppException;
-import com.poly.datn.be.entity.Product;
+import com.poly.datn.be.entity.*;
 import com.poly.datn.be.repo.ProductRepo;
-import com.poly.datn.be.service.ProductService;
+import com.poly.datn.be.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +27,32 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepo productRepo;
 
+    @Autowired
+    BrandService brandService;
+
+    @Autowired
+    ImageService imageService;
+
+    @Autowired
+    ProductCategoryService productCategoryService;
+
+    @Autowired
+    AttributeService attributeService;
+
+    @Autowired
+    SaleService saleService;
+
+    @Autowired
+    CategoryService categoryService;
+
     @Override
-    public List<Object[]> getProducts(Boolean active, Pageable pageable) {
+    public  Page<ResponseProductDto> getProducts(Boolean active, Pageable pageable) {
         return productRepo.getAllProducts(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, active, pageable);
+    }
+
+    @Override
+    public Page<ResponseProductDto> getAllProductsByBrand(Boolean active, Long brand, Pageable pageable) {
+        return productRepo.getAllProductsByBrand(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, active, brand, pageable);
     }
 
     @Override
@@ -62,5 +92,77 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product update(Product product) {
         return productRepo.save(product);
+    }
+
+    @Override
+    public Integer countProduct() {
+        return productRepo.findAll().size();
+    }
+
+    @Override
+    @Transactional
+    public Product create(ReqProductDto reqProductDto) {
+        Optional<Product> p = productRepo.findProductByCode(reqProductDto.getCode());
+        if(p.isPresent()){
+            throw new AppException(ProductConst.PRODUCT_MSG_CODE_EXIST);
+        }
+        /*Find brand and set for product*/
+        Brand brand = brandService.getBrandById(reqProductDto.getBrandId());
+        /*Find sale and set for product*/
+        Sale sale = saleService.getSaleById(reqProductDto.getSaleId());
+        /*Create product from data*/
+        Product product = new Product();
+        product.setName(reqProductDto.getName());
+        product.setCode(reqProductDto.getCode());
+        product.setDescription(reqProductDto.getDescription());
+        product.setCreateDate(LocalDate.now());
+        product.setModifyDate(LocalDate.now());
+        product.setView(0L);
+        product.setIsActive(AppConst.CONST_ACTIVE);
+        product.setBrand(brand);
+        product.setSale(sale);
+        /*Save product to DB*/
+        product = productRepo.save(product);
+        /*Create product-category from product*/
+        Long[] categoryId = reqProductDto.getCategoryId();
+        for(Long l: categoryId){
+            Category category = categoryService.findById(l);
+            ProductCategory productCategory = new ProductCategory();
+            productCategory.setProduct(product);
+            productCategory.setCategory(category);
+            productCategoryService.create(productCategory);
+        }
+        /*Create image of product*/
+        String[] imageUrl = reqProductDto.getImageUrl();
+        for(int i = 0; i < imageUrl.length; i++){
+            Image image = new Image();
+            if(i == 0){
+                image.setName(ProductConst.PRODUCT_MAIN_IMAGE);
+            }else{
+                image.setName(ProductConst.PRODUCT_OTHER_IMAGE);
+            }
+            image.setImageLink(imageUrl[i]);
+            image.setCreateDate(LocalDate.now());
+            image.setModifyDate(LocalDate.now());
+            image.setIsActive(AppConst.CONST_ACTIVE);
+            image.setProduct(product);
+
+            imageService.createImage(image);
+        }
+        /*Create attribute of product*/
+        ReqAttributeDto[] reqAttributeDtos = reqProductDto.getAttribute();
+        for(ReqAttributeDto r: reqAttributeDtos){
+            Attribute attribute = new Attribute();
+            attribute.setSize(r.getSize());
+            attribute.setPrice(r.getPrice());
+            attribute.setStock(r.getStock());
+            attribute.setCache(AttributeConst.ATTRIBUTE_CACHE_INIT);
+            attribute.setCreateDate(LocalDate.now());
+            attribute.setModifyDate(LocalDate.now());
+            attribute.setProduct(product);
+
+            attributeService.save(attribute);
+        }
+        return product;
     }
 }

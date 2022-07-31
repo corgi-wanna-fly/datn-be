@@ -1,23 +1,26 @@
-package com.poly.datn.be.domain.req_dto;
+package com.poly.datn.be.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-public class ReqUpdateAccountDto {
-    //12 truong
+public class ReqCreateAccountDto {
+    //10 truong
     //account
-    @NotNull(message = "id không được để trống")
-    private Long id;
-    @NotNull(message = "Isactive không được để trống")
-    private Boolean isActive;
+    @NotNull(message = "Username không null")
+    @NotEmpty(message = "Username không trống")
+    private String username;
+    @NotNull(message = "Password không null")
+    @NotEmpty(message = "Password không trống")
+    private String password;
     //role
-    @NotNull(message = "Role id không được để trống")
+    @NotNull(message = "Role id không được null")
     private Long roleId;
     //account detail
     @NotNull(message = "FullName không được null")

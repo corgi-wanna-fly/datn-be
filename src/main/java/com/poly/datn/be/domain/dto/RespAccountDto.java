@@ -1,4 +1,4 @@
-package com.poly.datn.be.domain.resp_dto;
+package com.poly.datn.be.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

@@ -4,6 +4,10 @@ import com.poly.datn.be.domain.constant.*;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.exception.AppException;
+import com.poly.datn.be.domain.model.AmountMonth;
+import com.poly.datn.be.domain.model.AmountYear;
+import com.poly.datn.be.domain.model.CountOrder;
+import com.poly.datn.be.domain.model.ReportProduct;
 import com.poly.datn.be.entity.*;
 import com.poly.datn.be.repo.OrderRepo;
 import com.poly.datn.be.service.*;
@@ -208,4 +212,35 @@ public class OrderServiceImpl implements OrderService {
         }
         return orderRepo.findOrderByOrderStatusBetweenDate(id, from, to, pageable);
     }
+
+    @Override
+    public Page<ReportProduct> reportByProduct(Pageable pageable) {
+        return orderRepo.reportByProduct(pageable);
+    }
+
+    @Override
+    public Page<Order> findOrderByProduct(Long id, Pageable pageable) {
+        return orderRepo.findOrderByProduct(id, pageable);
+    }
+
+    @Override
+    public List<AmountYear> reportAmountYear() {
+        return orderRepo.reportAmountYear();
+    }
+
+    @Override
+    public List<AmountMonth> reportAmountMonth(Integer year) {
+        return orderRepo.reportAmountMonth(year);
+    }
+
+    @Override
+    public Integer countOrder() {
+        return orderRepo.findAll().size();
+    }
+
+    @Override
+    public List<CountOrder> countOrderByName() {
+        return orderRepo.countOrderByName();
+    }
+
 }
