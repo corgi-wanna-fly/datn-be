@@ -1,13 +1,17 @@
 package com.poly.datn.be.domain.constant;
 
 public class ProductConst {
-    public static final String API_PRODUCT_GET_ALL = "/api/site/get-products";
-    public static final String API_PRODUCT_GET_ALL_BY_BRAND = "/api/site/get-products-by-brand";
-    public static final String API_PRODUCT_CREATE = "/api/site/create-product";
-    public static final String API_PRODUCT_SEARCH = "/api/site/search-products";
-    public static final String API_PRODUCT_COUNT = "/api/site/count-product";
-    public static final String API_PRODUCT_GET_BY_ID = "/api/site/get-product-detail/{id}";
-    public static final String API_PRODUCT_TOTAL_PAGE = "/api/site/get-total-page";
+    /* Api Url */
+    public static final String API_PRODUCT_GET_ALL = "/api/site/product/get-all";
+    public static final String API_PRODUCT_GET_ALL_BY_BRAND = "/api/site/product/by-brand";
+    public static final String API_PRODUCT_CREATE = "/api/admin/product/create";
+    public static final String API_PRODUCT_MODIFY = "/api/admin/product/modify";
+    public static final String API_PRODUCT_SEARCH = "/api/site/products/search";
+    public static final String API_PRODUCT_COUNT = "/api/admin/product/count";
+    public static final String API_PRODUCT_GET_BY_ID = "/api/site/product/detail/{id}";
+    public static final String API_PRODUCT_TOTAL_PAGE = "/api/site/product/total-page";
+
+    /* Product Constant */
     public static final Integer PRODUCT_AVG_SIZE = 39;
     public static final String PRODUCT_MAIN_IMAGE = "main";
     public static final String PRODUCT_OTHER_IMAGE = "other";

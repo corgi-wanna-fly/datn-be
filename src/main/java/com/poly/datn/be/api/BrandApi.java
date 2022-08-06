@@ -35,12 +35,6 @@ public class BrandApi {
         return new ResponseEntity<>(brandService.getBrandById(id), HttpStatus.OK);
     }
 
-    @GetMapping(BrandConst.API_BRAND_TOTAL_PAGE)
-    public ResponseEntity<?> getTotalPage(){
-        return new ResponseEntity<>(brandService.getToTalPage(), HttpStatus.OK);
-    }
-
-
     @PostMapping(BrandConst.API_BRAND_CREATE)
     public ResponseEntity<Brand> save(@Valid @RequestBody Brand brand){
         if(brandService.existsByName(brand.getName())){

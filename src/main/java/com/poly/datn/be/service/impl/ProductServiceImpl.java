@@ -3,10 +3,7 @@ package com.poly.datn.be.service.impl;
 import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.AttributeConst;
 import com.poly.datn.be.domain.constant.ProductConst;
-import com.poly.datn.be.domain.dto.ReqAttributeDto;
-import com.poly.datn.be.domain.dto.ReqProductDto;
-import com.poly.datn.be.domain.dto.RespProductDto;
-import com.poly.datn.be.domain.dto.ResponseProductDto;
+import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.*;
 import com.poly.datn.be.repo.ProductRepo;
@@ -164,5 +161,44 @@ public class ProductServiceImpl implements ProductService {
             attributeService.save(attribute);
         }
         return product;
+    }
+
+    @Override
+    public Product modify(ReqUpdateProductDto reqUpdateProductDto) {
+        Optional<Product> optional = productRepo.findById(reqUpdateProductDto.getId());
+        if(!optional.isPresent()){
+            throw new AppException(ProductConst.PRODUCT_MSG_ERROR_NOT_EXIST);
+        }
+        Product product = optional.get();
+        product.setName(reqUpdateProductDto.getName());
+        product.setCode(reqUpdateProductDto.getCode());
+        product.setDescription(reqUpdateProductDto.getDescription());
+        /*Find brand and set for product*/
+        Brand brand = brandService.getBrandById(reqUpdateProductDto.getBrandId());
+        /*Find sale and set for product*/
+        Sale sale = saleService.getSaleById(reqUpdateProductDto.getSaleId());
+        product.setBrand(brand);
+        product.setSale(sale);
+        product.setModifyDate(LocalDate.now());
+        List<ProductCategory> productCategories = productCategoryService.findByProduct(reqUpdateProductDto.getId());
+        for(ProductCategory p: productCategories){
+            productCategoryService.removeProductCategory(p);
+        }
+        Long[] categoryId = reqUpdateProductDto.getCategoryId();
+        for(Long l: categoryId){
+            Category category = categoryService.findById(l);
+            ProductCategory productCategory = new ProductCategory();
+            productCategory.setProduct(product);
+            productCategory.setCategory(category);
+            productCategoryService.create(productCategory);
+        }
+        ReqAttributeDto[] reqAttributeDtos = reqUpdateProductDto.getAttribute();
+        for(ReqAttributeDto r: reqAttributeDtos){
+            Attribute attribute = attributeService.getByProductIdAndSize(reqUpdateProductDto.getId(), r.getSize());
+            attribute.setStock(r.getStock());
+            attribute.setSize(r.getSize());
+            attributeService.save(attribute);
+        }
+        return productRepo.save(product);
     }
 }

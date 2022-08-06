@@ -1,6 +1,7 @@
 package com.poly.datn.be.service;
 
 import com.poly.datn.be.domain.dto.ReqProductDto;
+import com.poly.datn.be.domain.dto.ReqUpdateProductDto;
 import com.poly.datn.be.domain.dto.RespProductDto;
 import com.poly.datn.be.domain.dto.ResponseProductDto;
 import com.poly.datn.be.entity.Product;
@@ -21,4 +22,5 @@ public interface ProductService {
     Product update(Product product);
     Integer countProduct();
     Product create(ReqProductDto reqProductDto);
+    Product modify(ReqUpdateProductDto reqUpdateProductDto);
 }

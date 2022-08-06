@@ -29,10 +29,10 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
     Page<Order> findOrderByOrderStatusBetweenDate(@Param("id") Long id, @Param("from")LocalDate from, @Param("to") LocalDate to, Pageable pageable);
     @Query("SELECT o FROM Order o WHERE o.createDate between :from and :to")
     Page<Order> findOrderBetweenDate(@Param("from")LocalDate from, @Param("to") LocalDate to, Pageable pageable);
-    @Query("SELECT new com.poly.datn.be.domain.model.ReportProduct(p.id, p.name, a.size, sum(d.sellPrice * d.quantity), SUM(d.quantity), COUNT(o)) FROM Attribute a INNER JOIN Product p on a.product.id = p.id INNER JOIN OrderDetail d on a.id = d.attribute.id INNER JOIN Order o on o.id = d.order.id where o.orderStatus.id = 3 group by p.id, p.name, a.size ORDER BY sum(d.sellPrice * d.quantity) DESC")
+    @Query("SELECT new com.poly.datn.be.domain.model.ReportProduct(p.id, p.name, SUM(d.sellPrice * d.quantity), SUM(d.quantity), COUNT(o.id)) FROM Attribute a INNER JOIN Product p on a.product.id = p.id INNER JOIN OrderDetail d on a.id = d.attribute.id INNER JOIN Order o on o.id = d.order.id where o.orderStatus.id = 3 group by p.id, p.name ORDER BY sum(d.sellPrice * d.quantity) DESC")
     Page<ReportProduct> reportByProduct(Pageable pageable);
 
-    @Query("SELECT o FROM Order o inner join OrderDetail d on o.id = d.order.id where d.attribute.id = :id")
+    @Query("SELECT o FROM Order o inner join OrderDetail d on o.id = d.order.id inner join Attribute a on a.id = d.attribute.id inner join Product p on p.id = a.product.id where p.id = :id and o.orderStatus.id = 3")
     Page<Order> findOrderByProduct(@Param("id") Long id, Pageable pageable);
     @Query("SELECT new com.poly.datn.be.domain.model.AmountYear(YEAR(o.createDate), COUNT(o.id), SUM (o.total)) FROM Order o WHERE o.orderStatus.id = 3 GROUP BY YEAR(o.createDate) ORDER BY SUM (o.total) DESC")
     List<AmountYear> reportAmountYear();

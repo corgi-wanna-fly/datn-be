@@ -2,10 +2,7 @@ package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.ProductConst;
-import com.poly.datn.be.domain.dto.ReqCacheAttributeDto;
-import com.poly.datn.be.domain.dto.ReqProductDto;
-import com.poly.datn.be.domain.dto.RespProductDto;
-import com.poly.datn.be.domain.dto.ResponseProductDto;
+import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.entity.Product;
 import com.poly.datn.be.service.ProductService;
 import com.poly.datn.be.util.ConvertUtil;
@@ -77,5 +74,9 @@ public class ProductApi {
     @PostMapping(ProductConst.API_PRODUCT_CREATE)
     public ResponseEntity<?> createProduct(@RequestBody ReqProductDto reqProductDto) {
         return new ResponseEntity<>(productService.create(reqProductDto), HttpStatus.OK);
+    }
+    @PostMapping(ProductConst.API_PRODUCT_MODIFY)
+    public ResponseEntity<?> modifyProduct(@RequestBody ReqUpdateProductDto reqUpdateProductDto) {
+        return new ResponseEntity<>(productService.modify(reqUpdateProductDto), HttpStatus.OK);
     }
 }

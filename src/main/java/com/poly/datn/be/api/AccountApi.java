@@ -97,15 +97,4 @@ public class AccountApi {
         return new ResponseEntity<>(accountService.countAccount(), HttpStatus.OK);
     }
 
-//    @PostMapping(AccountConst.API_ACCOUNT_CHANGE_PASSWORD)
-//    public ResponseEntity<?> changePassword(@RequestBody @Valid ReqChangePasswordDto reqChangePasswordDto){
-//        this.accountService.changePassword(reqChangePasswordDto);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    @PostMapping(AccountConst.API_ACCOUNT_FORGOT_PASSWORD)
-//    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
-//        this.accountService.forgotPassword(reqForgotPasswordDto);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
 }

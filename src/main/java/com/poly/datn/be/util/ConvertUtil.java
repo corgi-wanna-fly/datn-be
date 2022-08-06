@@ -44,7 +44,11 @@ public class ConvertUtil {
         List<String> images = product.getImages().stream().map(item -> item.getImageLink()).collect(Collectors.toList());
         respProductDetailDto.setImages(images);
         respProductDetailDto.setAttributes((List<Attribute>) product.getAttributes());
+        List<Long> longs = product.getProductCategories().stream().map((item) -> item.getCategory().getId()).collect(Collectors.toList());
+        respProductDetailDto.setCategory(longs);
         respProductDetailDto.setDiscount(product.getSale().getDiscount());
+        respProductDetailDto.setBrandId(product.getBrand().getId());
+        respProductDetailDto.setSaleId(product.getSale().getId());
         return respProductDetailDto;
     }
 

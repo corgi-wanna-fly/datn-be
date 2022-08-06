@@ -12,7 +12,6 @@ import lombok.ToString;
 public class ReportProduct {
     private Long id;
     private String name;
-    private Integer size;
     private Double amount;
     private Long quantity;
     private Long count;
