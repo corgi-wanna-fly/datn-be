@@ -18,11 +18,11 @@ public class OrderConst {
     public static final String API_ORDER_GET_ALL_BY_ACCOUNT = "/api/site/order/get-orders";
     public static final String API_ORDER_GET_ALL_AND_PAGINATION = "/api/admin/order/get-orders-and-pagination";
     public static final String API_ORDER_GET_BY_ID = "/api/site/order/get-order-by-id";
+    public static final String API_ORDER_BASE64 = "/api/site/order/base64";
     public static final String API_ORDER_DETAIL_GET_BY_ID = "/api/site/order/get-order-detail-by-id";
 
     /* Order constant*/
     public static final String CART_ITEM_MSG_ERROR_NOT_ENOUGH = "Sản phẩm còn lại không đủ!";
     public static final String ORDER_MSG_ERROR_NOT_EXIST = "Đơn hàng không tồn tại!";
-    public static final Integer ORDER_TOTAL_BASE = 4000000;
     public static final String ORDER_MSG_ERROR_ALREADY_STATUS = "Đơn hàng đã ở trạng thái này.";
 }

@@ -18,5 +18,5 @@ public class AccountConst {
     public static final String ACCOUNT_MSG_ERROR_NOT_EXIST = "Tài khoản không tồn tại!";
     public static final String ACCOUNT_MSG_ERROR_SIGN_IN = "Đăng nhập thất bại!";
     public static final String ACCOUNT_MSG_ERROR_LOCK = "Tài khoản đã bị khóa!";
-    public static final String ACCOUNT_MSG_ERROR_ACCESS_DENIED = "Bạn không phải là admin!";
+    public static final String ACCOUNT_MSG_ERROR_ACCESS_DENIED = "Bạn không có quyền truy cập!";
 }

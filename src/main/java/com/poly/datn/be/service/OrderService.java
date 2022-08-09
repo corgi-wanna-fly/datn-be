@@ -36,4 +36,5 @@ public interface OrderService {
 
     Integer countOrder();
     List<CountOrder> countOrderByName();
+    List<Order> findOrderBySeenEquals(Boolean seen);
 }

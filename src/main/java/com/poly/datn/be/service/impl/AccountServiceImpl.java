@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,6 +35,9 @@ public class AccountServiceImpl implements AccountService {
     AccountDetailService accountDetailService;
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Override
     public Account findById(Long id) {
         Optional<Account> optionalAccount = accountRepo.findById(id);
@@ -139,6 +143,7 @@ public class AccountServiceImpl implements AccountService {
             throw new AppException("Email đã tồn tại");
         }
         Account account = ConvertUtil.ReqCreateAccountDtoToAccount(reqRegisterAccountDto);
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         Role role = roleService.findById(3L);
         account.setRole(role);
         account = this.accountRepo.save(account);

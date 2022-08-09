@@ -7,4 +7,6 @@ public class AttributeConst {
     public static final Integer ATTRIBUTE_CACHE_INIT = 0;
     /* Url Api */
     public static final String API_ATTRIBUTE_GET_BY_PRODUCT_ID = "/api/site/attribute/get-by-product";
+
+    public static final String API_ATTRIBUTE_GET_BY_ID = "/api/site/attribute/get-by-id";
 }

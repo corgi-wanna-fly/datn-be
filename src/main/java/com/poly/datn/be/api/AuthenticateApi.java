@@ -2,10 +2,12 @@ package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AccountConst;
 import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.constant.RoleConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.domain.model.CustomUserDetails;
 import com.poly.datn.be.domain.payload.LoginRequest;
 import com.poly.datn.be.domain.payload.LoginResponse;
+import com.poly.datn.be.entity.Role;
 import com.poly.datn.be.jwt.JwtTokenProvider;
 import com.poly.datn.be.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class AuthenticateApi {
             );
 
             if(loginRequest.getAdmin()){
-                if(!authentication.getAuthorities().contains("ADMIN") && !authentication.getAuthorities().contains("EMP")){
+                if(authentication.getAuthorities().toArray()[0].toString().equals(RoleConst.ROLE_CUSTOMER)){
                     throw new AppException(AccountConst.ACCOUNT_MSG_ERROR_ACCESS_DENIED);
                 }
             }
@@ -54,7 +56,6 @@ public class AuthenticateApi {
             String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
             return new LoginResponse(jwt);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new AppException(AccountConst.ACCOUNT_MSG_ERROR_SIGN_IN);
         }
     }

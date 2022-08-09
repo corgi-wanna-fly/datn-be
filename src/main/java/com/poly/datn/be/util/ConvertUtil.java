@@ -131,10 +131,8 @@ public class ConvertUtil {
     }
 
     public static Account ReqCreateAccountDtoToAccount(ReqRegisterAccountDto reqAccountDto){
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Account account = new Account();
         account.setUsername(reqAccountDto.getUsername());
-//        account.setPassword(passwordEncoder.encode(reqAccountDto.getPassword()));
         account.setPassword(reqAccountDto.getPassword());
         account.setCreateDate(LocalDate.now());
         account.setModifyDate(LocalDate.now());

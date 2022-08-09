@@ -5,6 +5,7 @@ import com.poly.datn.be.domain.model.AmountYear;
 import com.poly.datn.be.domain.model.CountOrder;
 import com.poly.datn.be.domain.model.ReportProduct;
 import com.poly.datn.be.entity.Order;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +41,5 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
     List<AmountMonth> reportAmountMonth(@Param("year") Integer year);
     @Query("SELECT new com.poly.datn.be.domain.model.CountOrder(s.name, count(o.id)) FROM Order o INNER JOIN OrderStatus s on o.orderStatus.id = s.id GROUP BY s.name")
     List<CountOrder> countOrderByName();
+    List<Order> findOrderBySeenEquals(Boolean seen);
 }

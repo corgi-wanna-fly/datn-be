@@ -22,5 +22,9 @@ public class AttributeApi {
                                             @RequestParam("size") Optional<Integer> size){
         return new ResponseEntity<>(attributeService.getByProductIdAndSize(id, size.orElse(39)), HttpStatus.OK);
     }
-
+    @GetMapping(AttributeConst.API_ATTRIBUTE_GET_BY_ID)
+    public ResponseEntity<?> getAttribute(@RequestParam("id") Long id
+                                            ){
+        return new ResponseEntity<>(attributeService.findById(id), HttpStatus.OK);
+    }
 }

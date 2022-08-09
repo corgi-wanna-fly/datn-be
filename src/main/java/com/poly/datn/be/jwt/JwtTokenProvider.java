@@ -1,5 +1,6 @@
 package com.poly.datn.be.jwt;
 
+import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.domain.model.CustomUserDetails;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +46,17 @@ public class JwtTokenProvider {
             return true;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
+            throw new AppException("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
+            throw new AppException("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
+            throw new AppException("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
+            throw new AppException("JWT claims string is empty.");
         }
-        return false;
+//        return false;
     }
 }

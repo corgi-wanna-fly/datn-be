@@ -42,12 +42,19 @@ public class Order {
     private LocalDate modifyDate;
     @Column(name = "is_pending", nullable = false)
     private Boolean isPending;
+    @Column(name = "encode_url", nullable = false)
+    private String encodeUrl;
+    @Column(name = "seen", nullable = false)
+    private Boolean seen;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Collection<OrderDetail>  orderDetails;
+    private Collection<OrderDetail> orderDetails;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Notification> notifications;
     @ManyToOne
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;

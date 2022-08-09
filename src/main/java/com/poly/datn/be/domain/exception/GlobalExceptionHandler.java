@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler({AppException.class})
+    @ExceptionHandler({AppException.class, })
     public ResponseEntity<Object> handleAppException(AppException ex){
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Timestamp", new Date());

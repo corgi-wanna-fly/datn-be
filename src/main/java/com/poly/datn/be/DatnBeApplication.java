@@ -1,11 +1,23 @@
 package com.poly.datn.be;
 
+
+
+import com.poly.datn.be.entity.Order;
+import com.poly.datn.be.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
+
 @SpringBootApplication
-public class DatnBeApplication{
+public class DatnBeApplication implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication.run(DatnBeApplication.class, args);
+    }
+    @Override
+    public void run(String... args) throws Exception {
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Optional;
 
 @RestController
@@ -119,7 +120,10 @@ public class OrderApi {
     public ResponseEntity<?> reportAmountMonth(@RequestParam("year") Integer year){
         return new ResponseEntity<>(orderService.reportAmountMonth(year), HttpStatus.OK);
     }
-
+    @GetMapping(OrderConst.API_ORDER_BASE64)
+    public ResponseEntity<?> encode(@RequestParam("encodedUrl") String encodedUrl){
+        return new ResponseEntity<>(new String(Base64.getUrlDecoder().decode(encodedUrl)), HttpStatus.OK);
+    }
     @GetMapping(OrderConst.API_ORDER_COUNT)
     public ResponseEntity<?> countOrder(){
         return new ResponseEntity<>(orderService.countOrder(), HttpStatus.OK);
