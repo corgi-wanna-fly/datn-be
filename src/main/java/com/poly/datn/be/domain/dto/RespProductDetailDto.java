@@ -24,4 +24,7 @@ public class RespProductDetailDto {
     private List<Long> category;
     private Long saleId;
     private Long brandId;
+    private String brand;
+    private Double price;
+    private Long view;
 }

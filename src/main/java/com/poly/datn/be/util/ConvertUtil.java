@@ -1,5 +1,6 @@
 package com.poly.datn.be.util;
 
+import com.poly.datn.be.domain.constant.ProductConst;
 import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.domain.dto.ReqCreateAccountDto;
 import com.poly.datn.be.domain.dto.ReqRegisterAccountDto;
@@ -44,11 +45,19 @@ public class ConvertUtil {
         List<String> images = product.getImages().stream().map(item -> item.getImageLink()).collect(Collectors.toList());
         respProductDetailDto.setImages(images);
         respProductDetailDto.setAttributes((List<Attribute>) product.getAttributes());
+        for(Attribute a: product.getAttributes()){
+            if(a.getSize().equals(ProductConst.PRODUCT_AVG_SIZE)){
+                respProductDetailDto.setPrice(a.getPrice());
+                break;
+            }
+        }
         List<Long> longs = product.getProductCategories().stream().map((item) -> item.getCategory().getId()).collect(Collectors.toList());
         respProductDetailDto.setCategory(longs);
         respProductDetailDto.setDiscount(product.getSale().getDiscount());
         respProductDetailDto.setBrandId(product.getBrand().getId());
+        respProductDetailDto.setBrand(product.getBrand().getName());
         respProductDetailDto.setSaleId(product.getSale().getId());
+        respProductDetailDto.setView(product.getView());
         return respProductDetailDto;
     }
 

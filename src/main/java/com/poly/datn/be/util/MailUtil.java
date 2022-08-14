@@ -19,7 +19,7 @@ public class MailUtil {
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("tanvxph13005@fpt.edu.vn", "");
+                return new PasswordAuthentication("tanvxph13005@fpt.edu.vn", "SpringBoot@994");
             }
         });
         Message msg = new MimeMessage(session);

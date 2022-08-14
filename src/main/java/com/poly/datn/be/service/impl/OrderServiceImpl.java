@@ -91,6 +91,7 @@ public class OrderServiceImpl implements OrderService {
         notification.setDeliver(false);
         notification.setContent(String.format("Đơn hàng %s vừa được tạo, xác nhận ngay nào", String.valueOf(order.getId())));
         notification.setOrder(order);
+        notification.setType(1);
         notificationService.createNotification(notification);
         try {
             MailUtil.sendEmail(order);
@@ -190,6 +191,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order cancelOrder(Long orderId) {
         Order order = getByOrderId(orderId);
         if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SHIPPING) {
@@ -203,7 +205,17 @@ public class OrderServiceImpl implements OrderService {
         }
         OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
         order.setOrderStatus(orderStatus);
-        return orderRepo.save(order);
+        order = orderRepo.save(order);
+
+        Notification notification = new Notification();
+        notification.setRead(false);
+        notification.setDeliver(false);
+        notification.setType(2);
+        notification.setContent(String.format("Đơn hàng %s vừa hủy, kiểm tra ngay nào", String.valueOf(order.getId())));
+        notification.setOrder(order);
+        notificationService.createNotification(notification);
+
+        return order;
     }
 
     @Override

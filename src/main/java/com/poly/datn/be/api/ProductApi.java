@@ -33,7 +33,17 @@ public class ProductApi {
         Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(8), sort);
         return new ResponseEntity<>(productService.getProducts(active.orElse(true), pageable), HttpStatus.OK);
     }
-
+    @GetMapping(ProductConst.API_PRODUCT_RELATE)
+    public ResponseEntity<?> relateProduct(@RequestParam("relate") Long brand, @RequestParam("id") Long id) {
+        Pageable pageable = PageRequest.of(0, 3);
+        return new ResponseEntity<>(productService.relateProduct(id, brand, pageable), HttpStatus.OK);
+    }
+    @PostMapping(ProductConst.API_PRODUCT_FILTER)
+    public ResponseEntity<?> filterProducts(@RequestBody ReqFilterProduct reqFilterProduct) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "modifyDate");
+        Pageable pageable = PageRequest.of(reqFilterProduct.getPage() - 1, reqFilterProduct.getCount(), sort);
+        return new ResponseEntity<>(productService.filterAllProducts(reqFilterProduct.getCategory(), reqFilterProduct.getBrand(), reqFilterProduct.getMin(), reqFilterProduct.getMax(), pageable), HttpStatus.OK);
+    }
     @GetMapping(ProductConst.API_PRODUCT_GET_ALL_BY_BRAND)
     public ResponseEntity<?> getAllProductByBrand(@RequestParam("page") Optional<Integer> page,
                                                   @RequestParam("size") Optional<Integer> size,

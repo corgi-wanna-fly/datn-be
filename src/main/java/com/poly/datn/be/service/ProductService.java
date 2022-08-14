@@ -23,4 +23,7 @@ public interface ProductService {
     Integer countProduct();
     Product create(ReqProductDto reqProductDto);
     Product modify(ReqUpdateProductDto reqUpdateProductDto);
+    Page<ResponseProductDto> filterAllProducts(List<Long> category, List<Long> brand, Double min, Double max, Pageable pageable);
+    Page<ResponseProductDto> relateProduct(Long id, Long brand, Pageable pageable);
+    ResponseProductDto getProductDetail(Long id);
 }

@@ -3,6 +3,8 @@ package com.poly.datn.be.domain.constant;
 public class ProductConst {
     /* Api Url */
     public static final String API_PRODUCT_GET_ALL = "/api/site/product/get-all";
+    public static final String API_PRODUCT_FILTER = "/api/site/product/filter";
+    public static final String API_PRODUCT_RELATE = "/api/site/product/relate";
     public static final String API_PRODUCT_GET_ALL_BY_BRAND = "/api/site/product/by-brand";
     public static final String API_PRODUCT_CREATE = "/api/admin/product/create";
     public static final String API_PRODUCT_MODIFY = "/api/admin/product/modify";

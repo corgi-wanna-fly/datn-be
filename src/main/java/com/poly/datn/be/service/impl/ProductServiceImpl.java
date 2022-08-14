@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(reqProductDto.getDescription());
         product.setCreateDate(LocalDate.now());
         product.setModifyDate(LocalDate.now());
-        product.setView(0L);
+        product.setView(1L);
         product.setIsActive(AppConst.CONST_ACTIVE);
         product.setBrand(brand);
         product.setSale(sale);
@@ -200,5 +200,20 @@ public class ProductServiceImpl implements ProductService {
             attributeService.save(attribute);
         }
         return productRepo.save(product);
+    }
+
+    @Override
+    public Page<ResponseProductDto> filterAllProducts(List<Long> category, List<Long> brand, Double min, Double max, Pageable pageable) {
+        return productRepo.filterAllProducts(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, Boolean.TRUE, category, brand, min, max, pageable);
+    }
+
+    @Override
+    public Page<ResponseProductDto> relateProduct(Long id, Long brand, Pageable pageable) {
+        return productRepo.relateProduct(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, Boolean.TRUE, brand, id, pageable);
+    }
+
+    @Override
+    public ResponseProductDto getProductDetail(Long id) {
+        return productRepo.getProductDetail(ProductConst.PRODUCT_AVG_SIZE, ProductConst.PRODUCT_MAIN_IMAGE, id);
     }
 }
