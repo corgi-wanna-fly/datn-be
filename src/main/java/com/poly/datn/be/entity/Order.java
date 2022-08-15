@@ -34,6 +34,12 @@ public class Order {
     private Double total;
     @Column(name = "note", length = 1000, nullable = true)
     private String note;
+    @Column(name = "shipment", length = 1000, nullable = true)
+    private String shipment;
+    @Column(name = "code", length = 1000, nullable = true)
+    private String code;
+    @Column(name = "description", length = 1000, nullable = true)
+    private String description;
     @Column(name = "ship_date", nullable = true)
     private Date shipDate;
     @Column(name = "create_date", nullable = false)
