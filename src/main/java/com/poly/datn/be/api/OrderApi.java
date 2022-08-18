@@ -3,6 +3,7 @@ package com.poly.datn.be.api;
 import com.poly.datn.be.domain.constant.OrderConst;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
+import com.poly.datn.be.domain.dto.ReqUpdateStatusOrder;
 import com.poly.datn.be.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -131,5 +132,21 @@ public class OrderApi {
     @GetMapping(OrderConst.API_ORDER_COUNT_BY_NAME)
     public ResponseEntity<?> countOrderByName(){
         return new ResponseEntity<>(orderService.countOrderByName(), HttpStatus.OK);
+    }
+    @PostMapping(OrderConst.API_PROCESS_ORDER)
+    public ResponseEntity<?> processOrder(@RequestBody ReqUpdateStatusOrder reqUpdateStatusOrder){
+        return new ResponseEntity<>(orderService.processOrder(reqUpdateStatusOrder), HttpStatus.OK);
+    }
+    @PostMapping(OrderConst.API_SHIP_ORDER)
+    public ResponseEntity<?> shipOrder(@RequestBody ReqUpdateStatusOrder reqUpdateStatusOrder){
+        return new ResponseEntity<>(orderService.shipOrder(reqUpdateStatusOrder), HttpStatus.OK);
+    }
+    @PostMapping(OrderConst.API_SUCCESS_ORDER)
+    public ResponseEntity<?> successOrder(@RequestBody ReqUpdateStatusOrder reqUpdateStatusOrder){
+        return new ResponseEntity<>(orderService.successOrder(reqUpdateStatusOrder), HttpStatus.OK);
+    }
+    @PostMapping(OrderConst.API_CANCEL_ORDER)
+    public ResponseEntity<?> cancelOrder(@RequestBody ReqUpdateStatusOrder reqUpdateStatusOrder){
+        return new ResponseEntity<>(orderService.cancelOrder(reqUpdateStatusOrder), HttpStatus.OK);
     }
 }

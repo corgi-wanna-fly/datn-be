@@ -2,6 +2,7 @@ package com.poly.datn.be.service;
 
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
+import com.poly.datn.be.domain.dto.ReqUpdateStatusOrder;
 import com.poly.datn.be.domain.model.AmountMonth;
 import com.poly.datn.be.domain.model.AmountYear;
 import com.poly.datn.be.domain.model.CountOrder;
@@ -37,4 +38,9 @@ public interface OrderService {
     Integer countOrder();
     List<CountOrder> countOrderByName();
     List<Order> findOrderBySeenEquals(Boolean seen);
+
+    Order processOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
+    Order shipOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
+    Order successOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
+    Order cancelOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
 }

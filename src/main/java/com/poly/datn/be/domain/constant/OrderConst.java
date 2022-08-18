@@ -20,6 +20,10 @@ public class OrderConst {
     public static final String API_ORDER_GET_BY_ID = "/api/site/order/get-order-by-id";
     public static final String API_ORDER_BASE64 = "/api/site/order/base64";
     public static final String API_ORDER_DETAIL_GET_BY_ID = "/api/site/order/get-order-detail-by-id";
+    public static final String API_PROCESS_ORDER = "/api/site/order/process-order";
+    public static final String API_SHIP_ORDER = "/api/site/order/ship-order";
+    public static final String API_SUCCESS_ORDER = "/api/site/order/success-order";
+    public static final String API_CANCEL_ORDER = "/api/site/order/cancel-order";
 
     /* Order constant*/
     public static final String CART_ITEM_MSG_ERROR_NOT_ENOUGH = "Sản phẩm còn lại không đủ!";

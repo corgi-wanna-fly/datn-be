@@ -3,6 +3,7 @@ package com.poly.datn.be.service.impl;
 import com.poly.datn.be.domain.constant.*;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
+import com.poly.datn.be.domain.dto.ReqUpdateStatusOrder;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.domain.model.AmountMonth;
 import com.poly.datn.be.domain.model.AmountYear;
@@ -48,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order createOrder(ReqOrderDto reqOrderDto) {
+        reqOrderDto.getOrderDetails().stream();
         for (OrderDetail o : reqOrderDto.getOrderDetails()) {
             Attribute attribute = attributeService.findById(o.getAttribute().getId());
             if (attribute.getStock() < o.getQuantity()) {
@@ -272,6 +274,87 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findOrderBySeenEquals(Boolean seen) {
         return orderRepo.findOrderBySeenEquals(seen);
+    }
+
+    @Override
+    public Order processOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
+        Order order = getByOrderId(reqUpdateStatusOrder.getId());
+        Long flag = order.getOrderStatus().getId();
+        if(flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)){
+            OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_PROCESS);
+            order.setOrderStatus(orderStatus);
+            order.setModifyDate(LocalDate.now());
+            return orderRepo.save(order);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_PROCESS_MESSAGE);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_SHIPPING_MESSAGE);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
+        }else{
+            throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
+        }
+    }
+
+    @Override
+    public Order shipOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
+        Order order = getByOrderId(reqUpdateStatusOrder.getId());
+        Long flag = order.getOrderStatus().getId();
+        if(flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_WAITING_MESSAGE);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)){
+            OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_SHIPPING);
+            order.setOrderStatus(orderStatus);
+            order.setShipment(reqUpdateStatusOrder.getShipment());
+            order.setCode(reqUpdateStatusOrder.getCode());
+            order.setShipDate(reqUpdateStatusOrder.getShipDate());
+            order.setModifyDate(LocalDate.now());
+            return orderRepo.save(order);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_SHIPPING_MESSAGE);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
+        }else{
+            throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
+        }
+    }
+
+    @Override
+    public Order successOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
+        Order order = getByOrderId(reqUpdateStatusOrder.getId());
+        Long flag = order.getOrderStatus().getId();
+        if(flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_WAITING_MESSAGE);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)){
+            throw new AppException("Đơn hàng cần xác nhận vận chuyển");
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)){
+            OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_SUCCESS);
+            order.setOrderStatus(orderStatus);
+            order.setModifyDate(LocalDate.now());
+            order.setIsPending(true);
+            return orderRepo.save(order);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
+        }else{
+            throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
+        }
+    }
+
+    @Override
+    public Order cancelOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
+        Order order = getByOrderId(reqUpdateStatusOrder.getId());
+        Long flag = order.getOrderStatus().getId();
+        if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
+        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_CANCEL)){
+            throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
+        }else{
+            OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
+            order.setOrderStatus(orderStatus);
+            order.setDescription(reqUpdateStatusOrder.getDescription());
+            order.setModifyDate(LocalDate.now());
+            return orderRepo.save(order);
+        }
     }
 
 }
