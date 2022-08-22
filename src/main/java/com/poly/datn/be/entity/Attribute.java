@@ -21,7 +21,7 @@ public class Attribute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = true, length = 50)
     private String name;
     @Column(name = "size", nullable = false)
     private Integer size;

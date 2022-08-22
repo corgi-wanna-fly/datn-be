@@ -150,6 +150,7 @@ public class ProductServiceImpl implements ProductService {
         ReqAttributeDto[] reqAttributeDtos = reqProductDto.getAttribute();
         for(ReqAttributeDto r: reqAttributeDtos){
             Attribute attribute = new Attribute();
+            attribute.setName(product.getName());
             attribute.setSize(r.getSize());
             attribute.setPrice(r.getPrice());
             attribute.setStock(r.getStock());
