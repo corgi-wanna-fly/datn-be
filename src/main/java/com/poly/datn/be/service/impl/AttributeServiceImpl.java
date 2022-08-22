@@ -70,4 +70,13 @@ public class AttributeServiceImpl implements AttributeService {
     public Attribute getByProductIdAndSize(Long productId, Integer size) {
         return attributeRepo.findByProduct_IdAndSize(productId, size);
     }
+
+    @Override
+    public Boolean isValidCart(Long id, Integer quantity) {
+        Attribute attribute = findById(id);
+        if(quantity > attribute.getStock()){
+            throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
+        }
+        return Boolean.TRUE;
+    }
 }

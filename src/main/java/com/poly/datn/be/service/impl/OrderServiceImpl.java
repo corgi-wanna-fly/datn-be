@@ -277,6 +277,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order processOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
@@ -297,6 +298,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order shipOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
@@ -320,6 +322,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order successOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
@@ -332,6 +335,12 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus(orderStatus);
             order.setModifyDate(LocalDate.now());
             order.setIsPending(true);
+            List<OrderDetail> list = orderDetailService.getAllByOrderId(order.getId());
+            for(OrderDetail o: list){
+                Attribute attribute = o.getAttribute();
+                attribute.setCache(attribute.getCache() - o.getQuantity());
+                attributeService.save(attribute);
+            }
             return orderRepo.save(order);
         }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
             throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
@@ -341,6 +350,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order cancelOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
@@ -353,6 +363,13 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus(orderStatus);
             order.setDescription(reqUpdateStatusOrder.getDescription());
             order.setModifyDate(LocalDate.now());
+            List<OrderDetail> list = orderDetailService.getAllByOrderId(order.getId());
+            for(OrderDetail o: list){
+                Attribute attribute = o.getAttribute();
+                attribute.setCache(attribute.getCache() - o.getQuantity());
+                attribute.setStock(attribute.getStock() + o.getQuantity());
+                attributeService.save(attribute);
+            }
             return orderRepo.save(order);
         }
     }

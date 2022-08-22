@@ -67,7 +67,7 @@ public class CartItemServiceImpl implements CartItemService {
                 return cartItemRepo.save(c);
             }
         }else{
-            int flag = reqCartItemDto.getQuantity() + cartItem.getQuantity();
+            int flag = reqCartItemDto.getQuantity();
             if(flag == 0){
                 cartItem.setQuantity(flag);
                 cartItem.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
