@@ -35,4 +35,5 @@ public class ReqOrderDto {
     @NotEmpty(message = "Không để trống chi tiết đơn hàng.")
     private Collection<OrderDetail> orderDetails;
     private String code;
+    private String payment;
 }

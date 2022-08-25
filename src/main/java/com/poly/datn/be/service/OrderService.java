@@ -1,5 +1,6 @@
 package com.poly.datn.be.service;
 
+import com.poly.datn.be.domain.dto.ReqCancelOrder;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateStatusOrder;
@@ -26,7 +27,7 @@ public interface OrderService {
     Page<Order> getAllOrdersAndPagination(Long id, Pageable pageable);
     Order updateOrderWithStatus(Long orderId, Long statusId);
     Order updateOrder(ReqUpdateOrderDto reqUpdateOrderDto);
-    Order cancelOrder(Long orderId);
+//    Order cancelOrder(Long orderId);
     Page<Order> findOrderByAccount_Id(Long id, Pageable pageable);
     Page<Order> findOrderByOrderStatusAndYearAndMonth(Long id, Integer year, Integer month, Pageable pageable);
     Page<Order> findOrderBetweenDate(@Param("id") Long id, @Param("from") LocalDate from, @Param("to") LocalDate to, Pageable pageable);
@@ -43,4 +44,5 @@ public interface OrderService {
     Order shipOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
     Order successOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
     Order cancelOrder(ReqUpdateStatusOrder reqUpdateStatusOrder);
+    Order cancelOrder(ReqCancelOrder reqCancelOrder);
 }

@@ -1,6 +1,7 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.*;
+import com.poly.datn.be.domain.dto.ReqCancelOrder;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateStatusOrder;
@@ -22,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.time.LocalDate;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -49,17 +47,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order createOrder(ReqOrderDto reqOrderDto) {
-        reqOrderDto.getOrderDetails().stream();
-        for (OrderDetail o : reqOrderDto.getOrderDetails()) {
-            Attribute attribute = attributeService.findById(o.getAttribute().getId());
-            if (attribute.getStock() < o.getQuantity()) {
-                throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
-            } else {
-                attribute.setStock(attribute.getStock() - o.getQuantity());
-                attribute.setCache(attribute.getCache() + o.getQuantity());
-                attributeService.save(attribute);
-            }
-        }
         Account account = null;
         if (reqOrderDto.getAccountId() != (-1)) {
             account = accountService.findById(reqOrderDto.getAccountId());
@@ -77,29 +64,39 @@ public class OrderServiceImpl implements OrderService {
         }
         order = orderRepo.save(order);
         order.setEncodeUrl(Base64.getUrlEncoder().encodeToString(String.valueOf(order.getId()).getBytes()));
-        orderRepo.save(order);
-        for (OrderDetail o : reqOrderDto.getOrderDetails()) {
-            o.setOrder(order);
-            orderDetailService.createOrderDetail(o);
-            if (reqOrderDto.getAccountId() != -1) {
-                CartItem c = cartItemService.findCartItemByAccountIdAndAttributeId(account.getId(), o.getAttribute().getId());
-                c.setQuantity(CartItemConst.CART_ITEM_QUANTITY_WAITING);
-                c.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
-                cartItemService.saveCartItem(c);
+        order = orderRepo.save(order);
+        Collection<OrderDetail> orderDetails = reqOrderDto.getOrderDetails();
+        for (OrderDetail o : orderDetails) {
+            Attribute attribute = attributeService.findById(o.getAttribute().getId());
+            if (attribute.getStock() < o.getQuantity()) {
+                throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
+            } else {
+                attribute.setStock(attribute.getStock() - o.getQuantity());
+                attribute.setCache(attribute.getCache() + o.getQuantity());
+                attributeService.save(attribute);
+                o.setOrder(order);
+                orderDetailService.createOrderDetail(o);
+                if (reqOrderDto.getAccountId() != -1) {
+                    CartItem c = cartItemService.findCartItemByAccountIdAndAttributeId(account.getId(), o.getAttribute().getId());
+                    c.setQuantity(CartItemConst.CART_ITEM_QUANTITY_WAITING);
+                    c.setIsActive(CartItemConst.CART_ITEM_INACTIVE);
+                    cartItemService.saveCartItem(c);
+                }
             }
         }
+
         Notification notification = new Notification();
         notification.setRead(false);
         notification.setDeliver(false);
-        notification.setContent(String.format("Đơn hàng %s vừa được tạo, xác nhận ngay nào", String.valueOf(order.getId())));
+        notification.setContent(String.format("Đơn hàng %s vừa được tạo, xác nhận ngay nào", order.getId()));
         notification.setOrder(order);
         notification.setType(1);
         notificationService.createNotification(notification);
-        try {
-            MailUtil.sendEmail(order);
-        } catch (MessagingException e) {
-            System.out.println("Can't send an email.");
-        }
+//        try {
+//            MailUtil.sendEmail(order);
+//        } catch (MessagingException e) {
+//            System.out.println("Can't send an email.");
+//        }
         return order;
     }
 
@@ -192,28 +189,63 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.save(order);
     }
 
+//    @Override
+//    @Transactional
+//    public Order cancelOrder(Long orderId) {
+//        Order order = getByOrderId(orderId);
+//        if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SHIPPING) {
+//            throw new AppException("Đơn hàng đang được vận chuyển.");
+//        }
+//        if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_CANCEL) {
+//            throw new AppException("Đơn hàng đã được hủy.");
+//        }
+//        if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SUCCESS) {
+//            throw new AppException("Đơn hàng đã được giao thành công.");
+//        }
+//        OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
+//        order.setOrderStatus(orderStatus);
+//        order = orderRepo.save(order);
+//
+//        Notification notification = new Notification();
+//        notification.setRead(false);
+//        notification.setDeliver(false);
+//        notification.setType(2);
+//        notification.setContent(String.format("Đơn hàng %s vừa hủy, kiểm tra ngay nào", String.valueOf(order.getId())));
+//        notification.setOrder(order);
+//        notificationService.createNotification(notification);
+//
+//        return order;
+//    }
+
     @Override
     @Transactional
-    public Order cancelOrder(Long orderId) {
-        Order order = getByOrderId(orderId);
+    public Order cancelOrder(ReqCancelOrder reqCancelOrder) {
+        Order order = getByOrderId(reqCancelOrder.getId());
         if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SHIPPING) {
             throw new AppException("Đơn hàng đang được vận chuyển.");
-        }
-        if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_CANCEL) {
+        } else if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_CANCEL) {
             throw new AppException("Đơn hàng đã được hủy.");
-        }
-        if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SUCCESS) {
+        } else if (order.getOrderStatus().getId() == OrderStatusConst.ORDER_STATUS_SUCCESS) {
             throw new AppException("Đơn hàng đã được giao thành công.");
         }
         OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
         order.setOrderStatus(orderStatus);
+        order.setDescription(reqCancelOrder.getDescription());
         order = orderRepo.save(order);
+
+        Collection<OrderDetail> orderDetails = order.getOrderDetails();
+        for (OrderDetail o : orderDetails) {
+            Attribute attribute = o.getAttribute();
+            attribute.setStock(attribute.getStock() + o.getQuantity());
+            attribute.setCache(attribute.getCache() - o.getQuantity());
+            attributeService.save(attribute);
+        }
 
         Notification notification = new Notification();
         notification.setRead(false);
         notification.setDeliver(false);
         notification.setType(2);
-        notification.setContent(String.format("Đơn hàng %s vừa hủy, kiểm tra ngay nào", String.valueOf(order.getId())));
+        notification.setContent(String.format("Đơn hàng %s vừa hủy, kiểm tra ngay nào", order.getId()));
         notification.setOrder(order);
         notificationService.createNotification(notification);
 
@@ -281,18 +313,18 @@ public class OrderServiceImpl implements OrderService {
     public Order processOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
-        if(flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)){
+        if (flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)) {
             OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_PROCESS);
             order.setOrderStatus(orderStatus);
             order.setModifyDate(LocalDate.now());
             return orderRepo.save(order);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_PROCESS_MESSAGE);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SHIPPING_MESSAGE);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
-        }else{
+        } else {
             throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
         }
     }
@@ -302,9 +334,9 @@ public class OrderServiceImpl implements OrderService {
     public Order shipOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
-        if(flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)){
+        if (flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_WAITING_MESSAGE);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)) {
             OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_SHIPPING);
             order.setOrderStatus(orderStatus);
             order.setShipment(reqUpdateStatusOrder.getShipment());
@@ -312,11 +344,11 @@ public class OrderServiceImpl implements OrderService {
             order.setShipDate(reqUpdateStatusOrder.getShipDate());
             order.setModifyDate(LocalDate.now());
             return orderRepo.save(order);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SHIPPING_MESSAGE);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
-        }else{
+        } else {
             throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
         }
     }
@@ -326,25 +358,44 @@ public class OrderServiceImpl implements OrderService {
     public Order successOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
-        if(flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)){
+        if (flag.equals(OrderStatusConst.ORDER_STATUS_WAITING)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_WAITING_MESSAGE);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_PROCESS)) {
             throw new AppException("Đơn hàng cần xác nhận vận chuyển");
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SHIPPING)) {
             OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_SUCCESS);
             order.setOrderStatus(orderStatus);
             order.setModifyDate(LocalDate.now());
             order.setIsPending(true);
             List<OrderDetail> list = orderDetailService.getAllByOrderId(order.getId());
-            for(OrderDetail o: list){
+            for (OrderDetail o : list) {
                 Attribute attribute = o.getAttribute();
                 attribute.setCache(attribute.getCache() - o.getQuantity());
                 attributeService.save(attribute);
             }
+            Voucher voucher = new Voucher();
+            voucher.setCode(generateCode());
+            voucher.setIsActive(Boolean.TRUE);
+            voucher.setCreateDate(LocalDate.now());
+            voucher.setCount(new Integer(1));
+            voucher.setExpireDate(LocalDate.now().plusYears(1));
+            if (order.getTotal() >= 3000000) {
+                voucher.setDiscount(new Integer(30));
+            } else if (order.getTotal() >= 2000000) {
+                voucher.setDiscount(new Integer(20));
+            } else {
+                voucher.setDiscount(new Integer(10));
+            }
+            voucher = voucherService.saveVoucher(voucher);
+            try {
+                MailUtil.sendEmail(voucher, order);
+            } catch (MessagingException e) {
+                System.out.println("Can't send an email.");
+            }
             return orderRepo.save(order);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
-        }else{
+        } else {
             throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
         }
     }
@@ -354,17 +405,17 @@ public class OrderServiceImpl implements OrderService {
     public Order cancelOrder(ReqUpdateStatusOrder reqUpdateStatusOrder) {
         Order order = getByOrderId(reqUpdateStatusOrder.getId());
         Long flag = order.getOrderStatus().getId();
-        if(flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)){
+        if (flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
-        }else if(flag.equals(OrderStatusConst.ORDER_STATUS_CANCEL)){
+        } else if (flag.equals(OrderStatusConst.ORDER_STATUS_CANCEL)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_CANCEL_MESSAGE);
-        }else{
+        } else {
             OrderStatus orderStatus = orderStatusService.getById(OrderStatusConst.ORDER_STATUS_CANCEL);
             order.setOrderStatus(orderStatus);
             order.setDescription(reqUpdateStatusOrder.getDescription());
             order.setModifyDate(LocalDate.now());
             List<OrderDetail> list = orderDetailService.getAllByOrderId(order.getId());
-            for(OrderDetail o: list){
+            for (OrderDetail o : list) {
                 Attribute attribute = o.getAttribute();
                 attribute.setCache(attribute.getCache() - o.getQuantity());
                 attribute.setStock(attribute.getStock() + o.getQuantity());
@@ -374,4 +425,18 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    private String generateCode() {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }
 }

@@ -84,6 +84,7 @@ public class ConvertUtil {
         order.setTotal(reqOrderDto.getTotal());
         order.setNote(reqOrderDto.getNote());
         order.setIsPending(reqOrderDto.getIsPending());
+        order.setPayment(reqOrderDto.getPayment());
         order.setCreateDate(LocalDate.now());
         order.setModifyDate(LocalDate.now());
         order.setShipDate(Date.from(LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant()));

@@ -1,6 +1,7 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.OrderConst;
+import com.poly.datn.be.domain.dto.ReqCancelOrder;
 import com.poly.datn.be.domain.dto.ReqOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateOrderDto;
 import com.poly.datn.be.domain.dto.ReqUpdateStatusOrder;
@@ -65,9 +66,9 @@ public class OrderApi {
         LocalDate toDate = LocalDate.parse(to, dtf);
         return new ResponseEntity<>(orderService.findOrderBetweenDate(id, fromDate, toDate, pageable), HttpStatus.OK);
     }
-    @GetMapping(OrderConst.API_ORDER_CANCEL)
-    public ResponseEntity<?> cancelOrder(@RequestParam("id")Long id){
-        return new ResponseEntity<>(orderService.cancelOrder(id), HttpStatus.OK);
+    @PostMapping(OrderConst.API_ORDER_CANCEL)
+    public ResponseEntity<?> cancelOrder(@RequestBody ReqCancelOrder reqCancelOrder){
+        return new ResponseEntity<>(orderService.cancelOrder(reqCancelOrder), HttpStatus.OK);
     }
     @GetMapping(OrderConst.API_ORDER_UPDATE_STATUS)
     public ResponseEntity<?> updateOrderWithStatus(@RequestParam("id")Long orderId,
