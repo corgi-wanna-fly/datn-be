@@ -373,25 +373,27 @@ public class OrderServiceImpl implements OrderService {
                 attribute.setCache(attribute.getCache() - o.getQuantity());
                 attributeService.save(attribute);
             }
-            Voucher voucher = new Voucher();
-            voucher.setCode(generateCode());
-            voucher.setIsActive(Boolean.TRUE);
-            voucher.setCreateDate(LocalDate.now());
-            voucher.setCount(new Integer(1));
-            voucher.setExpireDate(LocalDate.now().plusYears(1));
-            if (order.getTotal() >= 3000000) {
-                voucher.setDiscount(new Integer(30));
-            } else if (order.getTotal() >= 2000000) {
-                voucher.setDiscount(new Integer(20));
-            } else {
-                voucher.setDiscount(new Integer(10));
-            }
-            voucher = voucherService.saveVoucher(voucher);
-            try {
-                MailUtil.sendEmail(voucher, order);
-            } catch (MessagingException e) {
-                System.out.println("Can't send an email.");
-            }
+           if(order.getTotal() > 1000000){
+               Voucher voucher = new Voucher();
+               voucher.setCode(generateCode());
+               voucher.setIsActive(Boolean.TRUE);
+               voucher.setCreateDate(LocalDate.now());
+               voucher.setCount(new Integer(1));
+               voucher.setExpireDate(LocalDate.now().plusYears(1));
+               if (order.getTotal() >= 3000000) {
+                   voucher.setDiscount(new Integer(30));
+               } else if (order.getTotal() >= 2000000) {
+                   voucher.setDiscount(new Integer(20));
+               } else {
+                   voucher.setDiscount(new Integer(10));
+               }
+               voucher = voucherService.saveVoucher(voucher);
+               try {
+                   MailUtil.sendEmail(voucher, order);
+               } catch (MessagingException e) {
+                   System.out.println("Can't send an email.");
+               }
+           }
             return orderRepo.save(order);
         } else if (flag.equals(OrderStatusConst.ORDER_STATUS_SUCCESS)) {
             throw new AppException(OrderStatusConst.ORDER_STATUS_SUCCESS_MESSAGE);
