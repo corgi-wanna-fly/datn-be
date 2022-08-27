@@ -196,9 +196,22 @@ public class ProductServiceImpl implements ProductService {
         ReqAttributeDto[] reqAttributeDtos = reqUpdateProductDto.getAttribute();
         for(ReqAttributeDto r: reqAttributeDtos){
             Attribute attribute = attributeService.getByProductIdAndSize(reqUpdateProductDto.getId(), r.getSize());
-            attribute.setStock(r.getStock());
-            attribute.setSize(r.getSize());
-            attributeService.save(attribute);
+           if(attribute != null){
+               attribute.setStock(r.getStock());
+               attribute.setSize(r.getSize());
+               attributeService.save(attribute);
+           }else{
+               Attribute a = new Attribute();
+               a.setName(product.getName());
+               a.setSize(r.getSize());
+               a.setPrice(r.getPrice());
+               a.setStock(r.getStock());
+               a.setCache(AttributeConst.ATTRIBUTE_CACHE_INIT);
+               a.setCreateDate(LocalDate.now());
+               a.setModifyDate(LocalDate.now());
+               a.setProduct(product);
+               attributeService.save(a);
+           }
         }
         return productRepo.save(product);
     }
