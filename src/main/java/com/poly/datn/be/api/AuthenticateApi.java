@@ -3,6 +3,7 @@ package com.poly.datn.be.api;
 import com.poly.datn.be.domain.constant.AccountConst;
 import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.RoleConst;
+import com.poly.datn.be.domain.dto.ReqForgotPasswordDto;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.domain.model.CustomUserDetails;
 import com.poly.datn.be.domain.payload.LoginRequest;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -67,5 +69,10 @@ public class AuthenticateApi {
             return new ResponseEntity<>(accountService.findByUsername(username), HttpStatus.OK);
         }
         return null;
+    }
+    @PostMapping(AccountConst.API_ACCOUNT_FORGOT_PASSWORD)
+    public ResponseEntity<?> forgotPassword(@RequestBody ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
+        accountService.forgotPassword(reqForgotPasswordDto);
+        return new ResponseEntity<>("Mật khẩu mới đã được gửi về mail!", HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.poly.datn.be.service.impl;
 
+import com.poly.datn.be.domain.dto.ReqUpdateAccountDetailDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
 import com.poly.datn.be.repo.AccountDetailRepo;
@@ -22,6 +23,17 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     @Override
     public AccountDetail save(AccountDetail accountDetail) {
         return this.accountDetailRepo.save(accountDetail);
+    }
+
+    @Override
+    public AccountDetail update(ReqUpdateAccountDetailDto reqUpdateAccountDetailDto) {
+        AccountDetail accountDetail = findAccountDetail(reqUpdateAccountDetailDto.getId());
+        accountDetail.setFullname(reqUpdateAccountDetailDto.getFullname());
+        accountDetail.setPhone(reqUpdateAccountDetailDto.getPhone());
+        accountDetail.setEmail(reqUpdateAccountDetailDto.getEmail());
+        accountDetail.setAddress(reqUpdateAccountDetailDto.getAddress());
+        accountDetail.setGender(reqUpdateAccountDetailDto.getGender());
+        return accountDetailRepo.save(accountDetail);
     }
 
 

@@ -40,6 +40,11 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
+    public Voucher getVoucherByOrder(Long id) {
+        return null;
+    }
+
+    @Override
     public Voucher saveVoucher(Voucher voucher) {
         voucher.setCreateDate(LocalDate.now());
         voucher.setIsActive(AppConst.CONST_ACTIVE);

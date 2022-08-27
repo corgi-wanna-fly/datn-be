@@ -36,7 +36,7 @@ public class Voucher {
     private Integer count;
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
-    @OneToMany(mappedBy = "voucher")
+    @OneToOne(mappedBy = "voucher")
     @JsonIgnore
-    private Collection<Order> orders;
+    private Order order;
 }

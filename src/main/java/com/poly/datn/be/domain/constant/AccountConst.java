@@ -9,11 +9,13 @@ public class AccountConst {
     public static final String API_ACCOUNT_GET_BY_ROLE_NAME = "/api/admin/account/by-role";
     public static final String API_ACCOUNT_REGISTER = "/api/site/account/register";
     public static final String API_ACCOUNT_DETAIL_GET_BY_ACCOUNT_ID = "/api/site/account/detail";
+    public static final String API_ACCOUNT_DETAIL_UPDATE = "/api/site/account/detail/update";
     public static final String API_ACCOUNT_COUNT = "/api/admin/account/count";
     public static final String API_ACCOUNT_FIND_ALL = "/api/admin/account/find-all";
     public static final String API_ACCOUNT_FIND_BY_ID = "/api/admin/account/{id}";
-    public static final String API_ACCOUNT_FIND_BY_USERNAME = "/api/admin/account/find-by-username";
+    public static final String API_ACCOUNT_FIND_BY_USERNAME = "/api/site/account/find-by-username";
     public static final String API_ACCOUNT_FIND_ME = "/api/site/me";
+    public static final String API_ACCOUNT_FORGOT_PASSWORD= "/api/site/forgot-password";
     /* Account constant*/
     public static final String ACCOUNT_MSG_ERROR_NOT_EXIST = "Tài khoản không tồn tại!";
     public static final String ACCOUNT_MSG_ERROR_SIGN_IN = "Đăng nhập thất bại!";

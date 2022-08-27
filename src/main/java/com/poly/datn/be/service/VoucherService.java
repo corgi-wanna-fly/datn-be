@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface VoucherService {
     Voucher getVoucherByCode(String code);
+    Voucher getVoucherByOrder(Long id);
     Voucher saveVoucher(Voucher voucher);
     Voucher update(Voucher voucher);
     void delete(Long id);

@@ -153,6 +153,7 @@ public class ConvertUtil {
     public static Account ReqUpdateAccountDtoToAccount(Account account, ReqUpdateAccountDto reqUpdateAccountDto){
         account.setId(reqUpdateAccountDto.getId());
         account.setIsActive(reqUpdateAccountDto.getIsActive());
+        account.setModifyDate(LocalDate.now());
         Role role = new Role();
         role.setId(reqUpdateAccountDto.getRoleId());
         account.setRole(role);

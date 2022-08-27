@@ -34,7 +34,7 @@ public class AccountApi {
     @GetMapping(AccountConst.API_ACCOUNT_FIND_ALL)
     public ResponseEntity<?> findAll(@RequestParam("page") Optional<Integer> page,
                                      @RequestParam("size") Optional<Integer> size) {
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "modifyDate");
         return new ResponseEntity<>(this.accountService.findAllSecond(pageable), HttpStatus.OK);
     }
 
@@ -83,7 +83,7 @@ public class AccountApi {
                                                   @RequestParam("page") Optional<Integer> page,
                                                   @RequestParam("size") Optional<Integer> size
                                                   ){
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "modifyDate");
         return new ResponseEntity<>(this.accountService.findAccountByRoleName(roleName, pageable), HttpStatus.OK);
     }
 

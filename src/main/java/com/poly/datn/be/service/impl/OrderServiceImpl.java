@@ -240,7 +240,12 @@ public class OrderServiceImpl implements OrderService {
             attribute.setCache(attribute.getCache() - o.getQuantity());
             attributeService.save(attribute);
         }
-
+        Voucher voucher = order.getVoucher();
+        if(voucher != null){
+            voucher.setCount(new Integer(1));
+            voucher.setIsActive(Boolean.TRUE);
+            voucherService.saveVoucher(voucher);
+        }
         Notification notification = new Notification();
         notification.setRead(false);
         notification.setDeliver(false);
@@ -373,6 +378,11 @@ public class OrderServiceImpl implements OrderService {
                 attribute.setCache(attribute.getCache() - o.getQuantity());
                 attributeService.save(attribute);
             }
+            Voucher v = order.getVoucher();
+            if(v != null){
+                v.setIsActive(Boolean.FALSE);
+                voucherService.saveVoucher(v);
+            }
            if(order.getTotal() > 1000000){
                Voucher voucher = new Voucher();
                voucher.setCode(generateCode());
@@ -422,6 +432,12 @@ public class OrderServiceImpl implements OrderService {
                 attribute.setCache(attribute.getCache() - o.getQuantity());
                 attribute.setStock(attribute.getStock() + o.getQuantity());
                 attributeService.save(attribute);
+            }
+            Voucher voucher = order.getVoucher();
+            if(voucher != null){
+                voucher.setCount(new Integer(1));
+                voucher.setIsActive(Boolean.TRUE);
+                voucherService.saveVoucher(voucher);
             }
             return orderRepo.save(order);
         }

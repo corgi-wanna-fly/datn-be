@@ -1,12 +1,12 @@
 package com.poly.datn.be.service;
 
-import com.poly.datn.be.domain.dto.ReqCreateAccountDto;
-import com.poly.datn.be.domain.dto.ReqRegisterAccountDto;
-import com.poly.datn.be.domain.dto.ReqUpdateAccountDto;
-import com.poly.datn.be.domain.dto.RespAccountDto;
+import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.entity.Account;
+import com.poly.datn.be.entity.AccountDetail;
 import org.springframework.data.domain.Pageable;
 
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface AccountService {
@@ -35,7 +35,7 @@ public interface AccountService {
     RespAccountDto register(ReqRegisterAccountDto reqRegisterAccountDto);
     Integer countAccount();
 
-//    void changePassword(ReqChangePasswordDto reqChangePasswordDto);
-//
-//    void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException;
+    @Transactional
+    void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException;
+    AccountDetail update(ReqUpdateAccountDetailDto reqUpdateAccountDetailDto);
 }
