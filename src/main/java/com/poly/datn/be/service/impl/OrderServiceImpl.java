@@ -92,11 +92,11 @@ public class OrderServiceImpl implements OrderService {
         notification.setOrder(order);
         notification.setType(1);
         notificationService.createNotification(notification);
-//        try {
-//            MailUtil.sendEmail(order);
-//        } catch (MessagingException e) {
-//            System.out.println("Can't send an email.");
-//        }
+        try {
+            MailUtil.sendEmail(order);
+        } catch (MessagingException e) {
+            System.out.println("Can't send an email.");
+        }
         return order;
     }
 
