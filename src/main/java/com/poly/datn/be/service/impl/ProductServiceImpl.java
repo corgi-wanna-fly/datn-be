@@ -199,18 +199,19 @@ public class ProductServiceImpl implements ProductService {
            if(attribute != null){
                attribute.setStock(r.getStock());
                attribute.setSize(r.getSize());
+               attribute.setPrice(r.getPrice());
                attributeService.save(attribute);
            }else{
-               Attribute a = new Attribute();
-               a.setName(product.getName());
-               a.setSize(r.getSize());
-               a.setPrice(r.getPrice());
-               a.setStock(r.getStock());
-               a.setCache(AttributeConst.ATTRIBUTE_CACHE_INIT);
-               a.setCreateDate(LocalDate.now());
-               a.setModifyDate(LocalDate.now());
-               a.setProduct(product);
-               attributeService.save(a);
+               attribute = new Attribute();
+               attribute.setName(product.getName());
+               attribute.setSize(r.getSize());
+               attribute.setPrice(r.getPrice());
+               attribute.setStock(r.getStock());
+               attribute.setCache(AttributeConst.ATTRIBUTE_CACHE_INIT);
+               attribute.setCreateDate(LocalDate.now());
+               attribute.setModifyDate(LocalDate.now());
+               attribute.setProduct(product);
+               attributeService.save(attribute);
            }
         }
         return productRepo.save(product);

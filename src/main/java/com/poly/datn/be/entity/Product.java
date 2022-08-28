@@ -48,4 +48,7 @@ public class Product {
     private Collection<Image> images;
     @OneToMany(mappedBy = "product")
     private Collection<Attribute> attributes;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Notification> notifications;
 }

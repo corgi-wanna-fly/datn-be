@@ -20,5 +20,8 @@ public class Notification {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", updatable = true, insertable = true)
     private Order order;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id", updatable = true, insertable = true)
+    private Product product;
     private Integer type;
 }
