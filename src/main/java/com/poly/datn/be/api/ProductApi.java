@@ -89,4 +89,9 @@ public class ProductApi {
     public ResponseEntity<?> modifyProduct(@RequestBody ReqUpdateProductDto reqUpdateProductDto) {
         return new ResponseEntity<>(productService.modify(reqUpdateProductDto), HttpStatus.OK);
     }
+
+    @GetMapping(ProductConst.API_PRODUCT_FIND_ALL)
+    public ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
+    }
 }

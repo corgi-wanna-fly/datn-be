@@ -27,6 +27,10 @@ public class AttributeApi {
     public ResponseEntity<?> getAttribute(@RequestParam("id") Long id) {
         return new ResponseEntity<>(attributeService.findById(id), HttpStatus.OK);
     }
+    @GetMapping(AttributeConst.API_ATTRIBUTE_GET_ALL)
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(attributeService.findAll(), HttpStatus.OK);
+    }
     @GetMapping(AttributeConst.API_ATTRIBUTE_IS_VALID)
     public ResponseEntity<?> isValid(@RequestParam("id") Long id, @RequestParam("quantity") Integer quantity) {
         return new ResponseEntity<>(attributeService.isValidCart(id, quantity), HttpStatus.OK);

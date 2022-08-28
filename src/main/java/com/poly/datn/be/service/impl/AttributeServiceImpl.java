@@ -48,6 +48,11 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
+    public List<Attribute> findAll() {
+        return attributeRepo.findAll();
+    }
+
+    @Override
     public List<Attribute> backAttribute(Long id) {
         List<OrderDetail> orderDetails = orderDetailService.getAllByOrderId(id);
         List<Attribute> attributes = new ArrayList<>();
