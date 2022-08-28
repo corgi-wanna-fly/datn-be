@@ -1,31 +1,30 @@
 package com.poly.datn.be.service.impl;
 
 import com.poly.datn.be.domain.constant.AccountConst;
-import com.poly.datn.be.domain.constant.AppConst;
+import com.poly.datn.be.domain.dto.*;
 import com.poly.datn.be.domain.exception.AppException;
-import com.poly.datn.be.domain.req_dto.*;
-import com.poly.datn.be.domain.resp_dto.RespAccountDto;
 import com.poly.datn.be.entity.Account;
 import com.poly.datn.be.entity.AccountDetail;
+import com.poly.datn.be.entity.Role;
 import com.poly.datn.be.repo.AccountRepo;
 import com.poly.datn.be.service.AccountDetailService;
 import com.poly.datn.be.service.AccountService;
+import com.poly.datn.be.service.RoleService;
 import com.poly.datn.be.util.ConvertUtil;
 import com.poly.datn.be.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,10 +32,13 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     AccountRepo accountRepo;
-
     @Autowired
     AccountDetailService accountDetailService;
+    @Autowired
+    RoleService roleService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Override
     public Account findById(Long id) {
         Optional<Account> optionalAccount = accountRepo.findById(id);
@@ -81,8 +83,17 @@ public class AccountServiceImpl implements AccountService {
         }else {
             Account account = optionalAccount.get();
             AccountDetail ad = this.accountDetailService.findAccountDetail(account.getId());
-            if (account.getRole().getId() == 1 && !reqUpdateAccountDto.getIsActive()) {
-                throw new AppException("Không thể dừng hoạt động tài khoản Admin");
+            if(account.getRole().getId() == 1){
+                if(!reqUpdateAccountDto.getIsActive()){
+                    throw new AppException("Không thể dừng hoạt động tài khoản Admin");
+                }
+                if(reqUpdateAccountDto.getRoleId() != 1){
+                    throw new AppException("Không thể thực hiện thao tác này");
+                }
+            }else{
+                if(reqUpdateAccountDto.getRoleId() == 1){
+                    throw new AppException("Không thể thực hiện thao tác này");
+                }
             }
             if (
                     !reqUpdateAccountDto.getEmail().equals(ad.getEmail())
@@ -135,7 +146,6 @@ public class AccountServiceImpl implements AccountService {
     @Modifying
     @Override
     public RespAccountDto register(ReqRegisterAccountDto reqRegisterAccountDto) {
-
         if (this.accountRepo.findAccountByUsername(reqRegisterAccountDto.getUsername()) != null) {
             throw new AppException("Username đã tồn tại");
         }
@@ -143,12 +153,20 @@ public class AccountServiceImpl implements AccountService {
             throw new AppException("Email đã tồn tại");
         }
         Account account = ConvertUtil.ReqCreateAccountDtoToAccount(reqRegisterAccountDto);
-        account.setId(this.accountRepo.save(account).getId());
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        Role role = roleService.findById(3L);
+        account.setRole(role);
+        account = this.accountRepo.save(account);
         AccountDetail accountDetail = ConvertUtil.ReqAccountDtoToAccountDetail(reqRegisterAccountDto);
         accountDetail.setAccount(account);
-        AccountDetail accountDetail1 = this.accountDetailService.save(accountDetail);
-        RespAccountDto respAccountDto = ConvertUtil.accountToRespAccountDto(account, accountDetail1);
+        accountDetail = this.accountDetailService.save(accountDetail);
+        RespAccountDto respAccountDto = ConvertUtil.accountToRespAccountDto(account, accountDetail);
         return respAccountDto;
+    }
+
+    @Override
+    public Integer countAccount() {
+        return accountRepo.findAll().size();
     }
 
 //    @Override
@@ -167,23 +185,39 @@ public class AccountServiceImpl implements AccountService {
 //            this.accountRepo.save(account);
 //        }
 //    }
-//
-//    @Transactional
-//    @Override
-//    public void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
-//        Account account = this.accountRepo.findAccountByUsername(reqForgotPasswordDto.getUsername());
-//        if (account == null){
-//            throw new AppException("Username không tồn tại");
-//        }else {
-//            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//            String newPassword = String.valueOf(UUID.randomUUID());
-//            account.setPassword(passwordEncoder.encode(newPassword));
-//            this.accountRepo.save(account);
-//            //gửi mail
-//            AccountDetail accountDetail = this.accountDetailService.findAccountDetail(account.getId());
-//            MailUtil.sendmailForgotPassword(accountDetail.getEmail(), newPassword);
-//        }
-//    }
+
+    @Transactional
+    @Override
+    public void forgotPassword(ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
+        Account account = this.accountRepo.findAccountByUsername(reqForgotPasswordDto.getUsername());
+        if (account == null){
+            throw new AppException("Username không tồn tại");
+        }else {
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String newPassword = String.valueOf(UUID.randomUUID());
+            account.setPassword(passwordEncoder.encode(newPassword));
+            this.accountRepo.save(account);
+            //gửi mail
+            AccountDetail accountDetail = this.accountDetailService.findAccountDetail(account.getId());
+            MailUtil.sendmailForgotPassword(accountDetail.getEmail(), newPassword);
+        }
+    }
+
+    @Override
+    public AccountDetail update(ReqUpdateAccountDetailDto reqUpdateAccountDetailDto) {
+        AccountDetail accountDetail = accountDetailService.findAccountDetail(reqUpdateAccountDetailDto.getId());
+        if(!accountDetail.getEmail().equals(reqUpdateAccountDetailDto.getEmail())){
+            if (this.accountDetailService.findAccountDetailByEmail(reqUpdateAccountDetailDto.getEmail()) != null){
+                throw new AppException("Email đã tồn tại");
+            }
+        }
+        accountDetail.setFullname(reqUpdateAccountDetailDto.getFullname());
+        accountDetail.setPhone(reqUpdateAccountDetailDto.getPhone());
+        accountDetail.setEmail(reqUpdateAccountDetailDto.getEmail());
+        accountDetail.setAddress(reqUpdateAccountDetailDto.getAddress());
+        accountDetail.setGender(reqUpdateAccountDetailDto.getGender());
+        return accountDetailService.save(accountDetail);
+    }
 
 
 }

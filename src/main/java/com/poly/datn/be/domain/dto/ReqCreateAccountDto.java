@@ -1,5 +1,6 @@
-package com.poly.datn.be.domain.req_dto;
+package com.poly.datn.be.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -38,5 +39,6 @@ public class ReqCreateAccountDto {
     @NotEmpty(message = "Address không được trống")
     private String address;
     @NotNull(message = "BirthDate không được null")
-    private Date birthDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private LocalDate birthDate;
 }

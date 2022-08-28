@@ -1,10 +1,11 @@
 package com.poly.datn.be.util;
 
+import com.poly.datn.be.domain.constant.ProductConst;
 import com.poly.datn.be.domain.dto.*;
-import com.poly.datn.be.domain.req_dto.ReqCreateAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqRegisterAccountDto;
-import com.poly.datn.be.domain.req_dto.ReqUpdateAccountDto;
-import com.poly.datn.be.domain.resp_dto.RespAccountDto;
+import com.poly.datn.be.domain.dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.dto.ReqRegisterAccountDto;
+import com.poly.datn.be.domain.dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.dto.RespAccountDto;
 import com.poly.datn.be.entity.*;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,15 +33,6 @@ public class ConvertUtil {
         respProductDto.setIsActive((Boolean) objects[9]);
         return respProductDto;
     }
-//    public static RespBrandDto fromBrand(Object[] objects){
-//        RespBrandDto respBrandDto = new RespBrandDto();
-//        respBrandDto.setId((Long) objects[0]);
-//        respBrandDto.setName((String) objects[1]);
-//        respBrandDto.setDescription((String) objects[2]);
-//        respBrandDto.setIsActive((Boolean) objects[3]);
-//        respBrandDto.setImage((String) objects[4]);
-//        return respBrandDto;
-//    }
 
     public static RespProductDetailDto fromProductDetail(Product product){
         RespProductDetailDto respProductDetailDto = new RespProductDetailDto();
@@ -53,7 +45,19 @@ public class ConvertUtil {
         List<String> images = product.getImages().stream().map(item -> item.getImageLink()).collect(Collectors.toList());
         respProductDetailDto.setImages(images);
         respProductDetailDto.setAttributes((List<Attribute>) product.getAttributes());
+        for(Attribute a: product.getAttributes()){
+            if(a.getSize().equals(ProductConst.PRODUCT_AVG_SIZE)){
+                respProductDetailDto.setPrice(a.getPrice());
+                break;
+            }
+        }
+        List<Long> longs = product.getProductCategories().stream().map((item) -> item.getCategory().getId()).collect(Collectors.toList());
+        respProductDetailDto.setCategory(longs);
         respProductDetailDto.setDiscount(product.getSale().getDiscount());
+        respProductDetailDto.setBrandId(product.getBrand().getId());
+        respProductDetailDto.setBrand(product.getBrand().getName());
+        respProductDetailDto.setSaleId(product.getSale().getId());
+        respProductDetailDto.setView(product.getView());
         return respProductDetailDto;
     }
 
@@ -80,6 +84,7 @@ public class ConvertUtil {
         order.setTotal(reqOrderDto.getTotal());
         order.setNote(reqOrderDto.getNote());
         order.setIsPending(reqOrderDto.getIsPending());
+        order.setPayment(reqOrderDto.getPayment());
         order.setCreateDate(LocalDate.now());
         order.setModifyDate(LocalDate.now());
         order.setShipDate(Date.from(LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -99,7 +104,7 @@ public class ConvertUtil {
         respAccountDto.setPhone((String) objects[8]);
         respAccountDto.setEmail((String) objects[9]);
         respAccountDto.setAddress((String) objects[10]);
-        respAccountDto.setBirthDate((Date) objects[11]);
+        respAccountDto.setBirthDate((LocalDate) objects[11]);
         return  respAccountDto;
     }
 
@@ -116,7 +121,7 @@ public class ConvertUtil {
         respAccountDto.setPhone(accountDetail.getPhone());
         respAccountDto.setEmail(accountDetail.getEmail());
         respAccountDto.setAddress(accountDetail.getAddress());
-        respAccountDto.setBirthDate(accountDetail.getBirthDate());
+        respAccountDto.setBirthDate(LocalDate.now());
         return  respAccountDto;
     }
 
@@ -136,24 +141,19 @@ public class ConvertUtil {
     }
 
     public static Account ReqCreateAccountDtoToAccount(ReqRegisterAccountDto reqAccountDto){
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Account account = new Account();
         account.setUsername(reqAccountDto.getUsername());
-//        account.setPassword(passwordEncoder.encode(reqAccountDto.getPassword()));
         account.setPassword(reqAccountDto.getPassword());
         account.setCreateDate(LocalDate.now());
         account.setModifyDate(LocalDate.now());
         account.setIsActive(true);
-        Role role = new Role();
-        role.setId(3L);
-        account.setRole(role);
         return account;
     }
 
     public static Account ReqUpdateAccountDtoToAccount(Account account, ReqUpdateAccountDto reqUpdateAccountDto){
         account.setId(reqUpdateAccountDto.getId());
-        account.setPassword(reqUpdateAccountDto.getPassword());
         account.setIsActive(reqUpdateAccountDto.getIsActive());
+        account.setModifyDate(LocalDate.now());
         Role role = new Role();
         role.setId(reqUpdateAccountDto.getRoleId());
         account.setRole(role);
@@ -169,20 +169,18 @@ public class ConvertUtil {
         accountDetail.setPhone(reqCreateAccountDto.getPhone());
         accountDetail.setEmail(reqCreateAccountDto.getEmail());
         accountDetail.setAddress(reqCreateAccountDto.getAddress());
-        accountDetail.setBirthDate(reqCreateAccountDto.getBirthDate());
+        accountDetail.setBirthDate(LocalDate.now());
         return accountDetail;
     }
 
     public static AccountDetail ReqAccountDtoToAccountDetail(ReqRegisterAccountDto ReqRegisterAccountDto){
         AccountDetail accountDetail = new AccountDetail();
-        Account account = new Account();
-        accountDetail.setAccount(account);
         accountDetail.setFullname(ReqRegisterAccountDto.getFullName());
         accountDetail.setGender(ReqRegisterAccountDto.getGender());
         accountDetail.setPhone(ReqRegisterAccountDto.getPhone());
         accountDetail.setEmail(ReqRegisterAccountDto.getEmail());
         accountDetail.setAddress(ReqRegisterAccountDto.getAddress());
-        accountDetail.setBirthDate(ReqRegisterAccountDto.getBirthDate());
+        accountDetail.setBirthDate(LocalDate.now());
         return accountDetail;
     }
 
@@ -196,7 +194,7 @@ public class ConvertUtil {
         accountDetail.setPhone(ReqUpdateAccountDto.getPhone());
         accountDetail.setEmail(ReqUpdateAccountDto.getEmail());
         accountDetail.setAddress(ReqUpdateAccountDto.getAddress());
-        accountDetail.setBirthDate(ReqUpdateAccountDto.getBirthDate());
+        accountDetail.setBirthDate(LocalDate.now());
         return accountDetail;
     }
 }

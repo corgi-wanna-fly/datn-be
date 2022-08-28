@@ -1,6 +1,5 @@
 package com.poly.datn.be.api;
 
-import com.poly.datn.be.domain.constant.AppConst;
 import com.poly.datn.be.domain.constant.VoucherConst;
 import com.poly.datn.be.domain.exception.AppException;
 import com.poly.datn.be.entity.Voucher;
@@ -44,7 +43,7 @@ public class VoucherApi {
     @GetMapping(VoucherConst.API_VOUCHER_GET_ALL)
     public ResponseEntity<?> getAllVoucher(@RequestParam("page") Optional<Integer> page,
                                            @RequestParam("size") Optional<Integer> size){
-        Pageable pageable = PageRequest.of(page.orElse(1)-1, size.orElse(9), Sort.Direction.DESC,"id");
+        Pageable pageable = PageRequest.of(page.orElse(1)-1, size.orElse(9), Sort.Direction.DESC,"createDate");
         return new ResponseEntity<>(voucherService.getToTalPage(pageable),HttpStatus.OK);
     }
     @GetMapping(VoucherConst.API_VOUCHER_GET_BY_ID)

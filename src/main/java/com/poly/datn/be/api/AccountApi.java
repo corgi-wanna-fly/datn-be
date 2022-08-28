@@ -1,11 +1,10 @@
 package com.poly.datn.be.api;
 
 import com.poly.datn.be.domain.constant.AccountConst;
-import com.poly.datn.be.domain.constant.ProductConst;
-import com.poly.datn.be.domain.req_dto.*;
-import com.poly.datn.be.domain.resp_dto.RespAccountDto;
-import com.poly.datn.be.entity.Account;
-import com.poly.datn.be.entity.AccountDetail;
+import com.poly.datn.be.domain.dto.ReqCreateAccountDto;
+import com.poly.datn.be.domain.dto.ReqRegisterAccountDto;
+import com.poly.datn.be.domain.dto.ReqUpdateAccountDto;
+import com.poly.datn.be.domain.dto.RespAccountDto;
 import com.poly.datn.be.service.AccountDetailService;
 import com.poly.datn.be.service.AccountService;
 import com.poly.datn.be.util.ConvertUtil;
@@ -13,15 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +34,7 @@ public class AccountApi {
     @GetMapping(AccountConst.API_ACCOUNT_FIND_ALL)
     public ResponseEntity<?> findAll(@RequestParam("page") Optional<Integer> page,
                                      @RequestParam("size") Optional<Integer> size) {
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "modifyDate");
         return new ResponseEntity<>(this.accountService.findAllSecond(pageable), HttpStatus.OK);
     }
 
@@ -52,12 +47,6 @@ public class AccountApi {
     public ResponseEntity<?> findByUsername(@RequestParam("username") String username) {
         return new ResponseEntity<>(this.accountService.findByUsername(username), HttpStatus.OK);
     }
-
-//    @GetMapping(AccountConst.API_ACCOUNT_DELETE_OR_RESTORE)
-//    public ResponseEntity<?> deleteOrRestore(@PathVariable("id") Long id, @RequestParam("isActive") Optional<Boolean> isActive) {
-//        this.accountService.deleteOrRestore(isActive.orElse(false), id);
-//        return new ResponseEntity<>("Update Successfully", HttpStatus.OK);
-//    }
 
     @GetMapping(AccountConst.API_ACCOUNT_FIND_ALL_BY_IS_ACTIVE_OR_INACTIVE)
     public ResponseEntity<?> findAccountByIsActiveOrInactive(@PathVariable("isActive") Boolean isActive,
@@ -94,7 +83,7 @@ public class AccountApi {
                                                   @RequestParam("page") Optional<Integer> page,
                                                   @RequestParam("size") Optional<Integer> size
                                                   ){
-        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(9), Sort.Direction.DESC, "modifyDate");
         return new ResponseEntity<>(this.accountService.findAccountByRoleName(roleName, pageable), HttpStatus.OK);
     }
 
@@ -103,15 +92,9 @@ public class AccountApi {
         return new ResponseEntity<>(this.accountService.register(reqRegisterAccountDto), HttpStatus.OK);
     }
 
-//    @PostMapping(AccountConst.API_ACCOUNT_CHANGE_PASSWORD)
-//    public ResponseEntity<?> changePassword(@RequestBody @Valid ReqChangePasswordDto reqChangePasswordDto){
-//        this.accountService.changePassword(reqChangePasswordDto);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    @PostMapping(AccountConst.API_ACCOUNT_FORGOT_PASSWORD)
-//    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ReqForgotPasswordDto reqForgotPasswordDto) throws MessagingException {
-//        this.accountService.forgotPassword(reqForgotPasswordDto);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @GetMapping(AccountConst.API_ACCOUNT_COUNT)
+    public ResponseEntity<?> countAccount(){
+        return new ResponseEntity<>(accountService.countAccount(), HttpStatus.OK);
+    }
+
 }

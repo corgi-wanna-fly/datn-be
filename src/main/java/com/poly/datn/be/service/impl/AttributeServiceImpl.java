@@ -48,6 +48,11 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
+    public List<Attribute> findAll() {
+        return attributeRepo.findAll();
+    }
+
+    @Override
     public List<Attribute> backAttribute(Long id) {
         List<OrderDetail> orderDetails = orderDetailService.getAllByOrderId(id);
         List<Attribute> attributes = new ArrayList<>();
@@ -69,5 +74,14 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public Attribute getByProductIdAndSize(Long productId, Integer size) {
         return attributeRepo.findByProduct_IdAndSize(productId, size);
+    }
+
+    @Override
+    public Boolean isValidCart(Long id, Integer quantity) {
+        Attribute attribute = findById(id);
+        if(quantity > attribute.getStock()){
+            throw new AppException(AttributeConst.ATTRIBUTE_MSG_ERROR_NOT_ENOUGH_STOCK);
+        }
+        return Boolean.TRUE;
     }
 }

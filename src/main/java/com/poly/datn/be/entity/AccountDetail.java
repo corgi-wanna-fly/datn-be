@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class AccountDetail {
     @Column(name = "address", nullable = false, length = 265)
     private String address;
     @Column(name = "birthdate", nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
     @OneToOne
     @JoinColumn(name = "account_id", unique = true)
     private Account account;

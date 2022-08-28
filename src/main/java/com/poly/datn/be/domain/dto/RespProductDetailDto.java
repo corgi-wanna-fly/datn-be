@@ -21,4 +21,10 @@ public class RespProductDetailDto {
     private Integer discount;
     private List<String> images;
     private List<Attribute> attributes;
+    private List<Long> category;
+    private Long saleId;
+    private Long brandId;
+    private String brand;
+    private Double price;
+    private Long view;
 }

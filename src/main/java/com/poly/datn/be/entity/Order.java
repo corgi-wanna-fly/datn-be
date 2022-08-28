@@ -34,6 +34,14 @@ public class Order {
     private Double total;
     @Column(name = "note", length = 1000, nullable = true)
     private String note;
+    @Column(name = "payment", length = 1000, nullable = true)
+    private String payment;
+    @Column(name = "shipment", length = 1000, nullable = true)
+    private String shipment;
+    @Column(name = "code", length = 1000, nullable = true)
+    private String code;
+    @Column(name = "description", length = 1000, nullable = true)
+    private String description;
     @Column(name = "ship_date", nullable = true)
     private Date shipDate;
     @Column(name = "create_date", nullable = false)
@@ -42,16 +50,23 @@ public class Order {
     private LocalDate modifyDate;
     @Column(name = "is_pending", nullable = false)
     private Boolean isPending;
+    @Column(name = "encode_url", nullable = false)
+    private String encodeUrl;
+    @Column(name = "seen", nullable = false)
+    private Boolean seen;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Collection<OrderDetail>  orderDetails;
+    private Collection<OrderDetail> orderDetails;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Notification> notifications;
     @ManyToOne
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
 }

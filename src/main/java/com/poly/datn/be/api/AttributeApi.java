@@ -17,10 +17,22 @@ import java.util.Optional;
 public class AttributeApi {
     @Autowired
     AttributeService attributeService;
+
     @GetMapping(AttributeConst.API_ATTRIBUTE_GET_BY_PRODUCT_ID)
     public ResponseEntity<?> cacheAttribute(@RequestParam("id") Long id,
-                                            @RequestParam("size") Optional<Integer> size){
+                                            @RequestParam("size") Optional<Integer> size) {
         return new ResponseEntity<>(attributeService.getByProductIdAndSize(id, size.orElse(39)), HttpStatus.OK);
     }
-
+    @GetMapping(AttributeConst.API_ATTRIBUTE_GET_BY_ID)
+    public ResponseEntity<?> getAttribute(@RequestParam("id") Long id) {
+        return new ResponseEntity<>(attributeService.findById(id), HttpStatus.OK);
+    }
+    @GetMapping(AttributeConst.API_ATTRIBUTE_GET_ALL)
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(attributeService.findAll(), HttpStatus.OK);
+    }
+    @GetMapping(AttributeConst.API_ATTRIBUTE_IS_VALID)
+    public ResponseEntity<?> isValid(@RequestParam("id") Long id, @RequestParam("quantity") Integer quantity) {
+        return new ResponseEntity<>(attributeService.isValidCart(id, quantity), HttpStatus.OK);
+    }
 }
